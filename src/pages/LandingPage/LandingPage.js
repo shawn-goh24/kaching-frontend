@@ -4,10 +4,13 @@ import appImg from "../../assets/appImg.png";
 import useMediaQuery from "../../hooks/useMediaQuery";
 
 import FeatureCard from "./FeatureCard";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function LandingPage() {
   // check if screen is md or lower
   const isSmallScreen = useMediaQuery("(max-width: 960px)");
+
+  const { loginWithRedirect } = useAuth0();
 
   return (
     <>
@@ -32,7 +35,17 @@ export default function LandingPage() {
           </Text>
         </Grid>
         <Grid xs={12} justify="center" css={{ margin: "50px 0 130px 0" }}>
-          <Button auto size="lg">
+          <Button
+            auto
+            size="lg"
+            onClick={() =>
+              loginWithRedirect({
+                authorizationParams: {
+                  redirect_uri: "http://localhost:3000/user/home",
+                },
+              })
+            }
+          >
             Get started
           </Button>
         </Grid>

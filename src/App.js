@@ -14,7 +14,7 @@ function App() {
       </Routes>
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/user/:id">
+        <Route path="/user">
           <Route path="home" element={<Home />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="settings" element={<Settings />} />
