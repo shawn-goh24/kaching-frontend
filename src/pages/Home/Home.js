@@ -11,17 +11,33 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import useMediaQuery from "../../hooks/useMediaQuery";
 import BudgetBar from "./BudgetBar.js";
+import TransactionCol from "./TransactionCol.js";
+
+import Backdrop from "@mui/material/Backdrop";
+import SpeedDial from "@mui/material/SpeedDial";
+import SpeedDialIcon from "@mui/material/SpeedDialIcon";
+import SpeedDialAction from "@mui/material/SpeedDialAction";
+import FileCopyIcon from "@mui/icons-material/FileCopyOutlined";
 
 export default function Home(props) {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
   const [date, setDate] = useState(new Date());
   const [value, setValute] = useState("1");
+  const [currUser, setCurrUser] = useState("");
+  const [accessToken, setAccessToken] = useState("");
+
+  // speed dial
+  const [openSpeedDial, setOpenSpeedDial] = useState(false);
+  const handleSpeedDialOpen = () => setOpenSpeedDial(true);
+  const handleSpeedDialClose = () => setOpenSpeedDial(false);
 
   // check if screen is md or lower
   const isSmallScreen = useMediaQuery("(max-width: 960px)");
 
-  const userApi = async () => {
+  const getUserApi = async () => {
     let token = await getAccessTokenSilently();
+    console.log(token);
+    // check user
     let request = await axios.post(
       "http://localhost:8080/user/home",
       {
@@ -33,13 +49,15 @@ export default function Home(props) {
         },
       }
     );
-    // console.log(request);
+    console.log(request.data);
+    setAccessToken(token);
+    setCurrUser(request.data);
+    // get user
   };
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      // console.log(user);
-      userApi();
+      getUserApi();
     }
   }, [isAuthenticated]);
 
@@ -100,9 +118,34 @@ export default function Home(props) {
           </TabPanel>
         </TabContext>
       </Grid>
-      <Grid item xs={12} md={6} sx={{ border: "1px solid red" }}>
-        Right box
+      <Grid item xs={12} md={6} sx={{ height: "100%" }}>
+        <h2>Transactions</h2>
+        <Box sx={{ height: "95%", overflowX: "scroll" }}>
+          <TransactionCol currUser={currUser} accessToken={accessToken} />
+        </Box>
       </Grid>
+      <Backdrop open={openSpeedDial} sx={{ zIndex: "999" }} />
+      <SpeedDial
+        ariaLabel="SpeedDial tooltip example"
+        sx={{ position: "absolute", bottom: 16, right: 16 }}
+        icon={<SpeedDialIcon />}
+        onClose={handleSpeedDialClose}
+        onOpen={handleSpeedDialOpen}
+        open={openSpeedDial}
+      >
+        <SpeedDialAction
+          key="addTransaction"
+          icon={<FileCopyIcon />}
+          tooltipTitle="Add Transaction"
+          onClick={handleSpeedDialClose}
+        />
+        <SpeedDialAction
+          key="addCategory"
+          icon={<FileCopyIcon />}
+          tooltipTitle="Add Category"
+          onClick={handleSpeedDialClose}
+        />
+      </SpeedDial>
     </Grid>
   );
 }
