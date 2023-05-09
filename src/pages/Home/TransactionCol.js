@@ -11,6 +11,7 @@ export default function TransactionCol({
   accessToken,
   setOpenAddTransactionModal,
   openAddTransactionModal,
+  date,
 }) {
   const [transactions, setTransactions] = useState("");
   const [categories, setCategories] = useState("");
@@ -22,8 +23,11 @@ export default function TransactionCol({
   // get all transactions from the user
   const getUserTransactionsApi = async () => {
     if (accessToken) {
+      const selectedDate = new Date(date);
+      const month = selectedDate.getMonth() + 1;
+      const year = selectedDate.getFullYear();
       let user = await axios.get(
-        `http://localhost:8080/transaction/${currUser.id}`,
+        `http://localhost:8080/transaction/${currUser.id}/${month}/${year}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -61,8 +65,11 @@ export default function TransactionCol({
   const handleEdit = async (transactionId, date, name, amount, categoryId) => {
     console.log(transactionId, date, name, amount, categoryId);
     if (accessToken) {
+      const selectedDate = new Date(date);
+      const month = selectedDate.getMonth() + 1;
+      const year = selectedDate.getFullYear();
       let editTransaction = await axios.put(
-        `http://localhost:8080/transaction/edit/${transactionId}`,
+        `http://localhost:8080/transaction/edit/${currUser.id}/${transactionId}/${month}/${year}`,
         {
           name: name,
           date: new Date(date),
@@ -80,16 +87,21 @@ export default function TransactionCol({
     }
   };
 
-  const handleAddTransaction = async (date, name, amount, categoryId) => {
+  const handleAddTransaction = async (
+    dateOfTransaction,
+    name,
+    amount,
+    categoryId
+  ) => {
     console.log("Add transaction");
-    console.log(date, name, amount, categoryId);
+    console.log(dateOfTransaction, name, amount, categoryId);
     if (accessToken) {
       let addTransaction = await axios.post(
         `http://localhost:8080/transaction/add`,
         {
           userId: currUser.id,
           name: name,
-          date: new Date(date),
+          date: new Date(dateOfTransaction),
           amount: +amount,
           categoryId: categoryId,
         },
@@ -100,10 +112,20 @@ export default function TransactionCol({
         }
       );
       console.log(addTransaction.data);
-      setTransactions((oldTransaction) => [
-        ...oldTransaction,
-        addTransaction.data,
-      ]);
+
+      const selectedDate = new Date(date);
+      const transactionDate = new Date(addTransaction.data.date);
+      console.log(selectedDate);
+      console.log(transactionDate);
+      if (
+        transactionDate.getMonth() === selectedDate.getMonth() &&
+        transactionDate.getFullYear() === selectedDate.getFullYear()
+      ) {
+        setTransactions((oldTransaction) => [
+          ...oldTransaction,
+          addTransaction.data,
+        ]);
+      }
     }
   };
 
@@ -117,8 +139,11 @@ export default function TransactionCol({
   const handleDelete = async (transactionId) => {
     console.log("delete item ", transactionId);
     if (accessToken) {
+      const selectedDate = new Date(date);
+      const month = selectedDate.getMonth() + 1;
+      const year = selectedDate.getFullYear();
       let deleteTransaction = await axios.delete(
-        `http://localhost:8080/transaction/delete/${transactionId}`,
+        `http://localhost:8080/transaction/delete/${currUser.id}/${transactionId}/${month}/${year}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -134,7 +159,7 @@ export default function TransactionCol({
   useEffect(() => {
     getUserTransactionsApi();
     getCategoriesApi();
-  }, [accessToken]);
+  }, [accessToken, date]);
 
   // list of transactions by user
   const TransactionList = () => {

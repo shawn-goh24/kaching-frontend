@@ -4,7 +4,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { months } from "../../data/constants.js";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import { Grid, Tab, Typography, Box } from "@mui/material";
+import { Grid, Tab, Typography, Box, IconButton } from "@mui/material";
 import PieChart from "./PieChart.js";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
@@ -17,7 +17,7 @@ import Backdrop from "@mui/material/Backdrop";
 import SpeedDial from "@mui/material/SpeedDial";
 import SpeedDialIcon from "@mui/material/SpeedDialIcon";
 import SpeedDialAction from "@mui/material/SpeedDialAction";
-import FileCopyIcon from "@mui/icons-material/FileCopyOutlined";
+import ReceiptIcon from "@mui/icons-material/Receipt";
 
 export default function Home(props) {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
@@ -25,6 +25,7 @@ export default function Home(props) {
   const [value, setValute] = useState("1");
   const [currUser, setCurrUser] = useState("");
   const [accessToken, setAccessToken] = useState("");
+  const [tmpMonth, setTmpMonth] = useState(0);
 
   // speed dial
   const [openSpeedDial, setOpenSpeedDial] = useState(false);
@@ -66,6 +67,27 @@ export default function Home(props) {
     setValute(newValue);
   };
 
+  const prevMonth = (date) => {
+    const tmp = new Date(date);
+    let month = tmp.getMonth() - 1;
+    let year = tmp.getFullYear();
+    if (month < 0) {
+      month = 11;
+      year = tmp.getFullYear() - 1;
+    }
+    setDate(new Date(year, month));
+  };
+  const nextMonth = (date) => {
+    const tmp = new Date(date);
+    let month = tmp.getMonth() + 1;
+    let year = tmp.getFullYear();
+    if (month < 0) {
+      month = 11;
+      year = tmp.getFullYear() + 1;
+    }
+    setDate(new Date(year, month));
+  };
+
   return (
     <Grid
       container
@@ -88,11 +110,15 @@ export default function Home(props) {
           border: "1px solid red",
         }}
       >
-        <NavigateBeforeIcon sx={{ marginRight: 10 }} />
+        <IconButton sx={{ marginRight: 10 }} onClick={() => prevMonth(date)}>
+          <NavigateBeforeIcon />
+        </IconButton>
         <Typography variant={isSmallScreen ? "h4" : "h2"}>
           {months[date.getMonth()]} {date.getFullYear()}
         </Typography>
-        <NavigateNextIcon sx={{ marginLeft: 10 }} />
+        <IconButton sx={{ marginLeft: 10 }} onClick={() => nextMonth(date)}>
+          <NavigateNextIcon />
+        </IconButton>
       </Grid>
       <Grid
         item
@@ -127,6 +153,7 @@ export default function Home(props) {
             accessToken={accessToken}
             openAddTransactionModal={openAddTransactionModal}
             setOpenAddTransactionModal={setOpenAddTransactionModal}
+            date={date}
           />
         </Box>
       </Grid>
@@ -141,7 +168,7 @@ export default function Home(props) {
       >
         <SpeedDialAction
           key="addTransaction"
-          icon={<FileCopyIcon />}
+          icon={<ReceiptIcon />}
           tooltipTitle="Add Transaction"
           onClick={() => {
             console.log("Open");
@@ -149,12 +176,12 @@ export default function Home(props) {
             handleSpeedDialClose();
           }}
         />
-        <SpeedDialAction
+        {/* <SpeedDialAction
           key="addCategory"
           icon={<FileCopyIcon />}
           tooltipTitle="Add Category"
           onClick={handleSpeedDialClose}
-        />
+        /> */}
       </SpeedDial>
     </Grid>
   );
