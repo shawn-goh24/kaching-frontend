@@ -30,6 +30,7 @@ export default function Home(props) {
   const [openSpeedDial, setOpenSpeedDial] = useState(false);
   const handleSpeedDialOpen = () => setOpenSpeedDial(true);
   const handleSpeedDialClose = () => setOpenSpeedDial(false);
+  const [openAddTransactionModal, setOpenAddTransactionModal] = useState(false);
 
   // check if screen is md or lower
   const isSmallScreen = useMediaQuery("(max-width: 960px)");
@@ -121,7 +122,12 @@ export default function Home(props) {
       <Grid item xs={12} md={6} sx={{ height: "100%" }}>
         <h2>Transactions</h2>
         <Box sx={{ height: "95%", overflowX: "scroll" }}>
-          <TransactionCol currUser={currUser} accessToken={accessToken} />
+          <TransactionCol
+            currUser={currUser}
+            accessToken={accessToken}
+            openAddTransactionModal={openAddTransactionModal}
+            setOpenAddTransactionModal={setOpenAddTransactionModal}
+          />
         </Box>
       </Grid>
       <Backdrop open={openSpeedDial} sx={{ zIndex: "999" }} />
@@ -137,7 +143,11 @@ export default function Home(props) {
           key="addTransaction"
           icon={<FileCopyIcon />}
           tooltipTitle="Add Transaction"
-          onClick={handleSpeedDialClose}
+          onClick={() => {
+            console.log("Open");
+            setOpenAddTransactionModal(true);
+            handleSpeedDialClose();
+          }}
         />
         <SpeedDialAction
           key="addCategory"

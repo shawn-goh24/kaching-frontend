@@ -4,8 +4,14 @@ import TransactionCard from "../../components/ui/TransactionCard";
 import axios from "axios";
 import EditTransaction from "../../components/form/EditTransaction";
 import DeleteTransaction from "../../components/form/DeleteTransaction";
+import TransactionModal from "../../components/form/TransactionModal";
 
-export default function TransactionCol({ currUser, accessToken }) {
+export default function TransactionCol({
+  currUser,
+  accessToken,
+  setOpenAddTransactionModal,
+  openAddTransactionModal,
+}) {
   const [transactions, setTransactions] = useState("");
   const [categories, setCategories] = useState("");
   const [openModal, setOpenModal] = useState(false);
@@ -70,6 +76,34 @@ export default function TransactionCol({ currUser, accessToken }) {
         }
       );
       console.log(editTransaction.data);
+      setTransactions(editTransaction.data);
+    }
+  };
+
+  const handleAddTransaction = async (date, name, amount, categoryId) => {
+    console.log("Add transaction");
+    console.log(date, name, amount, categoryId);
+    if (accessToken) {
+      let addTransaction = await axios.post(
+        `http://localhost:8080/transaction/add`,
+        {
+          userId: currUser.id,
+          name: name,
+          date: new Date(date),
+          amount: +amount,
+          categoryId: categoryId,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log(addTransaction.data);
+      setTransactions((oldTransaction) => [
+        ...oldTransaction,
+        addTransaction.data,
+      ]);
     }
   };
 
@@ -92,6 +126,7 @@ export default function TransactionCol({ currUser, accessToken }) {
         }
       );
       console.log(deleteTransaction.data);
+      setTransactions(deleteTransaction.data);
     }
   };
 
@@ -104,7 +139,11 @@ export default function TransactionCol({ currUser, accessToken }) {
   // list of transactions by user
   const TransactionList = () => {
     if (transactions) {
-      return transactions.map((transaction) => (
+      const transactionList = transactions.sort(function (a, b) {
+        return new Date(b.date) - new Date(a.date);
+      });
+
+      return transactionList.map((transaction) => (
         <TransactionCard
           key={transaction.id}
           transaction={transaction}
@@ -115,15 +154,37 @@ export default function TransactionCol({ currUser, accessToken }) {
     }
   };
 
+  useEffect(() => {
+    console.log("Inside useeffect");
+    TransactionList();
+  }, [transactions]);
+
   return (
     <Box>
       {TransactionList()}
-      <EditTransaction
+      {/* <EditTransaction
         openModal={openModal}
         setOpenModal={setOpenModal}
         editTransaction={editTransaction}
         handleEdit={handleEdit}
         categories={categories}
+      /> */}
+      <TransactionModal
+        title="Edit"
+        openModal={openModal}
+        setOpenModal={setOpenModal}
+        editTransaction={editTransaction}
+        handleEdit={handleEdit}
+        categories={categories}
+      />
+      <TransactionModal
+        title="Add"
+        openModal={openAddTransactionModal}
+        setOpenModal={setOpenAddTransactionModal}
+        editTransaction={null}
+        // handleEdit={handleEdit}
+        categories={categories}
+        handleAddTransaction={handleAddTransaction}
       />
       <DeleteTransaction
         transaction={deleteTransaction}
