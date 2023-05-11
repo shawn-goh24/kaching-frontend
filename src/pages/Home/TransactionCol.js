@@ -1,8 +1,7 @@
-import { Box, Container } from "@mui/material";
+import { Box } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import TransactionCard from "../../components/ui/TransactionCard";
 import axios from "axios";
-import EditTransaction from "../../components/form/EditTransaction";
 import DeleteTransaction from "../../components/form/DeleteTransaction";
 import TransactionModal from "../../components/form/TransactionModal";
 
@@ -43,7 +42,7 @@ export default function TransactionCol({
   const getCategoriesApi = async () => {
     if (accessToken) {
       let categories = await axios.get(
-        `http://localhost:8080/category/usercategories`,
+        `http://localhost:8080/user/category/${currUser.id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -82,7 +81,6 @@ export default function TransactionCol({
           },
         }
       );
-      console.log(editTransaction.data);
       setTransactions(editTransaction.data);
     }
   };
@@ -164,6 +162,7 @@ export default function TransactionCol({
   // list of transactions by user
   const TransactionList = () => {
     if (transactions) {
+      console.log(transactions);
       const transactionList = transactions.sort(function (a, b) {
         return new Date(b.date) - new Date(a.date);
       });
@@ -187,13 +186,6 @@ export default function TransactionCol({
   return (
     <Box>
       {TransactionList()}
-      {/* <EditTransaction
-        openModal={openModal}
-        setOpenModal={setOpenModal}
-        editTransaction={editTransaction}
-        handleEdit={handleEdit}
-        categories={categories}
-      /> */}
       <TransactionModal
         title="Edit"
         openModal={openModal}
@@ -207,7 +199,6 @@ export default function TransactionCol({
         openModal={openAddTransactionModal}
         setOpenModal={setOpenAddTransactionModal}
         editTransaction={null}
-        // handleEdit={handleEdit}
         categories={categories}
         handleAddTransaction={handleAddTransaction}
       />

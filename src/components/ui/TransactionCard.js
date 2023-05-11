@@ -45,28 +45,41 @@ export default function TransactionCard({
 
   return (
     <>
-      <Paper sx={{ maxWidth: "100%", mb: "15px", display: "flex" }}>
-        <div
-          style={{
-            height: "60px",
-            width: "3px",
-            backgroundColor: `${
-              transaction.Category
-                ? transaction.Category.color
-                : "argb(0,0,0,0)"
-            }`,
-          }}
-        />
-        <div
-          style={{
-            // width: "100%",
-            display: "flex",
-            // justifyItems: "space-between",
-            // alignItems: "center",
-          }}
-        >
-          <div style={{ marginLeft: "12px" }}>
-            <div style={{ display: "flex", alignItems: "center" }}>
+      <Paper
+        sx={{
+          maxWidth: "100%",
+          mb: "15px",
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <div style={{ display: "flex" }}>
+          <div
+            style={{
+              height: "60px",
+              width: "3px",
+
+              backgroundColor: `${
+                transaction.Category
+                  ? transaction.Category.color
+                  : "argb(0,0,0,0)"
+              }`,
+            }}
+          />
+          <div
+            style={{
+              marginLeft: "12px",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
               <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                 {transaction.name}
               </Typography>
@@ -76,25 +89,28 @@ export default function TransactionCard({
               {new Date(transaction.date).toLocaleDateString()}
             </Typography>
           </div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-            }}
+        </div>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <Typography>
+            {transaction.Category.incomeExpenseId === 1
+              ? `- ${currencyFormatter.format(transaction.amount)}`
+              : currencyFormatter.format(transaction.amount)}
+            {/* {currencyFormatter.format(transaction.amount)} */}
+          </Typography>
+          <IconButton
+            id="demo-positioned-button"
+            aria-controls={open ? "demo-positioned-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}
+            onClick={handleClick}
           >
-            <Typography>
-              {currencyFormatter.format(transaction.amount)}
-            </Typography>
-            <IconButton
-              id="demo-positioned-button"
-              aria-controls={open ? "demo-positioned-menu" : undefined}
-              aria-haspopup="true"
-              aria-expanded={open ? "true" : undefined}
-              onClick={handleClick}
-            >
-              <MoreVertIcon />
-            </IconButton>
-          </div>
+            <MoreVertIcon />
+          </IconButton>
         </div>
       </Paper>
       <Menu

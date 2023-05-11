@@ -39,12 +39,12 @@ export default function TransactionModal({
   };
 
   let categoryLists;
-  if (categories) {
-    categoryLists = categories.map((cat) => ({
+  if (categories.Categories) {
+    categoryLists = categories.Categories.map((cat) => ({
       // value is what we store
-      value: cat.Category.id,
+      value: cat.id,
       // label is what we display
-      label: cat.Category.name,
+      label: cat.name,
     }));
   }
 
