@@ -11,32 +11,34 @@ export default function TransactionCol({
   setOpenAddTransactionModal,
   openAddTransactionModal,
   date,
+  transactions,
+  setTransactions,
 }) {
-  const [transactions, setTransactions] = useState("");
+  // const [transactions, setTransactions] = useState("");
   const [categories, setCategories] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
   const [editTransaction, setEditTransaction] = useState("");
   const [deleteTransaction, setDeleteTransaction] = useState("");
 
-  // get all transactions from the user
-  const getUserTransactionsApi = async () => {
-    if (accessToken) {
-      const selectedDate = new Date(date);
-      const month = selectedDate.getMonth() + 1;
-      const year = selectedDate.getFullYear();
-      let user = await axios.get(
-        `http://localhost:8080/transaction/${currUser.id}/${month}/${year}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      console.log(user.data);
-      setTransactions(user.data);
-    }
-  };
+  // // get all transactions from the user
+  // const getUserTransactionsApi = async () => {
+  //   if (accessToken) {
+  //     const selectedDate = new Date(date);
+  //     const month = selectedDate.getMonth() + 1;
+  //     const year = selectedDate.getFullYear();
+  //     let user = await axios.get(
+  //       `http://localhost:8080/transaction/${currUser.id}/${month}/${year}`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${accessToken}`,
+  //         },
+  //       }
+  //     );
+  //     // console.log(user.data);
+  //     setTransactions(user.data);
+  //   }
+  // };
 
   // get all categories by user
   const getCategoriesApi = async () => {
@@ -49,7 +51,7 @@ export default function TransactionCol({
           },
         }
       );
-      console.log(categories.data);
+      // console.log(categories.data);
       setCategories(categories.data);
     }
   };
@@ -155,14 +157,14 @@ export default function TransactionCol({
 
   // useeffect to get all data from database
   useEffect(() => {
-    getUserTransactionsApi();
+    // getUserTransactionsApi();
     getCategoriesApi();
   }, [accessToken, date]);
 
   // list of transactions by user
   const TransactionList = () => {
     if (transactions) {
-      console.log(transactions);
+      // console.log(transactions);
       const transactionList = transactions.sort(function (a, b) {
         return new Date(b.date) - new Date(a.date);
       });
@@ -179,7 +181,7 @@ export default function TransactionCol({
   };
 
   useEffect(() => {
-    console.log("Inside useeffect");
+    // console.log("Inside useeffect");
     TransactionList();
   }, [transactions]);
 
