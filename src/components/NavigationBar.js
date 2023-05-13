@@ -2,6 +2,7 @@ import React from "react";
 import logo from "../assets/logo.svg";
 import { Navbar, Button, Avatar } from "@nextui-org/react";
 import { useAuth0 } from "@auth0/auth0-react";
+import UserAvatar from "./UserAvatar";
 
 export default function NavigationBar() {
   const { loginWithRedirect, logout, isAuthenticated } = useAuth0();
@@ -18,26 +19,7 @@ export default function NavigationBar() {
 
       {isAuthenticated ? (
         <Navbar.Content>
-          <Navbar.Item>
-            <Avatar
-              size="md"
-              text="User"
-              textColor="white"
-              color="gradient"
-              bordered
-            />
-          </Navbar.Item>
-          <Navbar.Item>
-            <Button
-              auto
-              flat
-              onClick={() =>
-                logout({ logoutParams: { returnTo: window.location.origin } })
-              }
-            >
-              Logout
-            </Button>
-          </Navbar.Item>
+          <UserAvatar />
         </Navbar.Content>
       ) : (
         <Navbar.Content>

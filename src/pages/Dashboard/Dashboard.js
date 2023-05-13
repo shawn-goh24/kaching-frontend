@@ -2,11 +2,11 @@ import React from "react";
 import { useParams } from "react-router-dom";
 
 export default function Dashboard() {
-  const { id } = useParams();
+  const { name } = useParams();
   return (
     <>
       <h1>Dashboard</h1>
-      <h3>User: {id}</h3>
+      <h3>User: {name}</h3>
     </>
   );
 }

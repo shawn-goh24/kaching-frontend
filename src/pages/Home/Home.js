@@ -96,7 +96,7 @@ export default function Home(props) {
           },
         }
       );
-      console.log(user.data);
+      // console.log(user.data);
       // console.log("user.data");
       setBudgets(user.data);
     }
@@ -196,7 +196,6 @@ export default function Home(props) {
           justifyContent: "center",
           alignItems: "center",
           height: "100px",
-          border: "1px solid red",
         }}
       >
         <IconButton sx={{ marginRight: 10 }} onClick={() => prevMonth(date)}>
