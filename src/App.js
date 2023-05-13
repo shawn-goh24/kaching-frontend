@@ -8,6 +8,7 @@ import NavigationBar from "./components/NavigationBar";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import SideBar from "./pages/Dashboard/SideBar";
 
 function App() {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
@@ -78,21 +79,30 @@ function App() {
   };
 
   return (
-    <div>
+    <>
       <Routes>
         <Route path="/" element={<NavigationBar />} />
         <Route path="/user/home" element={<NavigationBar />} />
       </Routes>
-      <Routes>
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/user">
-          <Route path="home" element={<Home />} />
-          <Route path="dashboard/:name" element={<Dashboard />} />
-          <Route path="settings" element={<Settings />} />
-        </Route>
-        <Route path="*" element={<Error />} />
-      </Routes>
-    </div>
+      <div
+        style={{
+          display: "flex",
+        }}
+      >
+        <Routes>
+          <Route path="/user/dashboard" element={<SideBar />} />
+        </Routes>
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/user">
+            <Route path="home" element={<Home />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="settings" element={<Settings />} />
+          </Route>
+          <Route path="*" element={<Error />} />
+        </Routes>
+      </div>
+    </>
   );
 }
 

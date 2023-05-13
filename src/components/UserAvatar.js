@@ -8,7 +8,7 @@ export default function UserAvatar({}) {
 
   const handleEvents = (e) => {
     if (e === "dashboard") {
-      navigate(`/user/dashboard/${user.given_name}`);
+      navigate("/user/dashboard");
     } else if (e === "settings") {
       console.log("Navigate to settings");
     } else {

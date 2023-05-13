@@ -180,7 +180,7 @@ export default function Home(props) {
   return (
     <Grid
       container
-      rowGap={5}
+      rowGap={1}
       columnGap={6}
       sx={{
         display: "flex",
