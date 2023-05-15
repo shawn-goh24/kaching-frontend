@@ -105,3 +105,73 @@ export const getYtdTotalIncome = (transactions) => {
   }, 0);
   return total;
 };
+
+/**
+ * Function that gets total amount by month
+ * @params {object} transactions
+ * @returns {object}
+ */
+export const getTransactionsByMonth = (transactions, incomeExpenseId) => {
+  const expensesArray = [];
+  const date = new Date().getMonth();
+  if (incomeExpenseId === 1) {
+    for (let month = 0; month <= 11; month++) {
+      const totalWithinMonth = transactions.reduce((acc, currentValue) => {
+        const date = new Date(currentValue.date).getMonth();
+        if (date === month && currentValue.Category.IncomeExpenseId === 1) {
+          return acc + +currentValue.amount;
+        }
+        return acc + 0;
+      }, 0);
+      if (totalWithinMonth === 0) {
+        if (month < date) {
+          expensesArray.push(0);
+        } else {
+          expensesArray.push(null);
+        }
+      } else {
+        expensesArray.push(totalWithinMonth);
+      }
+    }
+
+    return expensesArray;
+  } else {
+    for (let month = 0; month <= 11; month++) {
+      const totalWithinMonth = transactions.reduce((acc, currentValue) => {
+        const date = new Date(currentValue.date).getMonth();
+        if (date === month && currentValue.Category.IncomeExpenseId === 2) {
+          return acc + +currentValue.amount;
+        }
+        return acc + 0;
+      }, 0);
+      if (totalWithinMonth === 0) {
+        if (month < date) {
+          expensesArray.push(0);
+        } else {
+          expensesArray.push(null);
+        }
+      } else {
+        expensesArray.push(totalWithinMonth);
+      }
+    }
+
+    return expensesArray;
+  }
+};
+
+/**
+ * Function that get top category spends
+ * @param {*} transactions
+ * @returns {object}
+ */
+export const getTopExpensesByCat = (transactions) => {
+  const treemapArray = [];
+  const categories = combineExpenseCategoryAmounts(transactions);
+  for (const category of categories) {
+    const dataMap = { x: null, y: null };
+    dataMap.x = category[0];
+    dataMap.y = +category[1];
+    treemapArray.push(dataMap);
+  }
+  return treemapArray;
+};

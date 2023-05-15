@@ -10,8 +10,10 @@ import Top10Expenses from "./Top10Expenses";
 import axios from "axios";
 import {
   currencyFormatter,
+  getTransactionsByMonth,
   getYtdTotalExpense,
   getYtdTotalIncome,
+  getTopExpensesByCat,
 } from "../../utils/utils";
 
 export default function Dashboard({ accessToken, currUser }) {
@@ -66,6 +68,10 @@ export default function Dashboard({ accessToken, currUser }) {
     );
   };
 
+  if (ytdTransactions) {
+    getTopExpensesByCat(ytdTransactions);
+  }
+
   return (
     <Box
       sx={{
@@ -91,10 +97,29 @@ export default function Dashboard({ accessToken, currUser }) {
       </Grid>
       <Grid container spacing={2} my={1}>
         <Grid item xs={6}>
-          {MockItem2(<YtdLineChart />)}
+          {MockItem2(
+            <YtdLineChart
+              expenseLine={
+                ytdTransactions
+                  ? getTransactionsByMonth(ytdTransactions, 1)
+                  : []
+              }
+              incomeLine={
+                ytdTransactions
+                  ? getTransactionsByMonth(ytdTransactions, 2)
+                  : []
+              }
+            />
+          )}
         </Grid>
         <Grid item xs={6}>
-          {MockItem2(<Top10Expenses />)}
+          {MockItem2(
+            <Top10Expenses
+              topExpensesByCat={
+                ytdTransactions ? getTopExpensesByCat(ytdTransactions) : [{}]
+              }
+            />
+          )}
         </Grid>
       </Grid>
       <Grid container spacing={2} my={1}>

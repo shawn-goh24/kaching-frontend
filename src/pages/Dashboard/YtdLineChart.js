@@ -1,16 +1,16 @@
 import React from "react";
 import ReactApexChart from "react-apexcharts";
 
-export default function YtdLineChart() {
+export default function YtdLineChart({ expenseLine, incomeLine }) {
   let options = {
     series: [
       {
         name: "Income",
-        data: [28, 29, 33, 36, 32, 32, 33, 36, 32, 32, 33],
+        data: incomeLine,
       },
       {
         name: "Expense",
-        data: [12, 11, 14, 18, 17, 13],
+        data: expenseLine,
       },
     ],
     chart: {
@@ -30,7 +30,7 @@ export default function YtdLineChart() {
     },
     colors: ["#77B6EA", "#545454"],
     dataLabels: {
-      enabled: true,
+      enabled: false,
     },
     stroke: {
       curve: "smooth",
@@ -72,8 +72,8 @@ export default function YtdLineChart() {
       title: {
         text: "Amount",
       },
-      min: 5,
-      max: 40,
+      // min: 5,
+      // max: 40,
     },
     legend: {
       position: "top",
