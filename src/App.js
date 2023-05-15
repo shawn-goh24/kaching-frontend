@@ -24,7 +24,7 @@ function App() {
   }, [isAuthenticated]);
 
   useEffect(() => {
-    getUserTransactionsApi();
+    // getUserTransactionsApi();
     getCategoriesApi();
   }, [accessToken]);
 
@@ -47,21 +47,21 @@ function App() {
     setCurrUser(request.data);
   };
 
-  // get all user transactions
-  const getUserTransactionsApi = async () => {
-    const currentYear = new Date().getFullYear();
-    if (accessToken) {
-      let user = await axios.get(
-        `http://localhost:8080/transaction/${currUser.id}/${currentYear}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      setTransactions(user.data);
-    }
-  };
+  // // get all user transactions
+  // const getUserTransactionsApi = async () => {
+  //   const currentYear = new Date().getFullYear();
+  //   if (accessToken) {
+  //     let user = await axios.get(
+  //       `http://localhost:8080/transaction/${currUser.id}/${currentYear}`,
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${accessToken}`,
+  //         },
+  //       }
+  //     );
+  //     setTransactions(user.data);
+  //   }
+  // };
 
   // get categories
   const getCategoriesApi = async () => {
@@ -96,7 +96,12 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/user">
             <Route path="home" element={<Home />} />
-            <Route path="dashboard" element={<Dashboard />} />
+            <Route
+              path="dashboard"
+              element={
+                <Dashboard accessToken={accessToken} currUser={currUser} />
+              }
+            />
             <Route path="settings" element={<Settings />} />
           </Route>
           <Route path="*" element={<Error />} />

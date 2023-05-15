@@ -86,3 +86,22 @@ export const getIncomeCategoryColor = (transactions) => {
   }, new Map());
   return categoryColorSet;
 };
+
+export const getYtdTotalExpense = (transactions) => {
+  const total = transactions.reduce((acc, i) => {
+    if (i.Category.IncomeExpenseId === 1) {
+      return acc + +i.amount;
+    }
+    return acc + 0;
+  }, 0);
+  return total;
+};
+export const getYtdTotalIncome = (transactions) => {
+  const total = transactions.reduce((acc, i) => {
+    if (i.Category.IncomeExpenseId === 2) {
+      return acc + +i.amount;
+    }
+    return acc + 0;
+  }, 0);
+  return total;
+};
