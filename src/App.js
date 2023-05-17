@@ -84,6 +84,9 @@ function App() {
         <Route path="/" element={<NavigationBar />} />
         <Route path="/user/home" element={<NavigationBar />} />
       </Routes>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+      </Routes>
       <div
         style={{
           display: "flex",
@@ -91,9 +94,9 @@ function App() {
       >
         <Routes>
           <Route path="/user/dashboard" element={<SideBar />} />
+          <Route path="/user/settings" element={<SideBar />} />
         </Routes>
         <Routes>
-          <Route path="/" element={<LandingPage />} />
           <Route path="/user">
             <Route path="home" element={<Home />} />
             <Route
@@ -102,7 +105,12 @@ function App() {
                 <Dashboard accessToken={accessToken} currUser={currUser} />
               }
             />
-            <Route path="settings" element={<Settings />} />
+            <Route
+              path="settings"
+              element={
+                <Settings currUser={currUser} accessToken={accessToken} />
+              }
+            />
           </Route>
           <Route path="*" element={<Error />} />
         </Routes>

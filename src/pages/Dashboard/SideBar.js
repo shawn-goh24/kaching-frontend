@@ -19,6 +19,12 @@ export default function SideBar() {
   const goToHome = () => {
     navigate("/user/home");
   };
+  const goToSettings = () => {
+    navigate("/user/settings");
+  };
+  const goToDashboard = () => {
+    navigate("/user/dashboard");
+  };
 
   return (
     <>
@@ -32,6 +38,7 @@ export default function SideBar() {
           alignItems: "center",
           // transition: "width 200ms ease-in-out",
           backgroundColor: "#D2F2FF",
+          position: "fixed",
         }}
       >
         <Box display="flex" flexDirection="column" alignItems="center">
@@ -52,14 +59,14 @@ export default function SideBar() {
             </IconButton>
           </Tooltip>
           <Tooltip title="Dashboard" placement="right">
-            <IconButton>
+            <IconButton onClick={goToDashboard}>
               <DashboardIcon />
             </IconButton>
           </Tooltip>
           <Divider />
           <Tooltip title="Profile Settings" placement="right">
             <IconButton>
-              <SettingsIcon />
+              <SettingsIcon onClick={goToSettings} />
             </IconButton>
           </Tooltip>
         </Box>
@@ -78,7 +85,13 @@ export default function SideBar() {
         flexDirection="column"
         alignItems="center"
         justifyContent="space-between"
-        sx={{ height: "100vh", width: "450px", backgroundColor: "#D2F2FF" }}
+        sx={{
+          height: "100vh",
+          width: `${isSmallScreen ? "70%" : "450px"}`,
+          backgroundColor: "#D2F2FF",
+          position: "absolute",
+          zIndex: "99",
+        }}
       >
         <Box>
           <Box mt={10}>
@@ -99,13 +112,21 @@ export default function SideBar() {
               >
                 Home
               </Button>
-              <Button light icon={<DashboardIcon sx={{ mr: "10px" }} />}>
+              <Button
+                light
+                icon={<DashboardIcon sx={{ mr: "10px" }} />}
+                onPress={goToDashboard}
+              >
                 Dashboard
               </Button>
             </Box>
             <Box>
               <Text h3>Settings</Text>
-              <Button light icon={<SettingsIcon sx={{ mr: "10px" }} />}>
+              <Button
+                light
+                icon={<SettingsIcon sx={{ mr: "10px" }} />}
+                onPress={goToSettings}
+              >
                 Profile
               </Button>
             </Box>

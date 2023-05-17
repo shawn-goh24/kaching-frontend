@@ -45,7 +45,6 @@ export default function Dashboard({ accessToken, currUser }) {
         }
       );
       setYtdTransactions(user.data);
-      console.log("YTD Transactions", user.data);
     }
   };
 
@@ -67,17 +66,55 @@ export default function Dashboard({ accessToken, currUser }) {
       </Card>
     );
   };
+  const MockItem3 = (chart) => {
+    return (
+      <Card>
+        <Card.Header>Recent 5 Transactions</Card.Header>
+        <Card.Body>{chart}</Card.Body>
+      </Card>
+    );
+  };
 
-  if (ytdTransactions) {
-    getTopExpensesByCat(ytdTransactions);
-  }
+  // if (ytdTransactions) {
+  //   getTopExpensesByCat(ytdTransactions);
+  // }
+
+  const recentTransactions = () => {
+    return (
+      ytdTransactions &&
+      ytdTransactions.map((transaction, index) => {
+        if (index < 5) {
+          return (
+            <Card
+              key={transaction.id}
+              variant="bordered"
+              css={{ margin: 3, width: "95%" }}
+            >
+              <Card.Body
+                css={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                }}
+              >
+                <div>{transaction.name}</div>
+                <div style={{ marginRight: "50px" }}>
+                  {currencyFormatter.format(transaction.amount)}
+                </div>
+              </Card.Body>
+            </Card>
+          );
+        }
+      })
+    );
+  };
 
   return (
     <Box
       sx={{
         width: "100vw",
         marginY: "2%",
-        marginX: "10%",
+        marginX: "15%",
       }}
     >
       <Box>
@@ -85,18 +122,18 @@ export default function Dashboard({ accessToken, currUser }) {
         <Typography variant="subtitle">Welcome to your dashboard</Typography>
       </Box>
       <Grid container spacing={2} my={1}>
-        <Grid item xs={4}>
+        <Grid item xs={12} sm={4}>
           {MockItem("YTD Income", totalYtdIncome, <LocalAtmIcon />)}
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={12} sm={4}>
           {MockItem("YTD Expense", totalYtdExpense, <PaymentIcon />)}
         </Grid>
-        <Grid item xs={4} sx={{ backgroundColor: "yellow" }}>
+        <Grid item xs={12} sm={4} sx={{ backgroundColor: "yellow" }}>
           {MockItem("Bills", 3, <NotificationsActiveIcon />)}
         </Grid>
       </Grid>
       <Grid container spacing={2} my={1}>
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           {MockItem2(
             <YtdLineChart
               expenseLine={
@@ -112,21 +149,21 @@ export default function Dashboard({ accessToken, currUser }) {
             />
           )}
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={12} sm={6}>
           {MockItem2(
             <Top10Expenses
               topExpensesByCat={
-                ytdTransactions ? getTopExpensesByCat(ytdTransactions) : [{}]
+                ytdTransactions ? getTopExpensesByCat(ytdTransactions) : []
               }
             />
           )}
         </Grid>
       </Grid>
       <Grid container spacing={2} my={1}>
-        <Grid item xs={7}>
-          {MockItem("Recent 10 Transactions")}
+        <Grid item xs={12} sm={7}>
+          {MockItem3(recentTransactions())}
         </Grid>
-        <Grid item xs={5}>
+        <Grid item xs={12} sm={5} sx={{ backgroundColor: "yellow" }}>
           {MockItem("Bill Reminders")}
         </Grid>
       </Grid>
