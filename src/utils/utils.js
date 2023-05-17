@@ -1,11 +1,12 @@
 /**
  * Function to convert currency to SGD - Will edit to make change for all currency in the future
  */
-export const currencyFormatter = new Intl.NumberFormat(undefined, {
-  currency: "sgd",
-  style: "currency",
-  minimumFractionDigits: 0,
-});
+export const currencyFormatter = (currency) =>
+  new Intl.NumberFormat(undefined, {
+    currency: currency ? currency : "sgd",
+    style: "currency",
+    minimumFractionDigits: 0,
+  });
 
 /**
  * Function that converts date format to yyyy/mmm/dd

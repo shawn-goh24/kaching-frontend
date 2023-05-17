@@ -14,6 +14,7 @@ export default function BudgetBar({
   barPercentage,
   handleEditModal,
   handleDeleteModal,
+  userCategories,
 }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -49,10 +50,10 @@ export default function BudgetBar({
             <Typography
               sx={{ color: `${barPercentage > 100 ? "red" : "black"}` }}
             >
-              {currencyFormatter.format(amount)}
+              {currencyFormatter(userCategories.mainCurrency).format(amount)}
             </Typography>
             <span style={{ fontSize: 12, color: "grey", marginLeft: "4px" }}>
-              / {currencyFormatter.format(max)}
+              / {currencyFormatter(userCategories.mainCurrency).format(max)}
             </span>
           </div>
         </Box>

@@ -53,7 +53,7 @@ export default function Dashboard({ accessToken, currUser }) {
       <Card>
         <Card.Body>
           {icon}
-          {currencyFormatter.format(amount)} <br />
+          {currencyFormatter(currUser.mainCurrency).format(amount)} <br />
           {text}
         </Card.Body>
       </Card>
@@ -99,7 +99,9 @@ export default function Dashboard({ accessToken, currUser }) {
               >
                 <div>{transaction.name}</div>
                 <div style={{ marginRight: "50px" }}>
-                  {currencyFormatter.format(transaction.amount)}
+                  {currencyFormatter(currUser.mainCurrency).format(
+                    transaction.amount
+                  )}
                 </div>
               </Card.Body>
             </Card>

@@ -10,7 +10,7 @@ export default function UserAvatar({}) {
     if (e === "dashboard") {
       navigate("/user/dashboard");
     } else if (e === "settings") {
-      console.log("Navigate to settings");
+      navigate("/user/settings");
     } else {
       logout({ logoutParams: { returnTo: window.location.origin } });
     }

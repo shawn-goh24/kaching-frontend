@@ -175,6 +175,7 @@ export default function TransactionCol({
           transaction={transaction}
           openTransactionModal={openTransactionModal}
           openDeleteModal={openDeleteModal}
+          currUser={currUser}
         />
       ));
     }

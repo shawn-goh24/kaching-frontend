@@ -117,13 +117,13 @@ export default function Home(props) {
     }
   };
 
-  const handleBudget = async (userId, categoryId, date, amount) => {
+  const handleBudget = async (userId, category, date, amount) => {
     if (accessToken) {
       let newBudget = await axios.post(
         `http://localhost:8080/budget/add`,
         {
           userId: userId,
-          categoryId: categoryId,
+          categoryId: category.value,
           amount: amount,
           date: date,
         },
@@ -238,7 +238,7 @@ export default function Home(props) {
           accessToken={accessToken}
         />
         <Box sx={{ display: "flex", justifyContent: "center", mt: "20px" }}>
-          <Button onClick={() => setBudgetModal(true)}>Add new category</Button>
+          <Button onClick={() => setBudgetModal(true)}>Add new budget</Button>
         </Box>
       </Grid>
       <Grid item xs={12} md={6} sx={{ height: "100%" }}>

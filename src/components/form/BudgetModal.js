@@ -98,7 +98,7 @@ export default function CategoryModal({
             closeHandler();
             handleBudget(
               userCategories.id,
-              selectedCategories.value,
+              selectedCategories,
               dateRef.current.value,
               amountRef.current.value
             );

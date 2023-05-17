@@ -16,6 +16,7 @@ export default function TransactionCard({
   transaction,
   openTransactionModal,
   openDeleteModal,
+  currUser,
 }) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -98,9 +99,13 @@ export default function TransactionCard({
         >
           <Typography>
             {transaction.Category.incomeExpenseId === 1
-              ? `- ${currencyFormatter.format(transaction.amount)}`
-              : currencyFormatter.format(transaction.amount)}
-            {/* {currencyFormatter.format(transaction.amount)} */}
+              ? `- ${currencyFormatter(currUser.mainCurrency).format(
+                  transaction.amount
+                )}`
+              : currencyFormatter(currUser.mainCurrency).format(
+                  transaction.amount
+                )}
+            {/* {currencyFormatter('sgd').format(transaction.amount)} */}
           </Typography>
           <IconButton
             id="demo-positioned-button"
