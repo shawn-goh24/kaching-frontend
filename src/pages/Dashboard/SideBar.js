@@ -1,18 +1,22 @@
 import { Box, Divider, IconButton, Tooltip } from "@mui/material";
 import useMediaQuery from "../../hooks/useMediaQuery";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import logoImg from "../../assets/logoImg.svg";
 import HomeIcon from "@mui/icons-material/Home";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import SettingsIcon from "@mui/icons-material/Settings";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
-import { Avatar, Button, Text } from "@nextui-org/react";
+import { Avatar, Badge, Button, Text } from "@nextui-org/react";
 import { useNavigate } from "react-router-dom";
+import EmailIcon from "@mui/icons-material/Email";
+import axios from "axios";
 
-export default function SideBar() {
+export default function SideBar({ currUser, accessToken, notifications }) {
   const isSmallScreen = useMediaQuery("(max-width: 1000px)");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isInvisible, setIsInvisible] = useState(false);
+  const [badgeCount, setBadgeCount] = useState(0);
 
   const navigate = useNavigate();
 
@@ -25,6 +29,33 @@ export default function SideBar() {
   const goToDashboard = () => {
     navigate("/user/dashboard");
   };
+  const goToNotification = () => {
+    navigate("/user/notifications");
+  };
+
+  const getNotificationsApi = () => {
+    if (notifications) {
+      let count = 0;
+      if (notifications.length > 0) {
+        for (let notification of notifications) {
+          if (!notification.isRead) {
+            count++;
+          }
+        }
+      }
+      setBadgeCount(count);
+
+      if (count > 0) {
+        setIsInvisible(false);
+      } else {
+        setIsInvisible(true);
+      }
+    }
+  };
+
+  useEffect(() => {
+    getNotificationsApi();
+  }, [notifications]);
 
   return (
     <>
@@ -63,10 +94,22 @@ export default function SideBar() {
               <DashboardIcon />
             </IconButton>
           </Tooltip>
+          <Badge
+            color="error"
+            content={badgeCount}
+            isInvisible={isInvisible}
+            placement="bottom-right"
+          >
+            <Tooltip title="Notifications" placement="right">
+              <IconButton onClick={goToNotification}>
+                <EmailIcon />
+              </IconButton>
+            </Tooltip>
+          </Badge>
           <Divider />
           <Tooltip title="Profile Settings" placement="right">
-            <IconButton>
-              <SettingsIcon onClick={goToSettings} />
+            <IconButton onClick={goToSettings}>
+              <SettingsIcon />
             </IconButton>
           </Tooltip>
         </Box>
@@ -118,6 +161,13 @@ export default function SideBar() {
                 onPress={goToDashboard}
               >
                 Dashboard
+              </Button>
+              <Button
+                light
+                icon={<EmailIcon sx={{ mr: "10px" }} />}
+                onPress={goToNotification}
+              >
+                Notifications
               </Button>
             </Box>
             <Box>

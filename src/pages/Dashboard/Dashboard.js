@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box, IconButton, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { Card } from "@nextui-org/react";
 import React, { useEffect, useState } from "react";
@@ -8,6 +8,8 @@ import NotificationsActiveIcon from "@mui/icons-material/NotificationsActive";
 import YtdLineChart from "./YtdLineChart";
 import Top10Expenses from "./Top10Expenses";
 import axios from "axios";
+import BillModal from "../../components/form/BillModal";
+import AddIcon from "@mui/icons-material/Add";
 import {
   currencyFormatter,
   getTransactionsByMonth,
@@ -15,14 +17,21 @@ import {
   getYtdTotalIncome,
   getTopExpensesByCat,
 } from "../../utils/utils";
+import BillCard from "./BillCard";
 
 export default function Dashboard({ accessToken, currUser }) {
   const [ytdTransactions, setYtdTransactions] = useState();
   const [totalYtdExpense, setTotalYtdExpense] = useState(0);
   const [totalYtdIncome, setTotalYtdIncome] = useState(0);
+  const [billReminders, setBillReminders] = useState();
+  const [addBillModal, setAddBillModal] = useState(false);
+  const [editBillModal, setEditBillModal] = useState(false);
+
+  const [tmp, setTmp] = useState();
 
   useEffect(() => {
     getYtdTransactions();
+    getBillReminderApi();
   }, [accessToken]);
 
   useEffect(() => {
@@ -75,40 +84,122 @@ export default function Dashboard({ accessToken, currUser }) {
     );
   };
 
-  // if (ytdTransactions) {
-  //   getTopExpensesByCat(ytdTransactions);
-  // }
-
   const recentTransactions = () => {
-    return (
-      ytdTransactions &&
-      ytdTransactions.map((transaction, index) => {
-        if (index < 5) {
-          return (
-            <Card
-              key={transaction.id}
-              variant="bordered"
-              css={{ margin: 3, width: "95%" }}
-            >
-              <Card.Body
-                css={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
+    return ytdTransactions
+      ? ytdTransactions.map((transaction, index) => {
+          if (index < 5) {
+            return (
+              <Card
+                key={transaction.id}
+                variant="bordered"
+                css={{ margin: 3, width: "95%" }}
               >
-                <div>{transaction.name}</div>
-                <div style={{ marginRight: "50px" }}>
-                  {currencyFormatter(currUser.mainCurrency).format(
-                    transaction.amount
-                  )}
-                </div>
-              </Card.Body>
-            </Card>
-          );
+                <Card.Body
+                  css={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <div>{transaction.name}</div>
+                  <div style={{ marginRight: "50px" }}>
+                    {currencyFormatter(currUser.mainCurrency).format(
+                      transaction.amount
+                    )}
+                  </div>
+                </Card.Body>
+              </Card>
+            );
+          }
+        })
+      : undefined;
+  };
+  const billList = () => {
+    return billReminders.map((bill) => {
+      return (
+        <BillCard
+          key={bill.id}
+          bill={bill}
+          handleDelete={handleDelete}
+          handleOpenEditBillModal={handleOpenEditBillModal}
+        />
+      );
+    });
+  };
+
+  const getBillReminderApi = async () => {
+    if (accessToken) {
+      const response = await axios.get(
+        `http://localhost:8080/bill/${currUser.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
-      })
-    );
+      );
+
+      console.log("Bill reminders", response.data);
+      setBillReminders(response.data);
+    }
+  };
+
+  const handleDelete = async (billId) => {
+    if (accessToken) {
+      const response = await axios.delete(
+        `http://localhost:8080/bill/${currUser.id}/${billId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      console.log("Bill reminders", response.data);
+      setBillReminders(response.data);
+    }
+  };
+  const handleOpenEditBillModal = (bill) => {
+    setTmp(bill);
+    setEditBillModal(true);
+  };
+  const handleEdit = async (billId, name, date) => {
+    if (accessToken) {
+      const response = await axios.put(
+        `http://localhost:8080/bill/${currUser.id}/${billId}`,
+        {
+          name: name,
+          amount: 0,
+          date: date,
+          interval: "Monthly",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      setBillReminders(response.data);
+    }
+  };
+  const handleAdd = async (name, date) => {
+    if (accessToken) {
+      const response = await axios.post(
+        `http://localhost:8080/bill/new`,
+        {
+          userId: currUser.id,
+          name: name,
+          amount: 0,
+          date: date,
+          interval: "Monthly",
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      setBillReminders([...billReminders, response.data]);
+    }
   };
 
   return (
@@ -130,8 +221,15 @@ export default function Dashboard({ accessToken, currUser }) {
         <Grid item xs={12} sm={4}>
           {MockItem("YTD Expense", totalYtdExpense, <PaymentIcon />)}
         </Grid>
-        <Grid item xs={12} sm={4} sx={{ backgroundColor: "yellow" }}>
-          {MockItem("Bills", 3, <NotificationsActiveIcon />)}
+        <Grid item xs={12} sm={4}>
+          <Card>
+            <Card.Body>
+              <NotificationsActiveIcon />
+              {billReminders ? billReminders.length : undefined}
+              <br />
+              Bills
+            </Card.Body>
+          </Card>
         </Grid>
       </Grid>
       <Grid container spacing={2} my={1}>
@@ -165,10 +263,35 @@ export default function Dashboard({ accessToken, currUser }) {
         <Grid item xs={12} sm={7}>
           {MockItem3(recentTransactions())}
         </Grid>
-        <Grid item xs={12} sm={5} sx={{ backgroundColor: "yellow" }}>
-          {MockItem("Bill Reminders")}
+        <Grid item xs={12} sm={5}>
+          <Card css={{ height: "100%" }}>
+            <Card.Header>
+              Bill Reminders
+              <IconButton onClick={() => setAddBillModal(true)}>
+                <AddIcon />
+              </IconButton>
+            </Card.Header>
+            <Card.Body
+              css={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
+            >
+              {billReminders ? billList() : undefined}
+            </Card.Body>
+          </Card>
         </Grid>
       </Grid>
+      <BillModal
+        title="Add"
+        billModal={addBillModal}
+        setBillModal={setAddBillModal}
+        handleAdd={handleAdd}
+      />
+      <BillModal
+        title="Edit"
+        billModal={editBillModal}
+        setBillModal={setEditBillModal}
+        bill={tmp}
+        handleEdit={handleEdit}
+      />
     </Box>
   );
 }

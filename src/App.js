@@ -9,6 +9,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import SideBar from "./pages/Dashboard/SideBar";
+import Notifications from "./pages/Notifications/Notifications";
 
 function App() {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
@@ -16,6 +17,7 @@ function App() {
   const [accessToken, setAccessToken] = useState("");
   const [transactions, setTransactions] = useState("");
   const [userCategories, setUserCategories] = useState("");
+  const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
     if (isAuthenticated && user) {
@@ -24,8 +26,8 @@ function App() {
   }, [isAuthenticated]);
 
   useEffect(() => {
-    // getUserTransactionsApi();
     getCategoriesApi();
+    getNotificationsApi();
   }, [accessToken]);
 
   // get user
@@ -47,21 +49,19 @@ function App() {
     setCurrUser(request.data);
   };
 
-  // // get all user transactions
-  // const getUserTransactionsApi = async () => {
-  //   const currentYear = new Date().getFullYear();
-  //   if (accessToken) {
-  //     let user = await axios.get(
-  //       `http://localhost:8080/transaction/${currUser.id}/${currentYear}`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${accessToken}`,
-  //         },
-  //       }
-  //     );
-  //     setTransactions(user.data);
-  //   }
-  // };
+  const getNotificationsApi = async () => {
+    if (accessToken) {
+      const allNotification = await axios.get(
+        `http://localhost:8080/notification/${currUser.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      setNotifications(allNotification.data);
+    }
+  };
 
   // get categories
   const getCategoriesApi = async () => {
@@ -81,20 +81,54 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/" element={<NavigationBar />} />
-        <Route path="/user/home" element={<NavigationBar />} />
+        <Route
+          path="/"
+          element={
+            <NavigationBar accessToken={accessToken} currUser={currUser} />
+          }
+        />
+        <Route
+          path="/user/home"
+          element={
+            <NavigationBar accessToken={accessToken} currUser={currUser} />
+          }
+        />
       </Routes>
       <Routes>
         <Route path="/" element={<LandingPage />} />
       </Routes>
-      <div
-        style={{
-          display: "flex",
-        }}
-      >
+      <div style={{ display: "flex" }}>
         <Routes>
-          <Route path="/user/dashboard" element={<SideBar />} />
-          <Route path="/user/settings" element={<SideBar />} />
+          <Route
+            path="/user/dashboard"
+            element={
+              <SideBar
+                accessToken={accessToken}
+                currUser={currUser}
+                notifications={notifications}
+              />
+            }
+          />
+          <Route
+            path="/user/settings"
+            element={
+              <SideBar
+                accessToken={accessToken}
+                currUser={currUser}
+                notifications={notifications}
+              />
+            }
+          />
+          <Route
+            path="/user/notifications"
+            element={
+              <SideBar
+                accessToken={accessToken}
+                currUser={currUser}
+                notifications={notifications}
+              />
+            }
+          />
         </Routes>
         <Routes>
           <Route path="/user">
@@ -111,6 +145,17 @@ function App() {
                 <Settings currUser={currUser} accessToken={accessToken} />
               }
             />
+            <Route
+              path="notifications"
+              element={
+                <Notifications
+                  currUser={currUser}
+                  accessToken={accessToken}
+                  notifications={notifications}
+                  setNotifications={setNotifications}
+                />
+              }
+            />
           </Route>
           <Route path="*" element={<Error />} />
         </Routes>
@@ -120,3 +165,29 @@ function App() {
 }
 
 export default App;
+
+{
+  /* <>
+      <Routes>
+        <Route path="/" element={<NavigationBar />}>
+          <Route path="" element={<LandingPage />} />
+          <Route path="home" element={<Home />} />
+        </Route>
+      </Routes>
+      <Routes>
+        <Route path="/user" element={<SideBar />}>
+          <Route
+            path="dashboard"
+            element={
+              <Dashboard accessToken={accessToken} currUser={currUser} />
+            }
+          />
+          <Route
+            path="settings"
+            element={<Settings currUser={currUser} accessToken={accessToken} />}
+          />
+        </Route>
+        <Route path="*" element={<Error />} />
+      </Routes>
+    </> */
+}

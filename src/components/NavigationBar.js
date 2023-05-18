@@ -4,7 +4,7 @@ import { Navbar, Button, Avatar } from "@nextui-org/react";
 import { useAuth0 } from "@auth0/auth0-react";
 import UserAvatar from "./UserAvatar";
 
-export default function NavigationBar() {
+export default function NavigationBar({ currUser, accessToken }) {
   const { loginWithRedirect, logout, isAuthenticated } = useAuth0();
 
   return (
@@ -19,7 +19,7 @@ export default function NavigationBar() {
 
       {isAuthenticated ? (
         <Navbar.Content>
-          <UserAvatar />
+          <UserAvatar currUser={currUser} accessToken={accessToken} />
         </Navbar.Content>
       ) : (
         <Navbar.Content>

@@ -148,7 +148,7 @@ export default function Settings({ currUser, accessToken }) {
       }
     );
 
-    handleAddCategory();
+    handleClearCategory();
   };
 
   const handleClearCategory = () => {
