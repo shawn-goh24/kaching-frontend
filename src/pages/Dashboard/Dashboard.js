@@ -191,6 +191,7 @@ export default function Dashboard({ accessToken, currUser }) {
           amount: 0,
           date: date,
           interval: "Monthly",
+          user: currUser,
         },
         {
           headers: {

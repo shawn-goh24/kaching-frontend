@@ -9,6 +9,8 @@ export default function NotificationList({
   notifications,
   setNotifications,
 }) {
+  const [notis, setNotis] = useState();
+
   const handleRead = async (isRead, notificationId) => {
     const allNotification = await axios.put(
       `http://localhost:8080/notification/${currUser.id}/${notificationId}`,
@@ -22,12 +24,30 @@ export default function NotificationList({
       }
     );
     setNotifications(allNotification.data);
-    console.log(allNotification.data);
+    setNotis(allNotification.data);
   };
 
+  const getNotificationsApi = async () => {
+    if (accessToken) {
+      const allNotification = await axios.get(
+        `http://localhost:8080/notification/${currUser.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      setNotis(allNotification.data);
+    }
+  };
+
+  useEffect(() => {
+    getNotificationsApi();
+  }, [accessToken]);
+
   const notificationCards = () => {
-    if (notifications.length > 0) {
-      return notifications.map((notification) => {
+    if (notis.length > 0) {
+      return notis.map((notification) => {
         return (
           <NotificationCard
             key={notification.id}
@@ -39,5 +59,5 @@ export default function NotificationList({
     }
   };
 
-  return <Box>{notificationCards()}</Box>;
+  return <Box>{notis && notificationCards()}</Box>;
 }
