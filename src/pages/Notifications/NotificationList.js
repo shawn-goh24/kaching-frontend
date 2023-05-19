@@ -27,6 +27,19 @@ export default function NotificationList({
     setNotis(allNotification.data);
   };
 
+  const handleDelete = async (notificationId) => {
+    const allNotification = await axios.delete(
+      `http://localhost:8080/notification/${currUser.id}/${notificationId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    setNotifications(allNotification.data);
+    setNotis(allNotification.data);
+  };
+
   const getNotificationsApi = async () => {
     if (accessToken) {
       const allNotification = await axios.get(
@@ -53,6 +66,7 @@ export default function NotificationList({
             key={notification.id}
             notification={notification}
             handleRead={handleRead}
+            handleDelete={handleDelete}
           />
         );
       });

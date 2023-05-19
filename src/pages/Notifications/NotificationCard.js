@@ -3,7 +3,11 @@ import React, { useState } from "react";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import MarkunreadIcon from "@mui/icons-material/Markunread";
 
-export default function NotificationCard({ notification, handleRead }) {
+export default function NotificationCard({
+  notification,
+  handleRead,
+  handleDelete,
+}) {
   return (
     <Paper
       elevation={3}
@@ -45,7 +49,10 @@ export default function NotificationCard({ notification, handleRead }) {
         </Typography>
       </Box>
       <Box className="action" sx={{ display: "none" }}>
-        <IconButton sx={{ mx: "5px" }}>
+        <IconButton
+          sx={{ mx: "5px" }}
+          onClick={() => handleDelete(notification.id)}
+        >
           <DeleteForeverIcon />
         </IconButton>
         <IconButton
