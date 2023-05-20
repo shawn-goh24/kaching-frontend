@@ -8,10 +8,10 @@ import axios from "axios";
 
 export default function BudgetList({
   budgets,
-  setBudgets,
   transactions,
   accessToken,
   userCategories,
+  getBudgetApi,
 }) {
   const [editModal, openEditModal] = useState(false);
   const [deleteModal, openDeleteModal] = useState(false);
@@ -22,8 +22,10 @@ export default function BudgetList({
     openEditModal(true);
     setBudgetToEdit(budget);
   };
+
+  // handle edit on budget
   const handleEdit = async (budgetId, categoryId, amount) => {
-    const newBudgets = await axios.put(
+    await axios.put(
       `http://localhost:8080/budget/edit/${budgetId}`,
       {
         categoryId: categoryId,
@@ -36,7 +38,7 @@ export default function BudgetList({
       }
     );
 
-    setBudgets(newBudgets.data);
+    getBudgetApi();
   };
 
   // open delete modal
@@ -44,25 +46,23 @@ export default function BudgetList({
     openDeleteModal(true);
     setBudgetToEdit(budget);
   };
-  const handleDelete = async (budgetId) => {
-    const newBudgets = await axios.delete(
-      `http://localhost:8080/budget/delete/${budgetId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
 
-    setBudgets(newBudgets.data);
+  // handle delete budget
+  const handleDelete = async (budgetId) => {
+    await axios.delete(`http://localhost:8080/budget/delete/${budgetId}`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    getBudgetApi();
   };
 
+  // get total amount spent on the category within the budget column
   const getAmountSpent = (categoryName) => {
     if (transactions) {
       const mappedCategories = combineExpenseCategoryAmounts(transactions);
-      // console.log(mappedCategories);
       for (const categoryBudget of mappedCategories) {
-        // console.log(categoryBudget, categoryName);
         if (categoryBudget[0] === categoryName) {
           return categoryBudget[1];
         }
@@ -71,6 +71,7 @@ export default function BudgetList({
     }
   };
 
+  // get percentage for progress bar
   const barPercentage = (amount, budget) => {
     return (amount / budget) * 100;
   };
@@ -79,7 +80,6 @@ export default function BudgetList({
     return budgets
       ? budgets.map((budget) => {
           const amount = getAmountSpent(budget.Category.name);
-          // console.log(amount);
           return (
             <Box key={budget.Category.id} sx={{ margin: "20px 0" }}>
               <BudgetBar

@@ -31,7 +31,6 @@ export default function BudgetBar({
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        // marginBottom: "3px",
       }}
     >
       <Box sx={{ width: "100%" }}>

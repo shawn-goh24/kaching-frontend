@@ -1,28 +1,19 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Grid, Tab, Box, Fab, Tooltip } from "@mui/material";
-import PieChart from "./PieChart.js";
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
-import TabPanel from "@mui/lab/TabPanel";
-import useMediaQuery from "../../hooks/useMediaQuery";
+import { Grid, Box } from "@mui/material";
 import TransactionCol from "./TransactionCol.js";
-import BudgetList from "./BudgetList.js";
-import { Button } from "@nextui-org/react";
 import BudgetModal from "../../components/form/BudgetModal.js";
-import AddIcon from "@mui/icons-material/Add";
 import MonthSelection from "./MonthSelection.js";
+import BudgetExpenseCol from "./BudgetExpenseCol.js";
+import AddCategoryFab from "./AddCategoryFab.js";
 
 export default function Home({ currUser, accessToken }) {
   const [date, setDate] = useState(new Date());
-  const [tabValue, setTabValue] = useState("1");
   const [budgetModal, setBudgetModal] = useState(false);
   const [userCategories, setUserCategories] = useState("");
   const [transactions, setTransactions] = useState("");
   const [budgets, setBudgets] = useState("");
   const [openAddTransactionModal, setOpenAddTransactionModal] = useState(false);
-  // check if screen is md or lower
-  const isSmallScreen = useMediaQuery("(max-width: 960px)");
 
   // get all transactions from the user on current month and year
   const getUserTransactionsApi = async () => {
@@ -104,11 +95,6 @@ export default function Home({ currUser, accessToken }) {
     getCategoriesApi();
   }, [accessToken, date]);
 
-  // handle tab value to change between expense/income piechart tab
-  const handleTabChange = (e, newValue) => {
-    setTabValue(newValue);
-  };
-
   return (
     <Grid
       container
@@ -133,40 +119,14 @@ export default function Home({ currUser, accessToken }) {
         <MonthSelection date={date} setDate={setDate} />
       </Grid>
       <Grid item xs={12} md={4}>
-        <TabContext
-          value={tabValue}
-          sx={{ display: "flex", justifyContent: "center" }}
-        >
-          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <TabList
-              onChange={handleTabChange}
-              aria-label="lab API tabs example"
-            >
-              <Tab label="Expense" value="1" />
-              <Tab label="Income" value="2" />
-            </TabList>
-          </Box>
-          <TabPanel value="1">
-            <Box sx={{ display: "flex", justifyContent: "center" }}>
-              <PieChart transactions={transactions} isExpense={true} />
-            </Box>
-          </TabPanel>
-          <TabPanel value="2">
-            <Box sx={{ display: "flex", justifyContent: "center" }}>
-              <PieChart transactions={transactions} isExpense={false} />
-            </Box>
-          </TabPanel>
-        </TabContext>
-        <BudgetList
-          budgets={budgets}
-          setBudgets={setBudgets}
+        <BudgetExpenseCol
           transactions={transactions}
+          budgets={budgets}
           userCategories={userCategories}
           accessToken={accessToken}
+          setBudgetModal={setBudgetModal}
+          getBudgetApi={getBudgetApi}
         />
-        <Box sx={{ display: "flex", justifyContent: "center", mt: "20px" }}>
-          <Button onClick={() => setBudgetModal(true)}>Add new budget</Button>
-        </Box>
       </Grid>
       <Grid item xs={12} md={6} sx={{ height: "100%" }}>
         <h2>Transactions</h2>
@@ -182,26 +142,7 @@ export default function Home({ currUser, accessToken }) {
           />
         </Box>
       </Grid>
-      <Box
-        sx={{
-          position: "fixed",
-          bottom: 62,
-          right: 62,
-          zIndex: 1,
-        }}
-      >
-        <Tooltip title="Add Transaction" placement="top-start">
-          <Fab
-            onClick={() => {
-              setOpenAddTransactionModal(true);
-            }}
-            color="secondary"
-            aria-label="Add"
-          >
-            <AddIcon />
-          </Fab>
-        </Tooltip>
-      </Box>
+      <AddCategoryFab setOpenAddTransactionModal={setOpenAddTransactionModal} />
       <BudgetModal
         title="Add"
         budgetModal={budgetModal}
