@@ -6,7 +6,7 @@ import UserAvatar from "./UserAvatar";
 import { Outlet } from "react-router-dom";
 
 export default function NavigationBar({ currUser, accessToken }) {
-  const { loginWithRedirect, logout, isAuthenticated } = useAuth0();
+  const { loginWithRedirect, isAuthenticated } = useAuth0();
 
   return (
     <>
@@ -14,10 +14,6 @@ export default function NavigationBar({ currUser, accessToken }) {
         <Navbar.Brand>
           <img src={logo} alt="logo" />
         </Navbar.Brand>
-        <Navbar.Content hideIn="xs">
-          <Navbar.Link href="#">Dashboard</Navbar.Link>
-          <Navbar.Link href="#">Transaction</Navbar.Link>
-        </Navbar.Content>
 
         {isAuthenticated ? (
           <Navbar.Content>
@@ -32,7 +28,7 @@ export default function NavigationBar({ currUser, accessToken }) {
                 onClick={() =>
                   loginWithRedirect({
                     authorizationParams: {
-                      redirect_uri: "http://localhost:3000/user/home",
+                      redirect_uri: "http://localhost:3000/home",
                     },
                   })
                 }
@@ -47,7 +43,7 @@ export default function NavigationBar({ currUser, accessToken }) {
                 onClick={() =>
                   loginWithRedirect({
                     authorizationParams: {
-                      redirect_uri: "http://localhost:3000/user/home",
+                      redirect_uri: "http://localhost:3000/home",
                     },
                   })
                 }
