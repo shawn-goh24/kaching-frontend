@@ -52,7 +52,9 @@ export default function CategoriesCard({
           </IconButton>
           <IconButton
             size="small"
-            onClick={() => setCategories(category.id, "delete")}
+            onClick={() =>
+              setCategories({ categoryId: category.id, selection: "delete" })
+            }
           >
             <DeleteIcon />
           </IconButton>

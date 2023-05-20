@@ -15,8 +15,6 @@ function App() {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
   const [currUser, setCurrUser] = useState("");
   const [accessToken, setAccessToken] = useState("");
-  const [transactions, setTransactions] = useState("");
-  const [userCategories, setUserCategories] = useState("");
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
@@ -26,7 +24,6 @@ function App() {
   }, [isAuthenticated]);
 
   useEffect(() => {
-    getCategoriesApi();
     getNotificationsApi();
   }, [accessToken]);
 
@@ -63,21 +60,6 @@ function App() {
     }
   };
 
-  // get categories
-  const getCategoriesApi = async () => {
-    if (accessToken) {
-      let categories = await axios.get(
-        `http://localhost:8080/user/category/${currUser.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      setUserCategories(categories.data);
-    }
-  };
-
   return (
     <>
       <Routes>
@@ -88,7 +70,10 @@ function App() {
           }
         >
           <Route index element={<LandingPage />} />
-          <Route path="home" element={<Home />} />
+          <Route
+            path="home"
+            element={<Home accessToken={accessToken} currUser={currUser} />}
+          />
         </Route>
         <Route
           path="/user"

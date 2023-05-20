@@ -1,70 +1,30 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useAuth0 } from "@auth0/auth0-react";
-import { months } from "../../data/constants.js";
-import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import { Grid, Tab, Typography, Box, IconButton } from "@mui/material";
+import { Grid, Tab, Box, Fab, Tooltip } from "@mui/material";
 import PieChart from "./PieChart.js";
 import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import useMediaQuery from "../../hooks/useMediaQuery";
-import BudgetBar from "./BudgetBar.js";
 import TransactionCol from "./TransactionCol.js";
-
-import Backdrop from "@mui/material/Backdrop";
-import SpeedDial from "@mui/material/SpeedDial";
-import SpeedDialIcon from "@mui/material/SpeedDialIcon";
-import SpeedDialAction from "@mui/material/SpeedDialAction";
-import ReceiptIcon from "@mui/icons-material/Receipt";
 import BudgetList from "./BudgetList.js";
 import { Button } from "@nextui-org/react";
 import BudgetModal from "../../components/form/BudgetModal.js";
+import AddIcon from "@mui/icons-material/Add";
+import MonthSelection from "./MonthSelection.js";
 
-export default function Home(props) {
-  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+export default function Home({ currUser, accessToken }) {
   const [date, setDate] = useState(new Date());
-  const [value, setValute] = useState("1");
-  const [currUser, setCurrUser] = useState("");
-  const [accessToken, setAccessToken] = useState("");
+  const [tabValue, setTabValue] = useState("1");
   const [budgetModal, setBudgetModal] = useState(false);
   const [userCategories, setUserCategories] = useState("");
-  const [budget, setBudget] = useState("");
-
   const [transactions, setTransactions] = useState("");
   const [budgets, setBudgets] = useState("");
-
-  // speed dial
-  const [openSpeedDial, setOpenSpeedDial] = useState(false);
-  const handleSpeedDialOpen = () => setOpenSpeedDial(true);
-  const handleSpeedDialClose = () => setOpenSpeedDial(false);
   const [openAddTransactionModal, setOpenAddTransactionModal] = useState(false);
-
   // check if screen is md or lower
   const isSmallScreen = useMediaQuery("(max-width: 960px)");
 
-  const getUserApi = async () => {
-    let token = await getAccessTokenSilently();
-    console.log(token);
-    // check user
-    let request = await axios.post(
-      "http://localhost:8080/user/home",
-      {
-        user,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    // console.log(request.data);
-    setAccessToken(token);
-    setCurrUser(request.data);
-    // get user
-  };
-  // get all transactions from the user
+  // get all transactions from the user on current month and year
   const getUserTransactionsApi = async () => {
     if (accessToken) {
       const selectedDate = new Date(date);
@@ -78,12 +38,12 @@ export default function Home(props) {
           },
         }
       );
-      // console.log(user.data);
       setTransactions(user.data);
     }
   };
-  // get all budget from the user
-  const getUserBudgetApi = async () => {
+
+  // get all budgets from the user on current month and year
+  const getBudgetApi = async () => {
     if (accessToken) {
       const selectedDate = new Date(date);
       const month = selectedDate.getMonth() + 1;
@@ -96,12 +56,11 @@ export default function Home(props) {
           },
         }
       );
-      // console.log(user.data);
-      // console.log("user.data");
       setBudgets(user.data);
     }
   };
-  // get all categories from user
+
+  // get all categories owned by user from user route
   const getCategoriesApi = async () => {
     if (accessToken) {
       let categories = await axios.get(
@@ -112,11 +71,11 @@ export default function Home(props) {
           },
         }
       );
-      // console.log(categories.data);
       setUserCategories(categories.data);
     }
   };
 
+  // add new budget created by user
   const handleBudget = async (userId, category, date, amount) => {
     if (accessToken) {
       let newBudget = await axios.post(
@@ -138,43 +97,16 @@ export default function Home(props) {
     }
   };
 
-  useEffect(() => {
-    if (isAuthenticated && user) {
-      getUserApi();
-      // getUserTransactionsApi();
-    }
-  }, [isAuthenticated]);
-
-  // get transaction
+  // upon loaded, get transaction/budget/categories from db
   useEffect(() => {
     getUserTransactionsApi();
-    getUserBudgetApi();
+    getBudgetApi();
     getCategoriesApi();
   }, [accessToken, date]);
 
-  const handleChange = (e, newValue) => {
-    setValute(newValue);
-  };
-
-  const prevMonth = (date) => {
-    const tmp = new Date(date);
-    let month = tmp.getMonth() - 1;
-    let year = tmp.getFullYear();
-    if (month < 0) {
-      month = 11;
-      year = tmp.getFullYear() - 1;
-    }
-    setDate(new Date(year, month));
-  };
-  const nextMonth = (date) => {
-    const tmp = new Date(date);
-    let month = tmp.getMonth() + 1;
-    let year = tmp.getFullYear();
-    if (month < 0) {
-      month = 11;
-      year = tmp.getFullYear() + 1;
-    }
-    setDate(new Date(year, month));
+  // handle tab value to change between expense/income piechart tab
+  const handleTabChange = (e, newValue) => {
+    setTabValue(newValue);
   };
 
   return (
@@ -198,23 +130,18 @@ export default function Home(props) {
           height: "100px",
         }}
       >
-        <IconButton sx={{ marginRight: 10 }} onClick={() => prevMonth(date)}>
-          <NavigateBeforeIcon />
-        </IconButton>
-        <Typography variant={isSmallScreen ? "h4" : "h2"}>
-          {months[date.getMonth()]} {date.getFullYear()}
-        </Typography>
-        <IconButton sx={{ marginLeft: 10 }} onClick={() => nextMonth(date)}>
-          <NavigateNextIcon />
-        </IconButton>
+        <MonthSelection date={date} setDate={setDate} />
       </Grid>
       <Grid item xs={12} md={4}>
         <TabContext
-          value={value}
+          value={tabValue}
           sx={{ display: "flex", justifyContent: "center" }}
         >
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <TabList onChange={handleChange} aria-label="lab API tabs example">
+            <TabList
+              onChange={handleTabChange}
+              aria-label="lab API tabs example"
+            >
               <Tab label="Expense" value="1" />
               <Tab label="Income" value="2" />
             </TabList>
@@ -255,32 +182,26 @@ export default function Home(props) {
           />
         </Box>
       </Grid>
-      <Backdrop open={openSpeedDial} sx={{ zIndex: "999" }} />
-      <SpeedDial
-        ariaLabel="SpeedDial tooltip example"
-        sx={{ position: "absolute", bottom: 16, right: 16 }}
-        icon={<SpeedDialIcon />}
-        onClose={handleSpeedDialClose}
-        onOpen={handleSpeedDialOpen}
-        open={openSpeedDial}
+      <Box
+        sx={{
+          position: "fixed",
+          bottom: 62,
+          right: 62,
+          zIndex: 1,
+        }}
       >
-        <SpeedDialAction
-          key="addTransaction"
-          icon={<ReceiptIcon />}
-          tooltipTitle="Add Transaction"
-          onClick={() => {
-            console.log("Open");
-            setOpenAddTransactionModal(true);
-            handleSpeedDialClose();
-          }}
-        />
-        {/* <SpeedDialAction
-          key="addCategory"
-          icon={<FileCopyIcon />}
-          tooltipTitle="Add Category"
-          onClick={handleSpeedDialClose}
-        /> */}
-      </SpeedDial>
+        <Tooltip title="Add Transaction" placement="top-start">
+          <Fab
+            onClick={() => {
+              setOpenAddTransactionModal(true);
+            }}
+            color="secondary"
+            aria-label="Add"
+          >
+            <AddIcon />
+          </Fab>
+        </Tooltip>
+      </Box>
       <BudgetModal
         title="Add"
         budgetModal={budgetModal}

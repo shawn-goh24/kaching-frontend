@@ -9,21 +9,13 @@ export default function UserAvatar({ currUser, accessToken }) {
   const navigate = useNavigate();
   const [isInvisible, setIsInvisible] = useState(false);
   const [badgeCount, setBadgeCount] = useState(0);
+  // const [notifications, setNotifications] = useState([]);
 
-  const handleEvents = (e) => {
-    if (e === "dashboard") {
-      navigate("/user/dashboard");
-    } else if (e === "settings") {
-      navigate("/user/settings");
-    } else if (e === "notification") {
-      navigate("/user/notifications");
-    } else {
-      logout({ logoutParams: { returnTo: window.location.origin } });
-    }
-  };
+  useEffect(() => {
+    getNotificationsApi();
+  }, [accessToken]);
 
-  const [notifications, setNotifications] = useState([]);
-
+  // get notifications from db, and set the badge number based on number of unread notification
   const getNotificationsApi = async () => {
     if (accessToken) {
       const allNotification = await axios.get(
@@ -34,7 +26,7 @@ export default function UserAvatar({ currUser, accessToken }) {
           },
         }
       );
-      setNotifications(allNotification.data);
+      // setNotifications(allNotification.data);
 
       let count = 0;
       if (allNotification.data.length > 0) {
@@ -54,16 +46,25 @@ export default function UserAvatar({ currUser, accessToken }) {
     }
   };
 
-  useEffect(() => {
-    getNotificationsApi();
-  }, [accessToken]);
+  // navigate to different pages
+  const handleEvents = (e) => {
+    if (e === "dashboard") {
+      navigate("/user/dashboard");
+    } else if (e === "settings") {
+      navigate("/user/settings");
+    } else if (e === "notification") {
+      navigate("/user/notifications");
+    } else {
+      logout({ logoutParams: { returnTo: window.location.origin } });
+    }
+  };
 
   return (
     <Dropdown placement="bottom-left">
       <Badge
         color="error"
-        content={notifications && badgeCount}
-        isInvisible={notifications && isInvisible}
+        content={badgeCount}
+        isInvisible={isInvisible}
         placement="top-left"
       >
         <Dropdown.Trigger>
@@ -103,7 +104,7 @@ export default function UserAvatar({ currUser, accessToken }) {
               display: `${badgeCount === 0 && "none"}`,
             }}
           >
-            {notifications && badgeCount}
+            {badgeCount}
           </span>
         </Dropdown.Item>
         <Dropdown.Item key="settings" withDivider>

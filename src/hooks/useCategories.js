@@ -14,15 +14,15 @@ export default function useCategories(currUser, accessToken) {
           },
         }
       );
-      setCategory(user.data);
+      setCategory(user.data.Categories);
     }
   };
 
-  const handleCategoryApi = async (categoryId, selection) => {
+  const handleCategoryApi = async (obj) => {
     if (accessToken) {
-      if (selection === "delete") {
-        let user = await axios.delete(
-          `http://localhost:8080/category/delete/${categoryId}`,
+      if (obj.selection === "delete") {
+        await axios.delete(
+          `http://localhost:8080/category/delete/${obj.categoryId}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -31,7 +31,7 @@ export default function useCategories(currUser, accessToken) {
         );
 
         getCategoryApi();
-      } else if (selection === "get") {
+      } else if (obj.selection === "get") {
         getCategoryApi();
       }
     }
@@ -41,5 +41,5 @@ export default function useCategories(currUser, accessToken) {
     getCategoryApi();
   }, []);
 
-  return [category.Categories, handleCategoryApi];
+  return [category, handleCategoryApi];
 }

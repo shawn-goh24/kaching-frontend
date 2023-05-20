@@ -16,13 +16,13 @@ export default function EditCategory({ currUser, accessToken }) {
     color,
     incomeExpenseId
   ) => {
-    console.log("edit", categoryId, name, color, incomeExpenseId);
     if (accessToken) {
       const response = await axios.put(
         `http://localhost:8080/category/edit/${categoryId}`,
         {
           name: name,
-          color: `#${color}`,
+          color: `${color}`,
+          incomeExpenseId: incomeExpenseId.value,
         },
         {
           headers: {
@@ -32,7 +32,7 @@ export default function EditCategory({ currUser, accessToken }) {
       );
     }
 
-    setCategories(currUser.id, "get");
+    setCategories({ selection: "get" });
   };
 
   const handleOpenCategoryModal = (category) => {

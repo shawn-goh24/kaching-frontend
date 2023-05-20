@@ -16,7 +16,6 @@ export default function LandingPage() {
   return (
     <Box>
       <Grid.Container justify="center">
-        {/* <div style={{ height: "60vh" }}> */}
         <Grid xs={12} justify="center" css={{ marginTop: 100 }}>
           <Text
             h1
