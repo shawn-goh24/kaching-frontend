@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function UserAvatar({ currUser, accessToken }) {
-  const { loginWithRedirect, logout, isAuthenticated, user } = useAuth0();
+  const { logout, user } = useAuth0();
   const navigate = useNavigate();
   const [isInvisible, setIsInvisible] = useState(false);
   const [badgeCount, setBadgeCount] = useState(0);
