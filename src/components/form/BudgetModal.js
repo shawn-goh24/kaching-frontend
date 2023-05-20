@@ -11,7 +11,7 @@ const selectFieldStyles = {
   }),
 };
 
-export default function CategoryModal({
+export default function BudgetModal({
   title, // edit or add title
   budgetModal,
   setBudgetModal,

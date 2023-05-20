@@ -86,6 +86,84 @@ function App() {
           element={
             <NavigationBar accessToken={accessToken} currUser={currUser} />
           }
+        >
+          <Route index element={<LandingPage />} />
+          <Route path="home" element={<Home />} />
+        </Route>
+        <Route
+          path="/user"
+          element={
+            <SideBar
+              accessToken={accessToken}
+              currUser={currUser}
+              notifications={notifications}
+            />
+          }
+        >
+          <Route
+            path="dashboard"
+            element={
+              <Dashboard accessToken={accessToken} currUser={currUser} />
+            }
+          />
+          <Route
+            path="settings"
+            element={<Settings currUser={currUser} accessToken={accessToken} />}
+          />
+          <Route
+            path="notifications"
+            element={
+              <Notifications
+                currUser={currUser}
+                accessToken={accessToken}
+                notifications={notifications}
+                setNotifications={setNotifications}
+              />
+            }
+          />
+        </Route>
+        <Route path="*" element={<Error />} />
+      </Routes>
+    </>
+  );
+}
+
+export default App;
+
+{
+  /* <>
+      <Routes>
+        <Route path="/" element={<NavigationBar />}>
+          <Route index element={<LandingPage />} />
+          <Route path="home" element={<Home />} />
+        </Route>
+      </Routes>
+      <Routes>
+        <Route path="/user" element={<SideBar />}>
+          <Route
+            path="dashboard"
+            element={
+              <Dashboard accessToken={accessToken} currUser={currUser} />
+            }
+          />
+          <Route
+            path="settings"
+            element={<Settings currUser={currUser} accessToken={accessToken} />}
+          />
+        </Route>
+        <Route path="*" element={<Error />} />
+      </Routes>
+    </> */
+}
+
+{
+  /* <>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <NavigationBar accessToken={accessToken} currUser={currUser} />
+          }
         />
         <Route
           path="/user/home"
@@ -160,34 +238,5 @@ function App() {
           <Route path="*" element={<Error />} />
         </Routes>
       </div>
-    </>
-  );
-}
-
-export default App;
-
-{
-  /* <>
-      <Routes>
-        <Route path="/" element={<NavigationBar />}>
-          <Route path="" element={<LandingPage />} />
-          <Route path="home" element={<Home />} />
-        </Route>
-      </Routes>
-      <Routes>
-        <Route path="/user" element={<SideBar />}>
-          <Route
-            path="dashboard"
-            element={
-              <Dashboard accessToken={accessToken} currUser={currUser} />
-            }
-          />
-          <Route
-            path="settings"
-            element={<Settings currUser={currUser} accessToken={accessToken} />}
-          />
-        </Route>
-        <Route path="*" element={<Error />} />
-      </Routes>
     </> */
 }

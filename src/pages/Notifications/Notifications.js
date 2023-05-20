@@ -9,8 +9,10 @@ export default function Notifications({
   setNotifications,
 }) {
   return (
-    <Box sx={{ mx: "75px", width: "100%" }}>
-      <Container>
+    <Container
+    // sx={{ mx: "75px", width: "100%" }}
+    >
+      <Box>
         <Typography variant="h3">Notifications</Typography>
         <NotificationList
           currUser={currUser}
@@ -18,7 +20,7 @@ export default function Notifications({
           notifications={notifications}
           setNotifications={setNotifications}
         />
-      </Container>
-    </Box>
+      </Box>
+    </Container>
   );
 }

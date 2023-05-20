@@ -3,7 +3,7 @@ import { Modal, Input, Button, Text } from "@nextui-org/react";
 import { yyyyMmDdConverter } from "../../utils/utils";
 import CreatableSelect from "react-select/creatable";
 
-export default function CategoryModal({
+export default function BillModal({
   title, // edit or add title
   billModal,
   setBillModal,

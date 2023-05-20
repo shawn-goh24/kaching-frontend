@@ -1,4 +1,4 @@
-import { Box, IconButton, Typography } from "@mui/material";
+import { Box, Container, IconButton, Typography } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { Card } from "@nextui-org/react";
 import React, { useEffect, useState } from "react";
@@ -204,12 +204,15 @@ export default function Dashboard({ accessToken, currUser }) {
   };
 
   return (
-    <Box
-      sx={{
-        width: "100vw",
-        marginY: "2%",
-        marginX: "15%",
-      }}
+    <Container
+      maxWidth="xl"
+      sx={
+        {
+          // width: "100vw",
+          // marginY: "2%",
+          // marginX: "15%",
+        }
+      }
     >
       <Box>
         <Typography variant="h4">Dashboard</Typography>
@@ -293,6 +296,6 @@ export default function Dashboard({ accessToken, currUser }) {
         bill={tmp}
         handleEdit={handleEdit}
       />
-    </Box>
+    </Container>
   );
 }

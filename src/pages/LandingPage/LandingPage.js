@@ -5,6 +5,7 @@ import useMediaQuery from "../../hooks/useMediaQuery";
 
 import FeatureCard from "./FeatureCard";
 import { useAuth0 } from "@auth0/auth0-react";
+import { Box } from "@mui/material";
 
 export default function LandingPage() {
   // check if screen is md or lower
@@ -13,7 +14,7 @@ export default function LandingPage() {
   const { loginWithRedirect } = useAuth0();
 
   return (
-    <>
+    <Box>
       <Grid.Container justify="center">
         {/* <div style={{ height: "60vh" }}> */}
         <Grid xs={12} justify="center" css={{ marginTop: 100 }}>
@@ -76,6 +77,6 @@ export default function LandingPage() {
       <footer style={{ textAlign: "center", color: "grey" }}>
         For project purpose only
       </footer>
-    </>
+    </Box>
   );
 }

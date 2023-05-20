@@ -8,7 +8,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import { Avatar, Badge, Button, Text } from "@nextui-org/react";
-import { useNavigate } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import EmailIcon from "@mui/icons-material/Email";
 import axios from "axios";
 
@@ -21,7 +21,7 @@ export default function SideBar({ currUser, accessToken, notifications }) {
   const navigate = useNavigate();
 
   const goToHome = () => {
-    navigate("/user/home");
+    navigate("/home");
   };
   const goToSettings = () => {
     navigate("/user/settings");
@@ -192,6 +192,7 @@ export default function SideBar({ currUser, accessToken, notifications }) {
           </Tooltip>
         </Box>
       </Box>
+      <Outlet />
     </>
   );
 }
