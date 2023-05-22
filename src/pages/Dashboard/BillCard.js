@@ -4,7 +4,7 @@ import React from "react";
 
 export default function BillCard({
   bill,
-  handleDelete,
+  handleDeleteModal,
   handleOpenEditBillModal,
 }) {
   const [contextMenu, setContextMenu] = React.useState(null);
@@ -73,7 +73,7 @@ export default function BillCard({
         <MenuItem
           onClick={() => {
             handleClose();
-            handleDelete(bill.id);
+            handleDeleteModal(bill);
           }}
         >
           Delete

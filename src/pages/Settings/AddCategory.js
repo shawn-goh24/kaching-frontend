@@ -87,35 +87,50 @@ export default function AddCategory({ currUser, accessToken }) {
     setSelectedIncomeExpense(selectedOption);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    handleAddCategory();
+  };
+
   return (
     <Box>
-      <Box>
-        <Text h3>Category Name:</Text>
-        <Input
-          value={newCatName}
-          fullWidth
-          placeholder="Insert Category"
-          onChange={(e) => setNewCatName(e.target.value)}
-        />
-        <Text h3>Color:</Text>
-        <MuiColorInput format="hex" value={color} onChange={handleColor} />
-        <Text h3>Income or Expense:</Text>
-        {/* <Box width="225px"> */}
-        <CreatableSelect
-          value={selectedIncomeExpense}
-          options={incomeExpenseList}
-          onChange={handleIncomeExpenseChange}
-        />
-        {/* </Box> */}
-      </Box>
-      <Box display="flex" justifyContent="flex-end" marginTop={7}>
-        <Button light onPress={handleClearCategory}>
-          Clear
-        </Button>
-        <Button flat onPress={handleAddCategory}>
-          Add new category
-        </Button>
-      </Box>
+      <form onSubmit={handleSubmit}>
+        <Box>
+          <Text h3>Category Name:</Text>
+          <Input
+            required
+            value={newCatName}
+            fullWidth
+            placeholder="Insert Category"
+            onChange={(e) => setNewCatName(e.target.value)}
+          />
+          <Text h3>Color:</Text>
+          <MuiColorInput
+            required
+            format="hex"
+            value={color}
+            onChange={handleColor}
+          />
+          <Text h3>Income or Expense:</Text>
+          {/* <Box width="225px"> */}
+          <CreatableSelect
+            required
+            value={selectedIncomeExpense}
+            options={incomeExpenseList}
+            onChange={handleIncomeExpenseChange}
+          />
+          {/* </Box> */}
+        </Box>
+        <Box display="flex" justifyContent="flex-end" marginTop={7}>
+          <Button light onPress={handleClearCategory}>
+            Clear
+          </Button>
+          <Button flat type="submit">
+            Add new category
+          </Button>
+        </Box>
+      </form>
     </Box>
   );
 }

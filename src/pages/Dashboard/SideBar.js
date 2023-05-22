@@ -76,9 +76,10 @@ export default function SideBar({ currUser, accessToken, notifications }) {
           <Box mt={2}>
             {/* <img src={logoImg} alt="logo image" /> */}
             <Avatar
-              src="https://i.pravatar.cc/150?u=a042581f4e29026024d"
+              src={currUser && currUser.imageUrl}
+              text={currUser.firstName}
               bordered
-              color="primary"
+              // color="primary"
               size="lg"
               css={{ marginBottom: 10 }}
             />

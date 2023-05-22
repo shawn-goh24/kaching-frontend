@@ -51,6 +51,16 @@ export default function EditBudget({
     setSelectedCategories(selectedOption);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    closeHandler();
+    handleEdit(
+      budgetToEdit.id,
+      selectedCategories.value,
+      amountRef.current.value
+    );
+  };
+
   return (
     <Modal
       closeButton
@@ -60,51 +70,45 @@ export default function EditBudget({
       onClose={closeHandler}
       css={{ height: "600px" }}
     >
-      <Modal.Header>
-        <Text h1>{title} Transaction</Text>
-      </Modal.Header>
-      <Modal.Body>
-        <CreatableSelect
-          styles={selectFieldStyles}
-          defaultValue={
-            budgetToEdit && budgetToEdit.Category
-              ? categoryLists[budgetToEdit.Category.id - 1]
-              : ""
-          }
-          options={categoryLists}
-          onChange={handleSelectChange}
-        />
-        {/* <Input
+      <form onSubmit={handleSubmit}>
+        <Modal.Header>
+          <Text h1>{title} Transaction</Text>
+        </Modal.Header>
+        <Modal.Body>
+          <CreatableSelect
+            required
+            styles={selectFieldStyles}
+            defaultValue={
+              budgetToEdit && budgetToEdit.Category
+                ? categoryLists[budgetToEdit.Category.id - 1]
+                : ""
+            }
+            options={categoryLists}
+            onChange={handleSelectChange}
+          />
+          {/* <Input
           ref={dateRef}
           label="Date"
           type="date"
           initialValue={budgetToEdit && yyyyMmDdConverter(budgetToEdit.date)}
         /> */}
-        <Input
-          ref={amountRef}
-          label="Amount"
-          type="number"
-          initialValue={budgetToEdit && budgetToEdit.amount}
-        />
-      </Modal.Body>
-      <Modal.Footer>
-        <Button auto light onPress={closeHandler}>
-          Close
-        </Button>
-        <Button
-          auto
-          onPress={() => {
-            closeHandler();
-            handleEdit(
-              budgetToEdit.id,
-              selectedCategories.value,
-              amountRef.current.value
-            );
-          }}
-        >
-          Confirm
-        </Button>
-      </Modal.Footer>
+          <Input
+            required
+            ref={amountRef}
+            label="Amount"
+            type="number"
+            initialValue={budgetToEdit && budgetToEdit.amount}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button auto light onPress={closeHandler}>
+            Close
+          </Button>
+          <Button auto type="submit">
+            Confirm
+          </Button>
+        </Modal.Footer>
+      </form>
     </Modal>
   );
 }

@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import { Button, Input, Text } from "@nextui-org/react";
 import Select from "react-select";
+import { useAuth0 } from "@auth0/auth0-react";
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
@@ -15,6 +16,8 @@ const selectFieldStyles = {
 };
 
 export default function ProfileSetting({ currUser, accessToken }) {
+  const { user } = useAuth0();
+
   const [selectedCurrency, setSelectedCurrency] = useState([]);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -22,6 +25,10 @@ export default function ProfileSetting({ currUser, accessToken }) {
   const [currency, setCurrency] = useState("");
   const [countryList, setCountryList] = useState([]);
   const [hasChanged, setHasChanged] = useState(false);
+  const [isGoogleAuth, setIsGoogleAuth] = useState();
+
+  console.log(user);
+  console.log(currUser);
 
   useEffect(() => {
     if (currUser) {
@@ -32,6 +39,12 @@ export default function ProfileSetting({ currUser, accessToken }) {
       findCurrencyId(currUser.mainCurrency);
     }
   }, [currUser]);
+
+  useEffect(() => {
+    if (user) {
+      setIsGoogleAuth(user.sub.includes("google"));
+    }
+  }, [user]);
 
   const handleSelectChange = (selectedOption) => {
     setCurrency(selectedOption.label);
@@ -66,7 +79,8 @@ export default function ProfileSetting({ currUser, accessToken }) {
 
   // handle edit user profile
   const handleEditUserProfile = async () => {
-    if (accessToken) {
+    console.log(isGoogleAuth);
+    if (accessToken && isGoogleAuth) {
       await axios.put(
         `http://localhost:8080/user/edit/${currUser.id}`,
         {
@@ -78,14 +92,30 @@ export default function ProfileSetting({ currUser, accessToken }) {
           },
         }
       );
+    } else {
+      const response = await axios.put(
+        `http://localhost:8080/user/edit/${currUser.id}`,
+        {
+          firstName: firstName,
+          lastName: lastName,
+          email: email,
+          mainCurrency: currency,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      console.log(response.data);
     }
   };
-
+  console.log(isGoogleAuth);
   return (
     <Box>
       <Text h3>First Name:</Text>
       <Input
-        disabled
+        disabled={user && isGoogleAuth && true}
         placeholder="First Name"
         fullWidth
         value={firstName}
@@ -96,7 +126,7 @@ export default function ProfileSetting({ currUser, accessToken }) {
       />
       <Text h3>Last Name:</Text>
       <Input
-        disabled
+        disabled={user && isGoogleAuth && true}
         placeholder="Last Name"
         fullWidth
         value={lastName}
@@ -107,7 +137,7 @@ export default function ProfileSetting({ currUser, accessToken }) {
       />
       <Text h3>Email:</Text>
       <Input
-        disabled
+        disabled={user && isGoogleAuth && true}
         placeholder="Email"
         fullWidth
         value={email}

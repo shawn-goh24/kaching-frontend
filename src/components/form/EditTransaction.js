@@ -50,6 +50,18 @@ export default function EditTransaction({
     setSelectedCategories(selectedOption);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    closeHandler();
+    handleEdit(
+      editTransaction.id,
+      dateRef.current.value,
+      nameRef.current.value,
+      amountRef.current.value,
+      selectedCategories.value
+    );
+  };
+
   return (
     <Modal
       closeButton
@@ -58,59 +70,53 @@ export default function EditTransaction({
       open={openModal}
       onClose={closeHandler}
     >
-      <Modal.Header>
-        <Text h1>Edit Transaction</Text>
-      </Modal.Header>
-      <Modal.Body>
-        <Input
-          ref={nameRef}
-          label="Name"
-          type="text"
-          initialValue={editTransaction.name}
-        />
-        <Input
-          ref={dateRef}
-          label="Date"
-          type="date"
-          initialValue={yyyyMmDdConverter(editTransaction.date)}
-        />
-        <Input
-          ref={amountRef}
-          label="Amount"
-          type="number"
-          initialValue={editTransaction.amount}
-        />
-        <CreatableSelect
-          styles={selectFieldStyles}
-          defaultValue={
-            editTransaction.Category
-              ? categoryLists[editTransaction.Category.id - 1]
-              : ""
-          }
-          options={categoryLists}
-          onChange={handleSelectChange}
-        />
-      </Modal.Body>
-      <Modal.Footer>
-        <Button auto light onPress={closeHandler}>
-          Close
-        </Button>
-        <Button
-          auto
-          onPress={() => {
-            closeHandler();
-            handleEdit(
-              editTransaction.id,
-              dateRef.current.value,
-              nameRef.current.value,
-              amountRef.current.value,
-              selectedCategories.value
-            );
-          }}
-        >
-          Confirm
-        </Button>
-      </Modal.Footer>
+      <form onSubmit={handleSubmit}>
+        <Modal.Header>
+          <Text h1>Edit Transaction</Text>
+        </Modal.Header>
+        <Modal.Body>
+          <Input
+            required
+            ref={nameRef}
+            label="Name"
+            type="text"
+            initialValue={editTransaction.name}
+          />
+          <Input
+            required
+            ref={dateRef}
+            label="Date"
+            type="date"
+            initialValue={yyyyMmDdConverter(editTransaction.date)}
+          />
+          <Input
+            required
+            ref={amountRef}
+            label="Amount"
+            type="number"
+            initialValue={editTransaction.amount}
+          />
+          <CreatableSelect
+            required
+            styles={selectFieldStyles}
+            defaultValue={
+              editTransaction.Category
+                ? categoryLists[editTransaction.Category.id - 1]
+                : ""
+            }
+            options={categoryLists}
+            onChange={handleSelectChange}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button auto light onPress={closeHandler}>
+            Close
+          </Button>
+          <Button auto type="submit">
+            Confirm
+          </Button>
+        </Modal.Footer>
+      </form>
     </Modal>
   );
 }

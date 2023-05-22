@@ -4,11 +4,25 @@ import useCategories from "../../hooks/useCategories";
 import CategoriesCard from "./CategoriesCard";
 import CategoryActionModal from "../../components/form/CategoryActionModal";
 import axios from "axios";
+import { Button, Modal, Text } from "@nextui-org/react";
 
 export default function EditCategory({ currUser, accessToken }) {
   const [categories, setCategories] = useCategories(currUser, accessToken);
   const [categoryModal, setCategoryModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState();
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [categoryToDelete, setCategoryToDelete] = useState();
+
+  const closeHandler = () => {
+    setDeleteModal(false);
+  };
+  const handleDeleteModal = (cat) => {
+    setDeleteModal(true);
+    setCategoryToDelete(cat);
+  };
+  const handleDelete = (id) => {
+    setCategories({ categoryId: id, selection: "delete" });
+  };
 
   const handleEditCategory = async (
     categoryId,
@@ -50,6 +64,7 @@ export default function EditCategory({ currUser, accessToken }) {
             category={category}
             setCategories={setCategories}
             handleOpenCategoryModal={handleOpenCategoryModal}
+            handleDeleteModal={handleDeleteModal}
           />
         );
       });
@@ -68,6 +83,35 @@ export default function EditCategory({ currUser, accessToken }) {
         selectedCategory={selectedCategory}
         handleEditCategory={handleEditCategory}
       />
+      <Modal
+        closeButton
+        blur
+        aria-labelledby="modal-title"
+        open={deleteModal}
+        onClose={closeHandler}
+      >
+        <Modal.Header>
+          <Text h1>Delete Bill</Text>
+        </Modal.Header>
+        <Modal.Body>
+          <Text h2>Are you sure you want to delete?</Text>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button auto light onPress={closeHandler}>
+            Back
+          </Button>
+          <Button
+            auto
+            color="warning"
+            onPress={() => {
+              closeHandler();
+              handleDelete(categoryToDelete.id);
+            }}
+          >
+            Confirm
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }

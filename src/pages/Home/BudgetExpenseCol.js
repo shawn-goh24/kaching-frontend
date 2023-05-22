@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Tab, Box } from "@mui/material";
 import PieChart from "./PieChart.js";
 import TabContext from "@mui/lab/TabContext";
@@ -36,7 +36,11 @@ export default function BudgetExpenseCol({
         </Box>
         <TabPanel value="1">
           <Box sx={{ display: "flex", justifyContent: "center" }}>
-            <PieChart transactions={transactions} isExpense={true} />
+            {transactions.length > 0 ? (
+              <PieChart transactions={transactions} isExpense={true} />
+            ) : (
+              "No transcations"
+            )}
           </Box>
         </TabPanel>
         <TabPanel value="2">

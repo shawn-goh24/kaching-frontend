@@ -16,6 +16,7 @@ export default function CategoriesCard({
   category,
   setCategories,
   handleOpenCategoryModal,
+  handleDeleteModal,
 }) {
   return (
     <>
@@ -50,12 +51,7 @@ export default function CategoriesCard({
           >
             <EditIcon />
           </IconButton>
-          <IconButton
-            size="small"
-            onClick={() =>
-              setCategories({ categoryId: category.id, selection: "delete" })
-            }
-          >
+          <IconButton size="small" onClick={() => handleDeleteModal(category)}>
             <DeleteIcon />
           </IconButton>
         </CardActions>

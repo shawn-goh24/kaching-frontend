@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import Grid from "@mui/material/Unstable_Grid2";
-import { Card } from "@nextui-org/react";
+import { Button, Card, Modal, Text } from "@nextui-org/react";
 import AddIcon from "@mui/icons-material/Add";
 import { currencyFormatter } from "../../utils/utils";
 import BillCard from "./BillCard";
@@ -14,6 +14,13 @@ export default function TransactionBillRow({
   handleDelete,
   handleOpenEditBillModal,
 }) {
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [billToDelete, setBillToDelete] = useState();
+
+  const closeHandler = () => {
+    setDeleteModal(false);
+  };
+
   // get the list of recent transaction cards
   const recentTransactions = () => {
     return ytdTransactions
@@ -46,6 +53,11 @@ export default function TransactionBillRow({
       : undefined;
   };
 
+  const handleDeleteModal = (bill) => {
+    setDeleteModal(true);
+    setBillToDelete(bill);
+  };
+
   // get the list of bills card
   const billList = () => {
     return billReminders.map((bill) => {
@@ -53,7 +65,7 @@ export default function TransactionBillRow({
         <BillCard
           key={bill.id}
           bill={bill}
-          handleDelete={handleDelete}
+          handleDeleteModal={handleDeleteModal}
           handleOpenEditBillModal={handleOpenEditBillModal}
         />
       );
@@ -61,28 +73,59 @@ export default function TransactionBillRow({
   };
 
   return (
-    <Grid container spacing={2} my={1}>
-      <Grid item xs={12} sm={7}>
-        <Card>
-          <Card.Header>Recent 5 Transactions</Card.Header>
-          <Card.Body>{recentTransactions()}</Card.Body>
-        </Card>
+    <>
+      <Grid container spacing={2} my={1}>
+        <Grid item xs={12} sm={7}>
+          <Card>
+            <Card.Header>Recent 5 Transactions</Card.Header>
+            <Card.Body>{recentTransactions()}</Card.Body>
+          </Card>
+        </Grid>
+        <Grid item xs={12} sm={5}>
+          <Card css={{ height: "100%" }}>
+            <Card.Header>
+              Bill Reminders
+              <IconButton onClick={() => setAddBillModal(true)}>
+                <AddIcon />
+              </IconButton>
+            </Card.Header>
+            <Card.Body
+              css={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
+            >
+              {billReminders ? billList() : undefined}
+            </Card.Body>
+          </Card>
+        </Grid>
       </Grid>
-      <Grid item xs={12} sm={5}>
-        <Card css={{ height: "100%" }}>
-          <Card.Header>
-            Bill Reminders
-            <IconButton onClick={() => setAddBillModal(true)}>
-              <AddIcon />
-            </IconButton>
-          </Card.Header>
-          <Card.Body
-            css={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}
+      <Modal
+        closeButton
+        blur
+        aria-labelledby="modal-title"
+        open={deleteModal}
+        onClose={closeHandler}
+      >
+        <Modal.Header>
+          <Text h1>Delete Bill</Text>
+        </Modal.Header>
+        <Modal.Body>
+          <Text h2>Are you sure you want to delete?</Text>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button auto light onPress={closeHandler}>
+            Back
+          </Button>
+          <Button
+            auto
+            color="warning"
+            onPress={() => {
+              closeHandler();
+              handleDelete(billToDelete.id);
+            }}
           >
-            {billReminders ? billList() : undefined}
-          </Card.Body>
-        </Card>
-      </Grid>
-    </Grid>
+            Confirm
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </>
   );
 }

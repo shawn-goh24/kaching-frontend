@@ -63,6 +63,17 @@ export default function CategoryActionModal({
     setSelectedIncomeExpense(selectedOption);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    handleEditCategory(
+      selectedCategory.id,
+      nameRef.current.value,
+      color,
+      selectedIncomeExpense
+    );
+    closeHandler();
+  };
+
   return (
     <Modal
       closeButton
@@ -72,42 +83,40 @@ export default function CategoryActionModal({
       onClose={closeHandler}
       css={{ height: "600px" }}
     >
-      <Modal.Header>
-        <Text h1>Edit Category</Text>
-      </Modal.Header>
-      <Modal.Body>
-        <Input
-          ref={nameRef}
-          label="Name"
-          type="text"
-          initialValue={selectedCategory && selectedCategory.name}
-        />
-        <MuiColorInput format="hex" value={color} onChange={handleColor} />
-        <Select
-          value={selectedIncomeExpense}
-          options={incomeExpenseList}
-          onChange={handleIncomeExpenseChange}
-        />
-      </Modal.Body>
-      <Modal.Footer>
-        <Button auto light onPress={closeHandler}>
-          Close
-        </Button>
-        <Button
-          auto
-          onPress={() => {
-            handleEditCategory(
-              selectedCategory.id,
-              nameRef.current.value,
-              color,
-              selectedIncomeExpense
-            );
-            closeHandler();
-          }}
-        >
-          Confirm
-        </Button>
-      </Modal.Footer>
+      <form onSubmit={handleSubmit}>
+        <Modal.Header>
+          <Text h1>Edit Category</Text>
+        </Modal.Header>
+        <Modal.Body>
+          <Input
+            required
+            ref={nameRef}
+            label="Name"
+            type="text"
+            initialValue={selectedCategory && selectedCategory.name}
+          />
+          <MuiColorInput
+            required
+            format="hex"
+            value={color}
+            onChange={handleColor}
+          />
+          <Select
+            required
+            value={selectedIncomeExpense}
+            options={incomeExpenseList}
+            onChange={handleIncomeExpenseChange}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button auto light onPress={closeHandler}>
+            Close
+          </Button>
+          <Button auto type="submit">
+            Confirm
+          </Button>
+        </Modal.Footer>
+      </form>
     </Modal>
   );
 }

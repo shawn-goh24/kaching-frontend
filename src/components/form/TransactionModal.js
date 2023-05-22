@@ -52,6 +52,25 @@ export default function TransactionModal({
     setSelectedCategories(selectedOption);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    closeHandler();
+    title === "Edit"
+      ? handleEdit(
+          editTransaction.id,
+          dateRef.current.value,
+          nameRef.current.value,
+          amountRef.current.value,
+          selectedCategories.value
+        )
+      : handleAddTransaction(
+          dateRef.current.value,
+          nameRef.current.value,
+          amountRef.current.value,
+          selectedCategories.value
+        );
+  };
+
   return (
     <Modal
       closeButton
@@ -60,68 +79,57 @@ export default function TransactionModal({
       open={openModal}
       onClose={closeHandler}
     >
-      <Modal.Header>
-        <Text h1>{title} Transaction</Text>
-      </Modal.Header>
-      <Modal.Body>
-        <Input
-          ref={nameRef}
-          label="Name"
-          type="text"
-          initialValue={editTransaction && editTransaction.name}
-        />
-        <Input
-          ref={dateRef}
-          label="Date"
-          type="date"
-          initialValue={
-            editTransaction && yyyyMmDdConverter(editTransaction.date)
-          }
-        />
-        <Input
-          ref={amountRef}
-          label="Amount"
-          type="number"
-          initialValue={editTransaction && editTransaction.amount}
-        />
-        <CreatableSelect
-          styles={selectFieldStyles}
-          defaultValue={
-            editTransaction && editTransaction.Category
-              ? categoryLists[editTransaction.Category.id - 1]
-              : ""
-          }
-          options={categoryLists}
-          onChange={handleSelectChange}
-        />
-      </Modal.Body>
-      <Modal.Footer>
-        <Button auto light onPress={closeHandler}>
-          Close
-        </Button>
-        <Button
-          auto
-          onPress={() => {
-            closeHandler();
-            title === "Edit"
-              ? handleEdit(
-                  editTransaction.id,
-                  dateRef.current.value,
-                  nameRef.current.value,
-                  amountRef.current.value,
-                  selectedCategories.value
-                )
-              : handleAddTransaction(
-                  dateRef.current.value,
-                  nameRef.current.value,
-                  amountRef.current.value,
-                  selectedCategories.value
-                );
-          }}
-        >
-          Confirm
-        </Button>
-      </Modal.Footer>
+      <form onSubmit={handleSubmit}>
+        <Modal.Header>
+          <Text h1>{title} Transaction</Text>
+        </Modal.Header>
+        <Modal.Body>
+          <Input
+            required
+            ref={nameRef}
+            label="Name"
+            type="text"
+            initialValue={editTransaction && editTransaction.name}
+          />
+          <Input
+            required
+            ref={dateRef}
+            label="Date"
+            type="date"
+            initialValue={
+              editTransaction
+                ? yyyyMmDdConverter(editTransaction.date)
+                : yyyyMmDdConverter(new Date())
+            }
+          />
+          <Input
+            required
+            ref={amountRef}
+            label="Amount"
+            type="number"
+            initialValue={editTransaction && editTransaction.amount}
+          />
+          <CreatableSelect
+            required
+            styles={selectFieldStyles}
+            defaultValue={
+              editTransaction && editTransaction.Category
+                ? categoryLists[editTransaction.Category.id - 1]
+                : ""
+            }
+            options={categoryLists}
+            onChange={handleSelectChange}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button auto light onPress={closeHandler}>
+            Close
+          </Button>
+          <Button auto type="submit">
+            Confirm
+          </Button>
+        </Modal.Footer>
+      </form>
     </Modal>
   );
 }

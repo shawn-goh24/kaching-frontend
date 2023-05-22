@@ -18,6 +18,17 @@ export default function BillModal({
     setBillModal(false);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    closeHandler();
+    if (title === "Edit") {
+      handleEdit(bill.id, nameRef.current.value, dateRef.current.value);
+    } else {
+      handleAdd(nameRef.current.value, dateRef.current.value);
+    }
+  };
+
   return (
     <Modal
       closeButton
@@ -27,41 +38,35 @@ export default function BillModal({
       onClose={closeHandler}
       css={{ height: "600px" }}
     >
-      <Modal.Header>
-        <Text h1>{title} Bill</Text>
-      </Modal.Header>
-      <Modal.Body>
-        <Input
-          ref={nameRef}
-          label="Name"
-          type="text"
-          initialValue={bill && bill.name}
-        />
-        <Input
-          ref={dateRef}
-          label="Date"
-          type="date"
-          initialValue={bill && yyyyMmDdConverter(bill.date)}
-        />
-      </Modal.Body>
-      <Modal.Footer>
-        <Button auto light onPress={closeHandler}>
-          Close
-        </Button>
-        <Button
-          auto
-          onPress={() => {
-            closeHandler();
-            if (title === "Edit") {
-              handleEdit(bill.id, nameRef.current.value, dateRef.current.value);
-            } else {
-              handleAdd(nameRef.current.value, dateRef.current.value);
-            }
-          }}
-        >
-          Confirm
-        </Button>
-      </Modal.Footer>
+      <form onSubmit={handleSubmit}>
+        <Modal.Header>
+          <Text h1>{title} Bill</Text>
+        </Modal.Header>
+        <Modal.Body>
+          <Input
+            required
+            ref={nameRef}
+            label="Name"
+            type="text"
+            initialValue={bill && bill.name}
+          />
+          <Input
+            required
+            ref={dateRef}
+            label="Date"
+            type="date"
+            initialValue={bill && yyyyMmDdConverter(bill.date)}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button auto light onPress={closeHandler}>
+            Close
+          </Button>
+          <Button auto type="submit">
+            Confirm
+          </Button>
+        </Modal.Footer>
+      </form>
     </Modal>
   );
 }

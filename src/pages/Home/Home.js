@@ -95,6 +95,38 @@ export default function Home({ currUser, accessToken }) {
     getCategoriesApi();
   }, [accessToken, date]);
 
+  const [show, setShow] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (loading) {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+    }
+  }, [loading]);
+
+  useEffect(() => {
+    helloHandeler();
+  }, []);
+
+  const helloHandeler = () => {
+    setLoading(!loading);
+    setTimeout(() => {
+      setLoading(!loading);
+      setShow(!show);
+    }, 1000);
+  };
+
+  if (loading)
+    return (
+      <Box className="container">
+        <span></span>
+        <span></span>
+        <span></span>
+      </Box>
+    );
+
   return (
     <Grid
       container

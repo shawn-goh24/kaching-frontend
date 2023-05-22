@@ -6,7 +6,7 @@ import MarkunreadIcon from "@mui/icons-material/Markunread";
 export default function NotificationCard({
   notification,
   handleRead,
-  handleDelete,
+  handleDeleteModal,
 }) {
   return (
     <Paper
@@ -51,7 +51,7 @@ export default function NotificationCard({
       <Box className="action" sx={{ display: "none" }}>
         <IconButton
           sx={{ mx: "5px" }}
-          onClick={() => handleDelete(notification.id)}
+          onClick={() => handleDeleteModal(notification)}
         >
           <DeleteForeverIcon />
         </IconButton>

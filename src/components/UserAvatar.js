@@ -59,6 +59,8 @@ export default function UserAvatar({ currUser, accessToken }) {
     }
   };
 
+  console.log(currUser);
+
   return (
     <Dropdown placement="bottom-left">
       <Badge
@@ -73,8 +75,10 @@ export default function UserAvatar({ currUser, accessToken }) {
             as="button"
             size="md"
             color="primary"
-            name={user && user.name}
-            src={user && user.picture}
+            src={currUser && currUser.imageUrl && currUser.imageUrl}
+            name={
+              currUser && currUser.firstName ? currUser.firstName : user.name
+            }
           />
         </Dropdown.Trigger>
       </Badge>

@@ -52,6 +52,18 @@ export default function BudgetModal({
     setSelectedCategories(selectedOption);
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    closeHandler();
+    handleBudget(
+      userCategories.id,
+      selectedCategories,
+      dateRef.current.value,
+      amountRef.current.value
+    );
+  };
+
   return (
     <Modal
       closeButton
@@ -61,52 +73,46 @@ export default function BudgetModal({
       onClose={closeHandler}
       css={{ height: "600px" }}
     >
-      <Modal.Header>
-        <Text h1>{title} Category</Text>
-      </Modal.Header>
-      <Modal.Body>
-        <CreatableSelect
-          styles={selectFieldStyles}
-          defaultValue={
-            userCategories && userCategories.Category
-              ? categoryLists[userCategories.Category.id - 1]
-              : ""
-          }
-          options={categoryLists}
-          onChange={handleSelectChange}
-        />
-        <Input
-          ref={dateRef}
-          label="Date"
-          type="date"
-          initialValue={date && yyyyMmDdConverter(date)}
-        />
-        <Input
-          ref={amountRef}
-          label="Amount"
-          type="number"
-          // initialValue={userCategories && userCategories.amount}
-        />
-      </Modal.Body>
-      <Modal.Footer>
-        <Button auto light onPress={closeHandler}>
-          Close
-        </Button>
-        <Button
-          auto
-          onPress={() => {
-            closeHandler();
-            handleBudget(
-              userCategories.id,
-              selectedCategories,
-              dateRef.current.value,
-              amountRef.current.value
-            );
-          }}
-        >
-          Confirm
-        </Button>
-      </Modal.Footer>
+      <form onSubmit={handleSubmit}>
+        <Modal.Header>
+          <Text h1>{title} Category</Text>
+        </Modal.Header>
+        <Modal.Body>
+          <CreatableSelect
+            required
+            styles={selectFieldStyles}
+            defaultValue={
+              userCategories && userCategories.Category
+                ? categoryLists[userCategories.Category.id - 1]
+                : ""
+            }
+            options={categoryLists}
+            onChange={handleSelectChange}
+          />
+          <Input
+            required
+            ref={dateRef}
+            label="Date"
+            type="date"
+            initialValue={date && yyyyMmDdConverter(date)}
+          />
+          <Input
+            required
+            ref={amountRef}
+            label="Amount"
+            type="number"
+            // initialValue={userCategories && userCategories.amount}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button auto light onPress={closeHandler}>
+            Close
+          </Button>
+          <Button auto type="submit">
+            Confirm
+          </Button>
+        </Modal.Footer>
+      </form>
     </Modal>
   );
 }

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import NotificationCard from "./NotificationCard";
 import { Box } from "@mui/material";
 import axios from "axios";
+import { Button, Modal, Text } from "@nextui-org/react";
 
 export default function NotificationList({
   currUser,
@@ -10,6 +11,16 @@ export default function NotificationList({
   setNotifications,
 }) {
   const [notis, setNotis] = useState();
+  const [deleteModal, setDeleteModal] = useState(false);
+  const [notificationToDelete, setNotificationToDelete] = useState();
+
+  const closeHandler = () => {
+    setDeleteModal(false);
+  };
+  const handleDeleteModal = (noti) => {
+    setDeleteModal(true);
+    setNotificationToDelete(noti);
+  };
 
   const handleRead = async (isRead, notificationId) => {
     const allNotification = await axios.put(
@@ -66,12 +77,45 @@ export default function NotificationList({
             key={notification.id}
             notification={notification}
             handleRead={handleRead}
-            handleDelete={handleDelete}
+            handleDeleteModal={handleDeleteModal}
           />
         );
       });
     }
   };
 
-  return <Box>{notis && notificationCards()}</Box>;
+  return (
+    <Box>
+      {notis && notificationCards()}
+      <Modal
+        closeButton
+        blur
+        aria-labelledby="modal-title"
+        open={deleteModal}
+        onClose={closeHandler}
+      >
+        <Modal.Header>
+          <Text h1>Delete Notification</Text>
+        </Modal.Header>
+        <Modal.Body>
+          <Text h2>Are you sure you want to delete?</Text>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button auto light onPress={closeHandler}>
+            Back
+          </Button>
+          <Button
+            auto
+            color="warning"
+            onPress={() => {
+              closeHandler();
+              handleDelete(notificationToDelete.id);
+            }}
+          >
+            Confirm
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </Box>
+  );
 }
