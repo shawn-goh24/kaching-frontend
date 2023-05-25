@@ -1,4 +1,4 @@
-import { Box, Container, Tab, useMediaQuery } from "@mui/material";
+import { Box, Container, Tab, Typography, useMediaQuery } from "@mui/material";
 import React, { useState } from "react";
 import TabContext from "@mui/lab/TabContext/TabContext";
 import TabList from "@mui/lab/TabList/TabList";
@@ -7,7 +7,7 @@ import AddCategory from "./AddCategory";
 import EditCategory from "./EditCategory";
 import ProfileSetting from "./ProfileSetting";
 
-export default function Settings({ currUser, accessToken }) {
+export default function Settings({ currUser, accessToken, setCurrUser }) {
   const isMdScreen = useMediaQuery("(max-width: 1440px)");
   const [tabValue, setTabValue] = useState("1");
 
@@ -18,9 +18,17 @@ export default function Settings({ currUser, accessToken }) {
   return (
     <Container>
       <Container maxWidth={isMdScreen ? "md" : "lg"}>
-        <h1>Edit Profile</h1>
-        <ProfileSetting currUser={currUser} accessToken={accessToken} />
-        <h1>Category Settings</h1>
+        <Typography variant="h3" sx={{ py: 3 }}>
+          Edit Profile
+        </Typography>
+        <ProfileSetting
+          currUser={currUser}
+          accessToken={accessToken}
+          setCurrUser={setCurrUser}
+        />
+        <Typography variant="h3" sx={{ py: 3 }}>
+          Category Settings
+        </Typography>
         <TabContext
           value={tabValue}
           sx={{ display: "flex", justifyContent: "center" }}

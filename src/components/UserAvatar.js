@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export default function UserAvatar({ currUser, accessToken }) {
+export default function UserAvatar({ currUser, accessToken, setSelectedPage }) {
   const { logout, user } = useAuth0();
   const navigate = useNavigate();
   const [isInvisible, setIsInvisible] = useState(false);
@@ -50,10 +50,13 @@ export default function UserAvatar({ currUser, accessToken }) {
   const handleEvents = (e) => {
     if (e === "dashboard") {
       navigate("/user/dashboard");
+      setSelectedPage("dashboard");
     } else if (e === "settings") {
       navigate("/user/settings");
+      setSelectedPage("settings");
     } else if (e === "notification") {
       navigate("/user/notifications");
+      setSelectedPage("notifications");
     } else {
       logout({ logoutParams: { returnTo: window.location.origin } });
     }

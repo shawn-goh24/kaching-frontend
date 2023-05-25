@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { Box } from "@mui/material";
+import { Box, IconButton, Snackbar } from "@mui/material";
 import { Button, Input, Text } from "@nextui-org/react";
 import { MuiColorInput } from "mui-color-input";
-import CreatableSelect from "react-select/creatable";
+import Select from "react-select";
 import axios from "axios";
+import CloseIcon from "@mui/icons-material/Close";
 
 export default function AddCategory({ currUser, accessToken }) {
   const [newCatName, setNewCatName] = useState("");
   const [color, setColor] = useState(
-    Math.floor(Math.random() * 16777215).toString(16)
+    `#${Math.floor(Math.random() * 16777215).toString(16)}`
   );
   const [selectedIncomeExpense, setSelectedIncomeExpense] = useState([]);
   const [incomeExpenseList, setIncomeExpenseList] = useState([]);
+  const [snackOpen, setSnackOpen] = useState(false);
 
+  console.log(accessToken);
   useEffect(() => {
     if (accessToken) {
       getIncomeExpenseApi();
@@ -39,17 +42,18 @@ export default function AddCategory({ currUser, accessToken }) {
   // reset inputs
   const handleClearCategory = () => {
     setNewCatName("");
-    setColor(Math.floor(Math.random() * 16777215).toString(16));
+    setColor(`#${Math.floor(Math.random() * 16777215).toString(16)}`);
     setSelectedIncomeExpense([]);
   };
 
   // add new category into database
   const handleAddCategory = async () => {
+    console.log(newCatName, color, selectedIncomeExpense.value, accessToken);
     const newCat = await axios.post(
       "http://localhost:8080/category/new",
       {
         name: newCatName,
-        color: `#${color}`,
+        color: `${color}`,
         incomeExpenseId: selectedIncomeExpense.value,
       },
       {
@@ -59,9 +63,8 @@ export default function AddCategory({ currUser, accessToken }) {
       }
     );
 
-    console.log(newCat.data);
-
-    const newUserCat = await axios.post(
+    // add to userCategory table
+    await axios.post(
       "http://localhost:8080/category/add",
       {
         userId: currUser.id,
@@ -75,10 +78,12 @@ export default function AddCategory({ currUser, accessToken }) {
     );
 
     handleClearCategory();
+    setSnackOpen(true);
   };
 
   // handle color input
   const handleColor = (color) => {
+    console.log(color);
     setColor(color);
   };
 
@@ -87,11 +92,34 @@ export default function AddCategory({ currUser, accessToken }) {
     setSelectedIncomeExpense(selectedOption);
   };
 
+  // handle submit of new category form
   const handleSubmit = (e) => {
     e.preventDefault();
 
     handleAddCategory();
   };
+
+  // close snackbar
+  const handleCloseSnack = (e, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+    setSnackOpen(false);
+  };
+
+  // snackbar actions
+  const snackAction = (
+    <React.Fragment>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleCloseSnack}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
 
   return (
     <Box>
@@ -104,6 +132,7 @@ export default function AddCategory({ currUser, accessToken }) {
             fullWidth
             placeholder="Insert Category"
             onChange={(e) => setNewCatName(e.target.value)}
+            css={{ mb: 20 }}
           />
           <Text h3>Color:</Text>
           <MuiColorInput
@@ -112,15 +141,17 @@ export default function AddCategory({ currUser, accessToken }) {
             value={color}
             onChange={handleColor}
           />
-          <Text h3>Income or Expense:</Text>
-          {/* <Box width="225px"> */}
-          <CreatableSelect
+          <Text h3 css={{ mt: 20 }}>
+            Income or Expense:
+          </Text>
+          <Select
             required
             value={selectedIncomeExpense}
             options={incomeExpenseList}
             onChange={handleIncomeExpenseChange}
+            menuPortalTarget={document.body}
+            styles={{ menuPortal: (base) => ({ ...base, zIndex: 9999 }) }}
           />
-          {/* </Box> */}
         </Box>
         <Box display="flex" justifyContent="flex-end" marginTop={7}>
           <Button light onPress={handleClearCategory}>
@@ -131,6 +162,13 @@ export default function AddCategory({ currUser, accessToken }) {
           </Button>
         </Box>
       </form>
+      <Snackbar
+        open={snackOpen}
+        autoHideDuration={3000}
+        onClose={handleCloseSnack}
+        message="New category added"
+        action={snackAction}
+      />
     </Box>
   );
 }

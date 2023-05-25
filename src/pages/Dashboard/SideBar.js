@@ -1,7 +1,6 @@
 import { Box, Divider, IconButton, Tooltip } from "@mui/material";
 import useMediaQuery from "../../hooks/useMediaQuery";
 import React, { useEffect, useState } from "react";
-import logoImg from "../../assets/logoImg.svg";
 import HomeIcon from "@mui/icons-material/Home";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import SettingsIcon from "@mui/icons-material/Settings";
@@ -12,7 +11,13 @@ import { Outlet, useNavigate } from "react-router-dom";
 import EmailIcon from "@mui/icons-material/Email";
 import axios from "axios";
 
-export default function SideBar({ currUser, accessToken, notifications }) {
+export default function SideBar({
+  currUser,
+  accessToken,
+  notifications,
+  selectedPage,
+  setSelectedPage,
+}) {
   const isSmallScreen = useMediaQuery("(max-width: 1000px)");
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isInvisible, setIsInvisible] = useState(false);
@@ -22,15 +27,19 @@ export default function SideBar({ currUser, accessToken, notifications }) {
 
   const goToHome = () => {
     navigate("/home");
+    setSelectedPage("home");
   };
   const goToSettings = () => {
     navigate("/user/settings");
+    setSelectedPage("settings");
   };
   const goToDashboard = () => {
     navigate("/user/dashboard");
+    setSelectedPage("dashboard");
   };
   const goToNotification = () => {
     navigate("/user/notifications");
+    setSelectedPage("notifications");
   };
 
   const getNotificationsApi = () => {
@@ -68,7 +77,8 @@ export default function SideBar({ currUser, accessToken, notifications }) {
           justifyContent: "space-between",
           alignItems: "center",
           // transition: "width 200ms ease-in-out",
-          backgroundColor: "#D2F2FF",
+          // backgroundColor: "#D2F2FF",
+          backgroundColor: "#202A44",
           position: "fixed",
         }}
       >
@@ -86,12 +96,32 @@ export default function SideBar({ currUser, accessToken, notifications }) {
             <Divider />
           </Box>
           <Tooltip title="Home" placement="right">
-            <IconButton onClick={goToHome}>
+            <IconButton
+              onClick={goToHome}
+              sx={{
+                color: "lightgrey",
+                "&:hover": {
+                  backgroundColor: "#587EDE",
+                  color: "lightgray",
+                },
+              }}
+            >
               <HomeIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="Dashboard" placement="right">
-            <IconButton onClick={goToDashboard}>
+            <IconButton
+              onClick={goToDashboard}
+              sx={{
+                color: `${
+                  selectedPage === "dashboard" ? "#587EDE" : "lightgrey"
+                }`,
+                "&:hover": {
+                  backgroundColor: "#587EDE",
+                  color: "lightgray",
+                },
+              }}
+            >
               <DashboardIcon />
             </IconButton>
           </Tooltip>
@@ -102,14 +132,36 @@ export default function SideBar({ currUser, accessToken, notifications }) {
             placement="bottom-right"
           >
             <Tooltip title="Notifications" placement="right">
-              <IconButton onClick={goToNotification}>
+              <IconButton
+                onClick={goToNotification}
+                sx={{
+                  color: `${
+                    selectedPage === "notifications" ? "#587EDE" : "lightgrey"
+                  }`,
+                  "&:hover": {
+                    backgroundColor: "#587EDE",
+                    color: "lightgray",
+                  },
+                }}
+              >
                 <EmailIcon />
               </IconButton>
             </Tooltip>
           </Badge>
           <Divider />
-          <Tooltip title="Profile Settings" placement="right">
-            <IconButton onClick={goToSettings}>
+          <Tooltip title="Settings" placement="right">
+            <IconButton
+              onClick={goToSettings}
+              sx={{
+                color: `${
+                  selectedPage === "settings" ? "#587EDE" : "lightgrey"
+                }`,
+                "&:hover": {
+                  backgroundColor: "#587EDE",
+                  color: "lightgray",
+                },
+              }}
+            >
               <SettingsIcon />
             </IconButton>
           </Tooltip>
@@ -118,6 +170,13 @@ export default function SideBar({ currUser, accessToken, notifications }) {
           <Tooltip title="Open sidebar" placement="right">
             <IconButton
               onClick={() => setIsDrawerOpen((prev) => !isDrawerOpen)}
+              sx={{
+                color: "#587EDE",
+                "&:hover": {
+                  backgroundColor: "#587EDE",
+                  color: "lightgray",
+                },
+              }}
             >
               <KeyboardDoubleArrowRightIcon />
             </IconButton>
@@ -132,20 +191,23 @@ export default function SideBar({ currUser, accessToken, notifications }) {
         sx={{
           height: "100vh",
           width: `${isSmallScreen ? "70%" : "450px"}`,
-          backgroundColor: "#D2F2FF",
-          position: "absolute",
+          backgroundColor: "#202A44",
+          position: "fixed",
           zIndex: "99",
         }}
       >
         <Box>
           <Box mt={10}>
             <Avatar
-              src="https://i.pravatar.cc/150?u=a042581f4e29026024d"
+              src={currUser && currUser.imageUrl}
+              text={currUser.firstName}
               bordered
               color="primary"
               css={{ width: "175px", height: "175px" }}
             />
-            <Text h1>Shawn Goh</Text>
+            <Text h1 css={{ color: "lightgray" }}>
+              Shawn Goh
+            </Text>
           </Box>
           <Box display="flex" flexDirection="column">
             <Box mb={3}>
@@ -153,32 +215,77 @@ export default function SideBar({ currUser, accessToken, notifications }) {
                 light
                 icon={<HomeIcon sx={{ mr: "10px" }} />}
                 onPress={goToHome}
+                css={{
+                  color: "lightgrey",
+                  "&:hover": {
+                    backgroundColor: "#587EDE",
+                    color: "lightgray",
+                  },
+                }}
               >
                 Home
               </Button>
               <Button
                 light
                 icon={<DashboardIcon sx={{ mr: "10px" }} />}
-                onPress={goToDashboard}
+                onPress={() => {
+                  goToDashboard();
+                  setIsDrawerOpen((prev) => !isDrawerOpen);
+                }}
+                css={{
+                  color: `${
+                    selectedPage === "dashboard" ? "#587EDE" : "lightgrey"
+                  }`,
+                  "&:hover": {
+                    backgroundColor: "#587EDE",
+                    color: "lightgray",
+                  },
+                }}
               >
                 Dashboard
               </Button>
               <Button
                 light
                 icon={<EmailIcon sx={{ mr: "10px" }} />}
-                onPress={goToNotification}
+                onPress={() => {
+                  goToNotification();
+                  setIsDrawerOpen((prev) => !isDrawerOpen);
+                }}
+                css={{
+                  color: `${
+                    selectedPage === "notifications" ? "#587EDE" : "lightgrey"
+                  }`,
+                  "&:hover": {
+                    backgroundColor: "#587EDE",
+                    color: "lightgray",
+                  },
+                }}
               >
                 Notifications
               </Button>
             </Box>
             <Box>
-              <Text h3>Settings</Text>
+              <Text h3 css={{ color: "lightgray" }}>
+                Settings
+              </Text>
               <Button
                 light
                 icon={<SettingsIcon sx={{ mr: "10px" }} />}
-                onPress={goToSettings}
+                onPress={() => {
+                  goToSettings();
+                  setIsDrawerOpen((prev) => !isDrawerOpen);
+                }}
+                css={{
+                  color: `${
+                    selectedPage === "settings" ? "#587EDE" : "lightgrey"
+                  }`,
+                  "&:hover": {
+                    backgroundColor: "#587EDE",
+                    color: "lightgray",
+                  },
+                }}
               >
-                Profile
+                Settings
               </Button>
             </Box>
           </Box>
@@ -187,6 +294,13 @@ export default function SideBar({ currUser, accessToken, notifications }) {
           <Tooltip title="Open sidebar" placement="right">
             <IconButton
               onClick={() => setIsDrawerOpen((prev) => !isDrawerOpen)}
+              sx={{
+                color: "#587EDE",
+                "&:hover": {
+                  backgroundColor: "#587EDE",
+                  color: "lightgray",
+                },
+              }}
             >
               <KeyboardDoubleArrowLeftIcon />
             </IconButton>

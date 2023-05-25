@@ -58,7 +58,7 @@ export default function Dashboard({ accessToken, currUser }) {
   };
 
   // handle deletion of bills
-  const handleDelete = async (billId) => {
+  const handleDeleteBill = async (billId) => {
     if (accessToken) {
       const response = await axios.delete(
         `http://localhost:8080/bill/${currUser.id}/${billId}`,
@@ -74,7 +74,7 @@ export default function Dashboard({ accessToken, currUser }) {
   };
 
   // handle the edit of bill
-  const handleEdit = async (billId, name, date) => {
+  const handleEditBill = async (billId, name, date) => {
     if (accessToken) {
       const response = await axios.put(
         `http://localhost:8080/bill/${currUser.id}/${billId}`,
@@ -95,7 +95,7 @@ export default function Dashboard({ accessToken, currUser }) {
   };
 
   // handle add new bill reminder
-  const handleAdd = async (name, date) => {
+  const handleAddBill = async (name, date) => {
     if (accessToken) {
       const response = await axios.post(
         `http://localhost:8080/bill/new`,
@@ -119,9 +119,13 @@ export default function Dashboard({ accessToken, currUser }) {
 
   return (
     <Container maxWidth="xl">
-      <Box>
-        <Typography variant="h4">Dashboard</Typography>
-        <Typography variant="subtitle">Welcome to your dashboard</Typography>
+      <Box sx={{ pt: 3 }}>
+        <Typography variant="h4">
+          <strong>Dashboard</strong>
+        </Typography>
+        <Typography variant="subtitle" sx={{ color: "#587EDE" }}>
+          Welcome to your dashboard
+        </Typography>
       </Box>
       <AmountBillRow
         currUser={currUser}
@@ -134,21 +138,21 @@ export default function Dashboard({ accessToken, currUser }) {
         ytdTransactions={ytdTransactions}
         setAddBillModal={setAddBillModal}
         billReminders={billReminders}
-        handleDelete={handleDelete}
+        handleDelete={handleDeleteBill}
         handleOpenEditBillModal={handleOpenEditBillModal}
       />
       <BillModal
         title="Add"
         billModal={addBillModal}
         setBillModal={setAddBillModal}
-        handleAdd={handleAdd}
+        handleAdd={handleAddBill}
       />
       <BillModal
         title="Edit"
         billModal={editBillModal}
         setBillModal={setEditBillModal}
         bill={tmp}
-        handleEdit={handleEdit}
+        handleEdit={handleEditBill}
       />
     </Container>
   );

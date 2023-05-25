@@ -16,6 +16,7 @@ function App() {
   const [currUser, setCurrUser] = useState("");
   const [accessToken, setAccessToken] = useState("");
   const [notifications, setNotifications] = useState([]);
+  const [selectedPage, setSelectedPage] = useState("");
 
   useEffect(() => {
     if (isAuthenticated && user) {
@@ -66,7 +67,11 @@ function App() {
         <Route
           path="/"
           element={
-            <NavigationBar accessToken={accessToken} currUser={currUser} />
+            <NavigationBar
+              accessToken={accessToken}
+              currUser={currUser}
+              setSelectedPage={setSelectedPage}
+            />
           }
         >
           <Route index element={<LandingPage />} />
@@ -82,6 +87,8 @@ function App() {
               accessToken={accessToken}
               currUser={currUser}
               notifications={notifications}
+              selectedPage={selectedPage}
+              setSelectedPage={setSelectedPage}
             />
           }
         >
@@ -93,7 +100,13 @@ function App() {
           />
           <Route
             path="settings"
-            element={<Settings currUser={currUser} accessToken={accessToken} />}
+            element={
+              <Settings
+                currUser={currUser}
+                accessToken={accessToken}
+                setCurrUser={setCurrUser}
+              />
+            }
           />
           <Route
             path="notifications"
@@ -101,7 +114,6 @@ function App() {
               <Notifications
                 currUser={currUser}
                 accessToken={accessToken}
-                notifications={notifications}
                 setNotifications={setNotifications}
               />
             }

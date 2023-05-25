@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Modal, Input, Button, Text } from "@nextui-org/react";
-import { yyyyMmDdConverter } from "../../utils/utils";
-import CreatableSelect from "react-select/creatable";
+import { getGroupedCategories, yyyyMmDdConverter } from "../../utils/utils";
+import Select from "react-select";
 
 // Select field styles
 const selectFieldStyles = {
@@ -19,34 +19,63 @@ export default function BudgetModal({
   date,
   handleBudget,
 }) {
-  const [selected, setSelected] = useState("");
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const nameRef = useRef();
   const dateRef = useRef();
   const amountRef = useRef();
+  const [groupedOptions, setGroupedOptions] = useState([]);
+  const [categoryLists, setCategoryLists] = useState([]);
 
-  // useEffect(() => {
-  //   console.log(userCategories);
-  // });
-
-  // useEffect(() => {
-  //   if (editTransaction && editTransaction.Category)
-  //     setSelected(new Set([`${editTransaction.Category.name}`]));
-  // }, [editTransaction]);
+  useEffect(() => {
+    const [groupedOptions, categoryLists] =
+      getGroupedCategories(userCategories);
+    setGroupedOptions(groupedOptions);
+    setCategoryLists(categoryLists);
+  }, [userCategories]);
 
   const closeHandler = () => {
     setBudgetModal(false);
   };
 
-  let categoryLists;
-  if (userCategories.Categories) {
-    categoryLists = userCategories.Categories.map((cat) => ({
-      // value is what we store
-      value: cat.id,
-      // label is what we display
-      label: cat.name,
-    }));
-  }
+  // let categoryLists;
+  // if (userCategories.Categories) {
+  //   categoryLists = userCategories.Categories.map((cat) => ({
+  //     value: cat.id,
+  //     label: cat.name,
+  //   }));
+  // }
+  // let expenseCategories;
+  // if (userCategories.Categories) {
+  //   expenseCategories = userCategories.Categories.map(
+  //     (cat) =>
+  //       cat.incomeExpenseId === 1 && {
+  //         value: cat.id,
+  //         label: cat.name,
+  //       }
+  //   ).filter((cat) => cat !== false);
+  // }
+  // let incomeCategories;
+  // if (userCategories.Categories) {
+  //   incomeCategories = userCategories.Categories.map(
+  //     (cat) =>
+  //       cat.incomeExpenseId === 2 && {
+  //         value: cat.id,
+  //         label: cat.name,
+  //       }
+  //   ).filter((cat) => cat !== false);
+  // }
+  // let groupedOptions;
+  // if (userCategories.Categories) {
+  //   groupedOptions = [
+  //     {
+  //       label: "Expense",
+  //       options: expenseCategories,
+  //     },
+  //     {
+  //       label: "Income",
+  //       options: incomeCategories,
+  //     },
+  //   ];
+  // }
 
   const handleSelectChange = (selectedOption) => {
     setSelectedCategories(selectedOption);
@@ -56,6 +85,7 @@ export default function BudgetModal({
     e.preventDefault();
 
     closeHandler();
+
     handleBudget(
       userCategories.id,
       selectedCategories,
@@ -77,8 +107,9 @@ export default function BudgetModal({
         <Modal.Header>
           <Text h1>{title} Category</Text>
         </Modal.Header>
-        <Modal.Body>
-          <CreatableSelect
+        <Modal.Body css={{ height: "430px" }}>
+          <Text h4>Category</Text>
+          <Select
             required
             styles={selectFieldStyles}
             defaultValue={
@@ -86,23 +117,18 @@ export default function BudgetModal({
                 ? categoryLists[userCategories.Category.id - 1]
                 : ""
             }
-            options={categoryLists}
+            options={groupedOptions}
             onChange={handleSelectChange}
           />
+          <Text h4>Date</Text>
           <Input
             required
             ref={dateRef}
-            label="Date"
             type="date"
             initialValue={date && yyyyMmDdConverter(date)}
           />
-          <Input
-            required
-            ref={amountRef}
-            label="Amount"
-            type="number"
-            // initialValue={userCategories && userCategories.amount}
-          />
+          <Text h4>Amount</Text>
+          <Input required ref={amountRef} type="number" />
         </Modal.Body>
         <Modal.Footer>
           <Button auto light onPress={closeHandler}>

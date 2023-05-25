@@ -12,6 +12,7 @@ export default function NotificationCard({
     <Paper
       elevation={3}
       sx={{
+        marginY: "10px",
         paddingX: "10px",
         backgroundColor: `${notification.isRead && "#D9D9D9"}`,
         display: "flex",
@@ -50,15 +51,15 @@ export default function NotificationCard({
       </Box>
       <Box className="action" sx={{ display: "none" }}>
         <IconButton
-          sx={{ mx: "5px" }}
-          onClick={() => handleDeleteModal(notification)}
-        >
-          <DeleteForeverIcon />
-        </IconButton>
-        <IconButton
           onClick={() => handleRead(!notification.isRead, notification.id)}
         >
           <MarkunreadIcon />
+        </IconButton>
+        <IconButton
+          sx={{ mx: "5px" }}
+          onClick={() => handleDeleteModal(notification)}
+        >
+          <DeleteForeverIcon color="error" />
         </IconButton>
       </Box>
     </Paper>

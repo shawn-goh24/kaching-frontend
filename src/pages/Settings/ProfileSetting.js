@@ -15,9 +15,8 @@ const selectFieldStyles = {
   }),
 };
 
-export default function ProfileSetting({ currUser, accessToken }) {
+export default function ProfileSetting({ currUser, accessToken, setCurrUser }) {
   const { user } = useAuth0();
-
   const [selectedCurrency, setSelectedCurrency] = useState([]);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -27,9 +26,7 @@ export default function ProfileSetting({ currUser, accessToken }) {
   const [hasChanged, setHasChanged] = useState(false);
   const [isGoogleAuth, setIsGoogleAuth] = useState();
 
-  console.log(user);
-  console.log(currUser);
-
+  // set default states
   useEffect(() => {
     if (currUser) {
       setFirstName(currUser.firstName);
@@ -40,12 +37,14 @@ export default function ProfileSetting({ currUser, accessToken }) {
     }
   }, [currUser]);
 
+  // check if user is authenticated from google
   useEffect(() => {
     if (user) {
       setIsGoogleAuth(user.sub.includes("google"));
     }
   }, [user]);
 
+  // handle react-select selection
   const handleSelectChange = (selectedOption) => {
     setCurrency(selectedOption.label);
     setSelectedCurrency(selectedOption);
@@ -79,38 +78,40 @@ export default function ProfileSetting({ currUser, accessToken }) {
 
   // handle edit user profile
   const handleEditUserProfile = async () => {
-    console.log(isGoogleAuth);
-    if (accessToken && isGoogleAuth) {
-      await axios.put(
-        `http://localhost:8080/user/edit/${currUser.id}`,
-        {
-          mainCurrency: currency,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
+    if (accessToken) {
+      let updatedUser;
+      if (isGoogleAuth) {
+        updatedUser = await axios.put(
+          `http://localhost:8080/user/edit/${currUser.id}`,
+          {
+            mainCurrency: currency,
           },
-        }
-      );
-    } else {
-      const response = await axios.put(
-        `http://localhost:8080/user/edit/${currUser.id}`,
-        {
-          firstName: firstName,
-          lastName: lastName,
-          email: email,
-          mainCurrency: currency,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+      } else {
+        updatedUser = await axios.put(
+          `http://localhost:8080/user/edit/${currUser.id}`,
+          {
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            mainCurrency: currency,
           },
-        }
-      );
-      console.log(response.data);
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        );
+      }
+      setCurrUser(updatedUser.data);
     }
   };
-  console.log(isGoogleAuth);
+
   return (
     <Box>
       <Text h3>First Name:</Text>
@@ -123,6 +124,7 @@ export default function ProfileSetting({ currUser, accessToken }) {
           setFirstName(e.target.value);
           setHasChanged(true);
         }}
+        css={{ mb: 20 }}
       />
       <Text h3>Last Name:</Text>
       <Input
@@ -134,6 +136,7 @@ export default function ProfileSetting({ currUser, accessToken }) {
           setLastName(e.target.value);
           setHasChanged(true);
         }}
+        css={{ mb: 20 }}
       />
       <Text h3>Email:</Text>
       <Input
@@ -145,6 +148,7 @@ export default function ProfileSetting({ currUser, accessToken }) {
           setEmail(e.target.value);
           setHasChanged(true);
         }}
+        css={{ mb: 20 }}
       />
       <Text h3>Currency:</Text>
       <Select

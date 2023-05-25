@@ -5,6 +5,7 @@ import { combineExpenseCategoryAmounts } from "../../utils/utils";
 import EditBudget from "../../components/form/EditBudget";
 import DeleteBudgetModal from "../../components/form/DeleteBudgetModal";
 import axios from "axios";
+import useMediaQuery from "../../hooks/useMediaQuery";
 
 export default function BudgetList({
   budgets,
@@ -16,6 +17,7 @@ export default function BudgetList({
   const [editModal, openEditModal] = useState(false);
   const [deleteModal, openDeleteModal] = useState(false);
   const [budgetToEdit, setBudgetToEdit] = useState();
+  const isSmallHeight = useMediaQuery("(max-height: 960px)");
 
   // open edit modal
   const handleEditModal = (budget) => {
@@ -99,7 +101,12 @@ export default function BudgetList({
   };
 
   return (
-    <Box sx={{ height: "600px", overflowX: "scroll" }}>
+    <Box
+      sx={{
+        maxHeight: `${isSmallHeight ? "35%" : "60%"}`,
+        overflowY: "scroll",
+      }}
+    >
       {mappedBudget()}
       <EditBudget
         title="Edit"

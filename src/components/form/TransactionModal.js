@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Modal, Input, Button, Text } from "@nextui-org/react";
-import { yyyyMmDdConverter } from "../../utils/utils";
-import CreatableSelect from "react-select/creatable";
+import { yyyyMmDdConverter, getGroupedCategories } from "../../utils/utils";
+import Select from "react-select";
 
 // Select field styles
 const selectFieldStyles = {
@@ -26,27 +26,31 @@ export default function TransactionModal({
   const dateRef = useRef();
   const amountRef = useRef();
 
+  const [groupedOptions, setGroupedOptions] = useState([]);
+  const [categoryLists, setCategoryLists] = useState([]);
+
+  useEffect(() => {
+    const [groupedOptions, categoryLists] = getGroupedCategories(categories);
+    setGroupedOptions(groupedOptions);
+    setCategoryLists(categoryLists);
+  }, [categories]);
+
   useEffect(() => {
     if (editTransaction && editTransaction.Category)
       setSelected(new Set([`${editTransaction.Category.name}`]));
   }, [editTransaction]);
 
-  // const handler = () => setVisible(true);
-
   const closeHandler = () => {
     setOpenModal(false);
-    console.log("closed");
   };
 
-  let categoryLists;
-  if (categories.Categories) {
-    categoryLists = categories.Categories.map((cat) => ({
-      // value is what we store
-      value: cat.id,
-      // label is what we display
-      label: cat.name,
-    }));
-  }
+  // let categoryLists;
+  // if (categories.Categories) {
+  //   categoryLists = categories.Categories.map((cat) => ({
+  //     value: cat.id,
+  //     label: cat.name,
+  //   }));
+  // }
 
   const handleSelectChange = (selectedOption) => {
     setSelectedCategories(selectedOption);
@@ -84,17 +88,19 @@ export default function TransactionModal({
           <Text h1>{title} Transaction</Text>
         </Modal.Header>
         <Modal.Body>
+          <Text h4>Name</Text>
           <Input
             required
             ref={nameRef}
-            label="Name"
+            // label="Name"
             type="text"
             initialValue={editTransaction && editTransaction.name}
           />
+          <Text h4>Date</Text>
           <Input
             required
             ref={dateRef}
-            label="Date"
+            // label="Date"
             type="date"
             initialValue={
               editTransaction
@@ -102,14 +108,16 @@ export default function TransactionModal({
                 : yyyyMmDdConverter(new Date())
             }
           />
+          <Text h4>Amount</Text>
           <Input
             required
             ref={amountRef}
-            label="Amount"
+            // label="Amount"
             type="number"
             initialValue={editTransaction && editTransaction.amount}
           />
-          <CreatableSelect
+          <Text h4>Category</Text>
+          <Select
             required
             styles={selectFieldStyles}
             defaultValue={
@@ -117,7 +125,7 @@ export default function TransactionModal({
                 ? categoryLists[editTransaction.Category.id - 1]
                 : ""
             }
-            options={categoryLists}
+            options={groupedOptions}
             onChange={handleSelectChange}
           />
         </Modal.Body>

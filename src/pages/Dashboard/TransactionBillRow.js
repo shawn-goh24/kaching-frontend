@@ -4,7 +4,7 @@ import { Button, Card, Modal, Text } from "@nextui-org/react";
 import AddIcon from "@mui/icons-material/Add";
 import { currencyFormatter } from "../../utils/utils";
 import BillCard from "./BillCard";
-import { IconButton } from "@mui/material";
+import { IconButton, Typography } from "@mui/material";
 
 export default function TransactionBillRow({
   currUser,
@@ -41,9 +41,24 @@ export default function TransactionBillRow({
                 >
                   <div>{transaction.name}</div>
                   <div style={{ marginRight: "50px" }}>
-                    {currencyFormatter(currUser.mainCurrency).format(
-                      transaction.amount
+                    {console.log(transaction.Category.incomeExpenseId)}
+                    {transaction.Category.incomeExpenseId === 1 ? (
+                      <Typography color="error">
+                        -
+                        {currencyFormatter(currUser.mainCurrency).format(
+                          transaction.amount
+                        )}
+                      </Typography>
+                    ) : (
+                      <Typography color="primary">
+                        {currencyFormatter(currUser.mainCurrency).format(
+                          transaction.amount
+                        )}
+                      </Typography>
                     )}
+                    {/* {currencyFormatter(currUser.mainCurrency).format(
+                      transaction.amount
+                    )} */}
                   </div>
                 </Card.Body>
               </Card>
@@ -77,15 +92,19 @@ export default function TransactionBillRow({
       <Grid container spacing={2} my={1}>
         <Grid item xs={12} sm={7}>
           <Card>
-            <Card.Header>Recent 5 Transactions</Card.Header>
+            <Card.Header>
+              <strong>Recent 5 Transactions</strong>
+            </Card.Header>
             <Card.Body>{recentTransactions()}</Card.Body>
           </Card>
         </Grid>
         <Grid item xs={12} sm={5}>
           <Card css={{ height: "100%" }}>
-            <Card.Header>
-              Bill Reminders
-              <IconButton onClick={() => setAddBillModal(true)}>
+            <Card.Header
+              css={{ display: "flex", justifyContent: "space-between" }}
+            >
+              <strong>Bill Reminders</strong>
+              <IconButton sx={{ mr: 3 }} onClick={() => setAddBillModal(true)}>
                 <AddIcon />
               </IconButton>
             </Card.Header>

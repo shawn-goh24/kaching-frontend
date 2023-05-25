@@ -16,7 +16,7 @@ export default function Top10Expenses({ topExpensesByCat }) {
       type: "treemap",
     },
     title: {
-      text: "Top Categories expenses",
+      text: "Top expenses (Categories)",
       align: "center",
     },
     colors: [

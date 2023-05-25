@@ -7,22 +7,43 @@ import { Button, Modal, Text } from "@nextui-org/react";
 export default function NotificationList({
   currUser,
   accessToken,
-  notifications,
   setNotifications,
 }) {
   const [notis, setNotis] = useState();
   const [deleteModal, setDeleteModal] = useState(false);
   const [notificationToDelete, setNotificationToDelete] = useState();
 
+  useEffect(() => {
+    getNotificationsApi();
+  }, [accessToken]);
+
+  // get all notification by user
+  const getNotificationsApi = async () => {
+    if (accessToken) {
+      const allNotification = await axios.get(
+        `http://localhost:8080/notification/${currUser.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      setNotis(allNotification.data);
+    }
+  };
+
+  // close delete modal
   const closeHandler = () => {
     setDeleteModal(false);
   };
-  const handleDeleteModal = (noti) => {
+  // open delete modal
+  const handleOpenDeleteModal = (noti) => {
     setDeleteModal(true);
     setNotificationToDelete(noti);
   };
 
-  const handleRead = async (isRead, notificationId) => {
+  // update notification to read/unread
+  const handleReadNotifications = async (isRead, notificationId) => {
     const allNotification = await axios.put(
       `http://localhost:8080/notification/${currUser.id}/${notificationId}`,
       {
@@ -38,7 +59,8 @@ export default function NotificationList({
     setNotis(allNotification.data);
   };
 
-  const handleDelete = async (notificationId) => {
+  // delete notification
+  const handleDeleteNotification = async (notificationId) => {
     const allNotification = await axios.delete(
       `http://localhost:8080/notification/${currUser.id}/${notificationId}`,
       {
@@ -51,24 +73,7 @@ export default function NotificationList({
     setNotis(allNotification.data);
   };
 
-  const getNotificationsApi = async () => {
-    if (accessToken) {
-      const allNotification = await axios.get(
-        `http://localhost:8080/notification/${currUser.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      setNotis(allNotification.data);
-    }
-  };
-
-  useEffect(() => {
-    getNotificationsApi();
-  }, [accessToken]);
-
+  // list of notifications components
   const notificationCards = () => {
     if (notis.length > 0) {
       return notis.map((notification) => {
@@ -76,8 +81,8 @@ export default function NotificationList({
           <NotificationCard
             key={notification.id}
             notification={notification}
-            handleRead={handleRead}
-            handleDeleteModal={handleDeleteModal}
+            handleRead={handleReadNotifications}
+            handleDeleteModal={handleOpenDeleteModal}
           />
         );
       });
@@ -109,7 +114,7 @@ export default function NotificationList({
             color="warning"
             onPress={() => {
               closeHandler();
-              handleDelete(notificationToDelete.id);
+              handleDeleteNotification(notificationToDelete.id);
             }}
           >
             Confirm

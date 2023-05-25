@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Tab, Box } from "@mui/material";
 import PieChart from "./PieChart.js";
 import TabContext from "@mui/lab/TabContext";
@@ -6,6 +6,7 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import BudgetList from "./BudgetList.js";
 import { Button } from "@nextui-org/react";
+import { checkIfContainIncomeOrExpense } from "../../utils/utils.js";
 
 export default function BudgetExpenseCol({
   transactions,
@@ -35,17 +36,35 @@ export default function BudgetExpenseCol({
           </TabList>
         </Box>
         <TabPanel value="1">
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
-            {transactions.length > 0 ? (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              minHeight: "309px",
+              alignItems: "center",
+            }}
+          >
+            {checkIfContainIncomeOrExpense(transactions, "expense") ? (
               <PieChart transactions={transactions} isExpense={true} />
             ) : (
-              "No transcations"
+              "No Expenses"
             )}
           </Box>
         </TabPanel>
         <TabPanel value="2">
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
-            <PieChart transactions={transactions} isExpense={false} />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              minHeight: "309px",
+              alignItems: "center",
+            }}
+          >
+            {checkIfContainIncomeOrExpense(transactions, "income") ? (
+              <PieChart transactions={transactions} isExpense={false} />
+            ) : (
+              "No Income"
+            )}
           </Box>
         </TabPanel>
       </TabContext>
@@ -57,7 +76,12 @@ export default function BudgetExpenseCol({
         getBudgetApi={getBudgetApi}
       />
       <Box sx={{ display: "flex", justifyContent: "center", mt: "20px" }}>
-        <Button onClick={() => setBudgetModal(true)}>Add new budget</Button>
+        <Button
+          onPress={() => setBudgetModal(true)}
+          css={{ backgroundColor: "#587EDE" }}
+        >
+          Add new budget
+        </Button>
       </Box>
     </>
   );

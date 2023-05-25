@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Grid, Box } from "@mui/material";
+import { Grid, Box, Typography } from "@mui/material";
 import TransactionCol from "./TransactionCol.js";
 import BudgetModal from "../../components/form/BudgetModal.js";
 import MonthSelection from "./MonthSelection.js";
 import BudgetExpenseCol from "./BudgetExpenseCol.js";
 import AddCategoryFab from "./AddCategoryFab.js";
+import Loader from "../../components/ui/Loader.js";
+import useMediaQuery from "../../hooks/useMediaQuery.js";
 
 export default function Home({ currUser, accessToken }) {
   const [date, setDate] = useState(new Date());
@@ -14,6 +16,15 @@ export default function Home({ currUser, accessToken }) {
   const [transactions, setTransactions] = useState("");
   const [budgets, setBudgets] = useState("");
   const [openAddTransactionModal, setOpenAddTransactionModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const isSmallHeight = useMediaQuery("(max-height: 960px)");
+
+  // upon loaded, get transaction/budget/categories from db
+  useEffect(() => {
+    getUserTransactionsApi();
+    getBudgetApi();
+    getCategoriesApi();
+  }, [accessToken, date]);
 
   // get all transactions from the user on current month and year
   const getUserTransactionsApi = async () => {
@@ -67,7 +78,7 @@ export default function Home({ currUser, accessToken }) {
   };
 
   // add new budget created by user
-  const handleBudget = async (userId, category, date, amount) => {
+  const handleAddBudget = async (userId, category, date, amount) => {
     if (accessToken) {
       let newBudget = await axios.post(
         `http://localhost:8080/budget/add`,
@@ -88,16 +99,7 @@ export default function Home({ currUser, accessToken }) {
     }
   };
 
-  // upon loaded, get transaction/budget/categories from db
-  useEffect(() => {
-    getUserTransactionsApi();
-    getBudgetApi();
-    getCategoriesApi();
-  }, [accessToken, date]);
-
-  const [show, setShow] = useState(false);
-  const [loading, setLoading] = useState(false);
-
+  //  useeffects to check if loading, and set timeout to display loader
   useEffect(() => {
     if (loading) {
       setTimeout(() => {
@@ -105,27 +107,14 @@ export default function Home({ currUser, accessToken }) {
       }, 1000);
     }
   }, [loading]);
-
   useEffect(() => {
-    helloHandeler();
-  }, []);
-
-  const helloHandeler = () => {
     setLoading(!loading);
     setTimeout(() => {
       setLoading(!loading);
-      setShow(!show);
     }, 1000);
-  };
+  }, []);
 
-  if (loading)
-    return (
-      <Box className="container">
-        <span></span>
-        <span></span>
-        <span></span>
-      </Box>
-    );
+  if (loading) return <Loader />;
 
   return (
     <Grid
@@ -150,7 +139,7 @@ export default function Home({ currUser, accessToken }) {
       >
         <MonthSelection date={date} setDate={setDate} />
       </Grid>
-      <Grid item xs={12} md={4}>
+      <Grid item xs={12} md={4} sx={{ height: "95%" }}>
         <BudgetExpenseCol
           transactions={transactions}
           budgets={budgets}
@@ -160,18 +149,32 @@ export default function Home({ currUser, accessToken }) {
           getBudgetApi={getBudgetApi}
         />
       </Grid>
-      <Grid item xs={12} md={6} sx={{ height: "100%" }}>
-        <h2>Transactions</h2>
-        <Box sx={{ height: "95%", overflowX: "scroll" }}>
-          <TransactionCol
-            currUser={currUser}
-            accessToken={accessToken}
-            openAddTransactionModal={openAddTransactionModal}
-            setOpenAddTransactionModal={setOpenAddTransactionModal}
-            date={date}
-            transactions={transactions}
-            setTransactions={setTransactions}
-          />
+      <Grid
+        item
+        xs={12}
+        md={6}
+        sx={{ maxHeight: `${isSmallHeight ? "95%" : "100%"}` }}
+      >
+        <h2 style={{ marginBottom: "10px" }}>Transactions</h2>
+        <Box
+          sx={{
+            maxHeight: `${isSmallHeight ? "95%" : "100%"}`,
+            overflowY: "scroll",
+          }}
+        >
+          {transactions.length > 0 ? (
+            <TransactionCol
+              currUser={currUser}
+              accessToken={accessToken}
+              openAddTransactionModal={openAddTransactionModal}
+              setOpenAddTransactionModal={setOpenAddTransactionModal}
+              date={date}
+              transactions={transactions}
+              setTransactions={setTransactions}
+            />
+          ) : (
+            <Typography>No transactions this month</Typography>
+          )}
         </Box>
       </Grid>
       <AddCategoryFab setOpenAddTransactionModal={setOpenAddTransactionModal} />
@@ -181,7 +184,7 @@ export default function Home({ currUser, accessToken }) {
         setBudgetModal={setBudgetModal}
         userCategories={userCategories}
         date={date}
-        handleBudget={handleBudget}
+        handleBudget={handleAddBudget}
       />
     </Grid>
   );

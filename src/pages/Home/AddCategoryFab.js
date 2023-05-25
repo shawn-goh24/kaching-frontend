@@ -7,8 +7,8 @@ export default function AddCategoryFab({ setOpenAddTransactionModal }) {
     <Box
       sx={{
         position: "fixed",
-        bottom: 62,
-        right: 62,
+        bottom: 55,
+        right: 45,
         zIndex: 1,
       }}
     >
@@ -17,7 +17,7 @@ export default function AddCategoryFab({ setOpenAddTransactionModal }) {
           onClick={() => {
             setOpenAddTransactionModal(true);
           }}
-          color="secondary"
+          color="primary"
           aria-label="Add"
         >
           <AddIcon />

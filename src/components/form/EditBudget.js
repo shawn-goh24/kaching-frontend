@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Modal, Input, Button, Text } from "@nextui-org/react";
-import { yyyyMmDdConverter } from "../../utils/utils";
-import CreatableSelect from "react-select/creatable";
+import Select from "react-select";
+import { getGroupedCategories } from "../../utils/utils";
 
 // Select field styles
 const selectFieldStyles = {
@@ -24,28 +24,33 @@ export default function EditBudget({
   const nameRef = useRef();
   const dateRef = useRef();
   const amountRef = useRef();
+  const [groupedOptions, setGroupedOptions] = useState([]);
+  const [categoryLists, setCategoryLists] = useState([]);
+
+  useEffect(() => {
+    const [groupedOptions, categoryLists] =
+      getGroupedCategories(userCategories);
+    setGroupedOptions(groupedOptions);
+    setCategoryLists(categoryLists);
+  }, [userCategories]);
 
   useEffect(() => {
     if (budgetToEdit && budgetToEdit.Category)
       setSelected(new Set([`${budgetToEdit.Category.name}`]));
   }, [budgetToEdit]);
 
-  // const handler = () => setVisible(true);
-
   const closeHandler = () => {
     setOpenModal(false);
     console.log("closed");
   };
 
-  let categoryLists;
-  if (userCategories.Categories) {
-    categoryLists = userCategories.Categories.map((cat) => ({
-      // value is what we store
-      value: cat.id,
-      // label is what we display
-      label: cat.name,
-    }));
-  }
+  // let categoryLists;
+  // if (userCategories.Categories) {
+  //   categoryLists = userCategories.Categories.map((cat) => ({
+  //     value: cat.id,
+  //     label: cat.name,
+  //   }));
+  // }
 
   const handleSelectChange = (selectedOption) => {
     setSelectedCategories(selectedOption);
@@ -74,8 +79,9 @@ export default function EditBudget({
         <Modal.Header>
           <Text h1>{title} Transaction</Text>
         </Modal.Header>
-        <Modal.Body>
-          <CreatableSelect
+        <Modal.Body css={{ height: "430px" }}>
+          <Text h4>Category</Text>
+          <Select
             required
             styles={selectFieldStyles}
             defaultValue={
@@ -83,19 +89,13 @@ export default function EditBudget({
                 ? categoryLists[budgetToEdit.Category.id - 1]
                 : ""
             }
-            options={categoryLists}
+            options={groupedOptions}
             onChange={handleSelectChange}
           />
-          {/* <Input
-          ref={dateRef}
-          label="Date"
-          type="date"
-          initialValue={budgetToEdit && yyyyMmDdConverter(budgetToEdit.date)}
-        /> */}
+          <Text h4>Amount</Text>
           <Input
             required
             ref={amountRef}
-            label="Amount"
             type="number"
             initialValue={budgetToEdit && budgetToEdit.amount}
           />

@@ -21,24 +21,10 @@ export default function TransactionCol({
   const [editTransaction, setEditTransaction] = useState("");
   const [deleteTransaction, setDeleteTransaction] = useState("");
 
-  // // get all transactions from the user
-  // const getUserTransactionsApi = async () => {
-  //   if (accessToken) {
-  //     const selectedDate = new Date(date);
-  //     const month = selectedDate.getMonth() + 1;
-  //     const year = selectedDate.getFullYear();
-  //     let user = await axios.get(
-  //       `http://localhost:8080/transaction/${currUser.id}/${month}/${year}`,
-  //       {
-  //         headers: {
-  //           Authorization: `Bearer ${accessToken}`,
-  //         },
-  //       }
-  //     );
-  //     // console.log(user.data);
-  //     setTransactions(user.data);
-  //   }
-  // };
+  // useeffect to get all data from database
+  useEffect(() => {
+    getCategoriesApi();
+  }, [accessToken, date]);
 
   // get all categories by user
   const getCategoriesApi = async () => {
@@ -51,7 +37,6 @@ export default function TransactionCol({
           },
         }
       );
-      // console.log(categories.data);
       setCategories(categories.data);
     }
   };
@@ -60,11 +45,15 @@ export default function TransactionCol({
   const openTransactionModal = (transaction) => {
     setOpenModal(true);
     setEditTransaction(transaction);
-    console.log("edit item ", transaction.id);
   };
   // handle edit on transaction
-  const handleEdit = async (transactionId, date, name, amount, categoryId) => {
-    console.log(transactionId, date, name, amount, categoryId);
+  const handleEditTransaction = async (
+    transactionId,
+    date,
+    name,
+    amount,
+    categoryId
+  ) => {
     if (accessToken) {
       const selectedDate = new Date(date);
       const month = selectedDate.getMonth() + 1;
@@ -87,14 +76,13 @@ export default function TransactionCol({
     }
   };
 
+  // add transaction
   const handleAddTransaction = async (
     dateOfTransaction,
     name,
     amount,
     categoryId
   ) => {
-    console.log("Add transaction");
-    console.log(dateOfTransaction, name, amount, categoryId);
     if (accessToken) {
       let addTransaction = await axios.post(
         `http://localhost:8080/transaction/add`,
@@ -111,12 +99,9 @@ export default function TransactionCol({
           },
         }
       );
-      console.log(addTransaction.data);
 
       const selectedDate = new Date(date);
       const transactionDate = new Date(addTransaction.data.date);
-      console.log(selectedDate);
-      console.log(transactionDate);
       if (
         transactionDate.getMonth() === selectedDate.getMonth() &&
         transactionDate.getFullYear() === selectedDate.getFullYear()
@@ -133,11 +118,9 @@ export default function TransactionCol({
   const openDeleteModal = (transaction) => {
     setDeleteModal(true);
     setDeleteTransaction(transaction);
-    console.log("open item ", transaction.id);
   };
   // handle delete transaction
   const handleDelete = async (transactionId) => {
-    console.log("delete item ", transactionId);
     if (accessToken) {
       const selectedDate = new Date(date);
       const month = selectedDate.getMonth() + 1;
@@ -150,23 +133,15 @@ export default function TransactionCol({
           },
         }
       );
-      console.log(deleteTransaction.data);
       setTransactions(deleteTransaction.data);
     }
   };
 
-  // useeffect to get all data from database
-  useEffect(() => {
-    // getUserTransactionsApi();
-    getCategoriesApi();
-  }, [accessToken, date]);
-
   // list of transactions by user
   const TransactionList = () => {
     if (transactions) {
-      // console.log(transactions);
       const transactionList = transactions.sort(function (a, b) {
-        return new Date(b.date) - new Date(a.date);
+        return new Date(b.date) - new Date(a.date) || b.id - a.id;
       });
 
       return transactionList.map((transaction) => (
@@ -182,7 +157,6 @@ export default function TransactionCol({
   };
 
   useEffect(() => {
-    // console.log("Inside useeffect");
     TransactionList();
   }, [transactions]);
 
@@ -194,7 +168,7 @@ export default function TransactionCol({
         openModal={openModal}
         setOpenModal={setOpenModal}
         editTransaction={editTransaction}
-        handleEdit={handleEdit}
+        handleEdit={handleEditTransaction}
         categories={categories}
       />
       <TransactionModal

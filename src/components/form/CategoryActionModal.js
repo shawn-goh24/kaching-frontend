@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Modal, Input, Button, Text } from "@nextui-org/react";
-import { yyyyMmDdConverter } from "../../utils/utils";
 import Select from "react-select";
-import { MuiColorInput } from "mui-color-input";
 import axios from "axios";
+import { Colorful } from "@uiw/react-color";
+import { Box } from "@mui/material";
 
 export default function CategoryActionModal({
   categoryModal,
@@ -29,7 +29,7 @@ export default function CategoryActionModal({
 
   useEffect(() => {
     if (selectedCategory) {
-      setColor(selectedCategory.color.substring(1));
+      setColor(selectedCategory.color);
       setSelectedIncomeExpense(
         incomeExpenseList[selectedCategory.incomeExpenseId - 1]
       );
@@ -54,8 +54,9 @@ export default function CategoryActionModal({
   };
 
   // handle color input
-  const handleColor = (color) => {
-    setColor(color);
+  const handleColor = (selectedColor) => {
+    setColor(selectedColor.hex);
+    console.log(selectedColor.hex);
   };
 
   // handle react-select input
@@ -81,26 +82,42 @@ export default function CategoryActionModal({
       aria-labelledby="modal-title"
       open={categoryModal}
       onClose={closeHandler}
-      css={{ height: "600px" }}
+      css={{ height: "700px" }}
     >
       <form onSubmit={handleSubmit}>
         <Modal.Header>
           <Text h1>Edit Category</Text>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body css={{ height: "90%" }}>
+          <Text h4>Name</Text>
           <Input
             required
             ref={nameRef}
-            label="Name"
             type="text"
             initialValue={selectedCategory && selectedCategory.name}
           />
-          <MuiColorInput
-            required
-            format="hex"
-            value={color}
-            onChange={handleColor}
-          />
+          <Text h4>Color</Text>
+          <Box display="flex" alignItems="center" justifyContent="space-around">
+            <Box display="flex" flexDirection="column" alignItems="center">
+              <div
+                style={{
+                  height: "48px",
+                  width: "48px",
+                  backgroundColor: `${color}`,
+                  borderRadius: "5px",
+                }}
+              />
+              <Text h5>{color}</Text>
+            </Box>
+            <Colorful
+              disableAlpha={true}
+              color={color}
+              onChange={(color) => {
+                setColor(color.hex);
+              }}
+            />
+          </Box>
+          <Text h4>Income/Expense</Text>
           <Select
             required
             value={selectedIncomeExpense}

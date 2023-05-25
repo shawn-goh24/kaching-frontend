@@ -29,7 +29,7 @@ export default function AmountBillRow({
           currUser={currUser}
           text="YTD Income"
           amount={totalYtdIncome}
-          icon={<LocalAtmIcon />}
+          icon={<LocalAtmIcon fontSize="large" sx={{ color: "#587EDE" }} />}
         />
       </Grid>
       <Grid item xs={12} sm={4}>
@@ -37,12 +37,17 @@ export default function AmountBillRow({
           currUser={currUser}
           text="YTD Expense"
           amount={totalYtdExpense}
-          icon={<PaymentIcon />}
+          icon={<PaymentIcon fontSize="large" sx={{ color: "#587EDE" }} />}
         />
       </Grid>
       <Grid item xs={12} sm={4}>
         <TotalBillReminderCard
-          icon={<NotificationsActiveIcon />}
+          icon={
+            <NotificationsActiveIcon
+              fontSize="large"
+              sx={{ color: "#587EDE" }}
+            />
+          }
           count={billReminders ? billReminders.length : 0}
         />
       </Grid>

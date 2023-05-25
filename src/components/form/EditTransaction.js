@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Modal, Input, Button, Text } from "@nextui-org/react";
 import { yyyyMmDdConverter } from "../../utils/utils";
-import CreatableSelect from "react-select/creatable";
+import Select from "react-select";
 
 // Select field styles
 const selectFieldStyles = {
@@ -96,7 +96,7 @@ export default function EditTransaction({
             type="number"
             initialValue={editTransaction.amount}
           />
-          <CreatableSelect
+          <Select
             required
             styles={selectFieldStyles}
             defaultValue={

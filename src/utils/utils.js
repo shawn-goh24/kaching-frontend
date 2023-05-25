@@ -131,7 +131,7 @@ export const getTransactionsByMonth = (transactions, incomeExpenseId) => {
           expensesArray.push(null);
         }
       } else {
-        expensesArray.push(totalWithinMonth);
+        expensesArray.push(totalWithinMonth.toFixed(2));
       }
     }
 
@@ -175,4 +175,65 @@ export const getTopExpensesByCat = (transactions) => {
     treemapArray.push(dataMap);
   }
   return treemapArray;
+};
+
+// check if transactions contains expense
+export const checkIfContainIncomeOrExpense = (transactions, selection) => {
+  let state = false;
+  for (const transaction of transactions) {
+    // console.log(transaction);
+    if (selection === "expense" && transaction.Category.incomeExpenseId === 1) {
+      state = true;
+    } else if (
+      selection === "income" &&
+      transaction.Category.incomeExpenseId === 2
+    ) {
+      state = true;
+    }
+  }
+  return state;
+};
+
+export const getGroupedCategories = (categories) => {
+  let categoryLists;
+  if (categories.Categories) {
+    categoryLists = categories.Categories.map((cat) => ({
+      value: cat.id,
+      label: cat.name,
+    }));
+  }
+  let expenseCategories;
+  if (categories.Categories) {
+    expenseCategories = categories.Categories.map(
+      (cat) =>
+        cat.incomeExpenseId === 1 && {
+          value: cat.id,
+          label: cat.name,
+        }
+    ).filter((cat) => cat !== false);
+  }
+  let incomeCategories;
+  if (categories.Categories) {
+    incomeCategories = categories.Categories.map(
+      (cat) =>
+        cat.incomeExpenseId === 2 && {
+          value: cat.id,
+          label: cat.name,
+        }
+    ).filter((cat) => cat !== false);
+  }
+  let groupedOptions;
+  if (categories.Categories) {
+    groupedOptions = [
+      {
+        label: "Expense",
+        options: expenseCategories,
+      },
+      {
+        label: "Income",
+        options: incomeCategories,
+      },
+    ];
+  }
+  return [groupedOptions, categoryLists];
 };

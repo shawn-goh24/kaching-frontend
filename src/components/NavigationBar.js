@@ -5,7 +5,11 @@ import { useAuth0 } from "@auth0/auth0-react";
 import UserAvatar from "./UserAvatar";
 import { Outlet } from "react-router-dom";
 
-export default function NavigationBar({ currUser, accessToken }) {
+export default function NavigationBar({
+  currUser,
+  accessToken,
+  setSelectedPage,
+}) {
   const { loginWithRedirect, isAuthenticated } = useAuth0();
 
   return (
@@ -17,7 +21,11 @@ export default function NavigationBar({ currUser, accessToken }) {
 
         {isAuthenticated ? (
           <Navbar.Content>
-            <UserAvatar currUser={currUser} accessToken={accessToken} />
+            <UserAvatar
+              currUser={currUser}
+              accessToken={accessToken}
+              setSelectedPage={setSelectedPage}
+            />
           </Navbar.Content>
         ) : (
           <Navbar.Content>

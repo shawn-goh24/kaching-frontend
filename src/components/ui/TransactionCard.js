@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Chip,
   IconButton,
@@ -26,6 +26,10 @@ export default function TransactionCard({
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  // useEffect(() => {
+  //   console.log(currUser.mainCurrency);
+  // }, [currUser]);
 
   const tag = () => {
     if (transaction.Category) {
@@ -98,13 +102,20 @@ export default function TransactionCard({
           }}
         >
           <Typography>
-            {transaction.Category.incomeExpenseId === 1
-              ? `- ${currencyFormatter(currUser.mainCurrency).format(
-                  transaction.amount
-                )}`
-              : currencyFormatter(currUser.mainCurrency).format(
+            {transaction.Category.incomeExpenseId === 1 ? (
+              <Typography color="error">
+                -{" "}
+                {currencyFormatter(currUser.mainCurrency).format(
                   transaction.amount
                 )}
+              </Typography>
+            ) : (
+              <Typography color="primary">
+                {currencyFormatter(currUser.mainCurrency).format(
+                  transaction.amount
+                )}
+              </Typography>
+            )}
             {/* {currencyFormatter('sgd').format(transaction.amount)} */}
           </Typography>
           <IconButton

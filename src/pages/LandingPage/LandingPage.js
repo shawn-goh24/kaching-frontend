@@ -1,6 +1,6 @@
 import { Button, Grid, Text } from "@nextui-org/react";
 import React from "react";
-import appImg from "../../assets/appImg.png";
+import dashboardImg from "../../assets/dashboardImg.png";
 import useMediaQuery from "../../hooks/useMediaQuery";
 
 import FeatureCard from "./FeatureCard";
@@ -38,6 +38,7 @@ export default function LandingPage() {
           <Button
             auto
             size="lg"
+            color="secondary"
             onClick={() =>
               loginWithRedirect({
                 authorizationParams: {
@@ -50,7 +51,16 @@ export default function LandingPage() {
           </Button>
         </Grid>
         <Grid xs={12} sm={8} justify="center">
-          <img src={appImg} alt="appImg" width="100%" />
+          <img
+            src={dashboardImg}
+            alt="dashboardImg"
+            width="100%"
+            style={{
+              border: "1px solid #D3D3D3",
+              borderRadius: "10px",
+              filter: "drop-shadow(10px 10px 4px #D3D3D3",
+            }}
+          />
         </Grid>
       </Grid.Container>
       <Grid.Container justify="center" style={{ margin: "150px 0" }}>

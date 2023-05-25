@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import useCategories from "../../hooks/useCategories";
 import CategoriesCard from "./CategoriesCard";
 import CategoryActionModal from "../../components/form/CategoryActionModal";
@@ -13,17 +13,21 @@ export default function EditCategory({ currUser, accessToken }) {
   const [deleteModal, setDeleteModal] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState();
 
+  // close delete modal
   const closeHandler = () => {
     setDeleteModal(false);
   };
+  // open delete modal
   const handleDeleteModal = (cat) => {
     setDeleteModal(true);
     setCategoryToDelete(cat);
   };
+  // delete category
   const handleDelete = (id) => {
     setCategories({ categoryId: id, selection: "delete" });
   };
 
+  // edit category
   const handleEditCategory = async (
     categoryId,
     name,
@@ -31,7 +35,7 @@ export default function EditCategory({ currUser, accessToken }) {
     incomeExpenseId
   ) => {
     if (accessToken) {
-      const response = await axios.put(
+      await axios.put(
         `http://localhost:8080/category/edit/${categoryId}`,
         {
           name: name,
@@ -49,6 +53,7 @@ export default function EditCategory({ currUser, accessToken }) {
     setCategories({ selection: "get" });
   };
 
+  // open edit modal
   const handleOpenCategoryModal = (category) => {
     setCategoryModal(true);
     setSelectedCategory(category);
@@ -56,7 +61,6 @@ export default function EditCategory({ currUser, accessToken }) {
 
   const categoryList = () => {
     if (categories) {
-      console.log(categories.length);
       return categories.map((category) => {
         return (
           <CategoriesCard
