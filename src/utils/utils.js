@@ -42,7 +42,6 @@ export const combineExpenseCategoryAmounts = (transactions) => {
     }
     return set;
   }, new Map());
-  // console.log(categoryAmountSet);
   return categoryAmountSet;
 };
 export const combineIncomeCategoryAmounts = (transactions) => {
@@ -57,7 +56,6 @@ export const combineIncomeCategoryAmounts = (transactions) => {
     }
     return set;
   }, new Map());
-  // console.log(categoryAmountSet);
   return categoryAmountSet;
 };
 
@@ -181,7 +179,6 @@ export const getTopExpensesByCat = (transactions) => {
 export const checkIfContainIncomeOrExpense = (transactions, selection) => {
   let state = false;
   for (const transaction of transactions) {
-    // console.log(transaction);
     if (selection === "expense" && transaction.Category.incomeExpenseId === 1) {
       state = true;
     } else if (

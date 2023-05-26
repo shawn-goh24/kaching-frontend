@@ -8,7 +8,7 @@ import Top10Expenses from "./Top10Expenses";
 export default function ChartRow({ ytdTransactions }) {
   return (
     <Grid container spacing={2} my={1}>
-      <Grid item xs={12} sm={6}>
+      <Grid item="true" xs={12} sm={6}>
         <Card>
           <Card.Body>
             <YtdLineChart
@@ -26,7 +26,7 @@ export default function ChartRow({ ytdTransactions }) {
           </Card.Body>
         </Card>
       </Grid>
-      <Grid item xs={12} sm={6}>
+      <Grid item="true" xs={12} sm={6}>
         <Card>
           <Card.Body>
             <Top10Expenses

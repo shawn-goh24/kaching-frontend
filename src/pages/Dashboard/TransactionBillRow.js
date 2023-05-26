@@ -41,7 +41,6 @@ export default function TransactionBillRow({
                 >
                   <div>{transaction.name}</div>
                   <div style={{ marginRight: "50px" }}>
-                    {console.log(transaction.Category.incomeExpenseId)}
                     {transaction.Category.incomeExpenseId === 1 ? (
                       <Typography color="error">
                         -
@@ -56,13 +55,12 @@ export default function TransactionBillRow({
                         )}
                       </Typography>
                     )}
-                    {/* {currencyFormatter(currUser.mainCurrency).format(
-                      transaction.amount
-                    )} */}
                   </div>
                 </Card.Body>
               </Card>
             );
+          } else {
+            return undefined;
           }
         })
       : undefined;
@@ -90,7 +88,7 @@ export default function TransactionBillRow({
   return (
     <>
       <Grid container spacing={2} my={1}>
-        <Grid item xs={12} sm={7}>
+        <Grid item="true" xs={12} sm={7}>
           <Card>
             <Card.Header>
               <strong>Recent 5 Transactions</strong>
@@ -98,7 +96,7 @@ export default function TransactionBillRow({
             <Card.Body>{recentTransactions()}</Card.Body>
           </Card>
         </Grid>
-        <Grid item xs={12} sm={5}>
+        <Grid item="true" xs={12} sm={5}>
           <Card css={{ height: "100%" }}>
             <Card.Header
               css={{ display: "flex", justifyContent: "space-between" }}

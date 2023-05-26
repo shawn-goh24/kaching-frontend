@@ -9,11 +9,9 @@ import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrow
 import { Avatar, Badge, Button, Text } from "@nextui-org/react";
 import { Outlet, useNavigate } from "react-router-dom";
 import EmailIcon from "@mui/icons-material/Email";
-import axios from "axios";
 
 export default function SideBar({
   currUser,
-  accessToken,
   notifications,
   selectedPage,
   setSelectedPage,
@@ -42,6 +40,7 @@ export default function SideBar({
     setSelectedPage("notifications");
   };
 
+  // get all user's notification from db
   const getNotificationsApi = () => {
     if (notifications) {
       let count = 0;
@@ -76,20 +75,16 @@ export default function SideBar({
           flexDirection: "column",
           justifyContent: "space-between",
           alignItems: "center",
-          // transition: "width 200ms ease-in-out",
-          // backgroundColor: "#D2F2FF",
           backgroundColor: "#202A44",
           position: "fixed",
         }}
       >
         <Box display="flex" flexDirection="column" alignItems="center">
           <Box mt={2}>
-            {/* <img src={logoImg} alt="logo image" /> */}
             <Avatar
               src={currUser && currUser.imageUrl}
               text={currUser.firstName}
               bordered
-              // color="primary"
               size="lg"
               css={{ marginBottom: 10 }}
             />

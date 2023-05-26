@@ -20,12 +20,10 @@ export default function TransactionModal({
   categories, // all categories from user
   handleAddTransaction, // handle add transaction to db
 }) {
-  const [selected, setSelected] = useState("");
   const [selectedCategories, setSelectedCategories] = useState([]);
   const nameRef = useRef();
   const dateRef = useRef();
   const amountRef = useRef();
-
   const [groupedOptions, setGroupedOptions] = useState([]);
   const [categoryLists, setCategoryLists] = useState([]);
 
@@ -36,26 +34,22 @@ export default function TransactionModal({
   }, [categories]);
 
   useEffect(() => {
-    if (editTransaction && editTransaction.Category)
-      setSelected(new Set([`${editTransaction.Category.name}`]));
+    if (categoryLists && categoryLists.length > 0 && editTransaction) {
+      setSelectedCategories(categoryLists[editTransaction.Category.id - 1]);
+    }
   }, [editTransaction]);
 
+  // close transaction modal
   const closeHandler = () => {
     setOpenModal(false);
   };
 
-  // let categoryLists;
-  // if (categories.Categories) {
-  //   categoryLists = categories.Categories.map((cat) => ({
-  //     value: cat.id,
-  //     label: cat.name,
-  //   }));
-  // }
-
+  // handle category selection on react-select
   const handleSelectChange = (selectedOption) => {
     setSelectedCategories(selectedOption);
   };
 
+  // edit or add transaction
   const handleSubmit = (e) => {
     e.preventDefault();
     closeHandler();
@@ -90,17 +84,17 @@ export default function TransactionModal({
         <Modal.Body>
           <Text h4>Name</Text>
           <Input
+            aria-label="Transaction Name"
             required
             ref={nameRef}
-            // label="Name"
             type="text"
             initialValue={editTransaction && editTransaction.name}
           />
           <Text h4>Date</Text>
           <Input
+            aria-label="Transaction Date"
             required
             ref={dateRef}
-            // label="Date"
             type="date"
             initialValue={
               editTransaction
@@ -110,10 +104,11 @@ export default function TransactionModal({
           />
           <Text h4>Amount</Text>
           <Input
+            aria-label="Transaction Amount"
             required
             ref={amountRef}
-            // label="Amount"
             type="number"
+            step=".01"
             initialValue={editTransaction && editTransaction.amount}
           />
           <Text h4>Category</Text>
@@ -122,7 +117,7 @@ export default function TransactionModal({
             styles={selectFieldStyles}
             defaultValue={
               editTransaction && editTransaction.Category
-                ? categoryLists[editTransaction.Category.id - 1]
+                ? selectedCategories
                 : ""
             }
             options={groupedOptions}

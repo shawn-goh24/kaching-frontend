@@ -9,7 +9,6 @@ export default function UserAvatar({ currUser, accessToken, setSelectedPage }) {
   const navigate = useNavigate();
   const [isInvisible, setIsInvisible] = useState(false);
   const [badgeCount, setBadgeCount] = useState(0);
-  // const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
     getNotificationsApi();
@@ -26,7 +25,6 @@ export default function UserAvatar({ currUser, accessToken, setSelectedPage }) {
           },
         }
       );
-      // setNotifications(allNotification.data);
 
       let count = 0;
       if (allNotification.data.length > 0) {
@@ -62,8 +60,6 @@ export default function UserAvatar({ currUser, accessToken, setSelectedPage }) {
     }
   };
 
-  console.log(currUser);
-
   return (
     <Dropdown placement="bottom-left">
       <Badge
@@ -90,7 +86,11 @@ export default function UserAvatar({ currUser, accessToken, setSelectedPage }) {
         aria-label="User Actions"
         onAction={handleEvents}
       >
-        <Dropdown.Item key="profile" css={{ height: "$18" }}>
+        <Dropdown.Item
+          key="profile"
+          aria-label="Profile"
+          css={{ height: "$18" }}
+        >
           <Text b color="inherit" css={{ d: "flex" }}>
             Signed in as
           </Text>
@@ -98,11 +98,11 @@ export default function UserAvatar({ currUser, accessToken, setSelectedPage }) {
             {user && user.email}
           </Text>
         </Dropdown.Item>
-        <Dropdown.Item key="dashboard" withDivider>
+        <Dropdown.Item key="dashboard" aria-label="Dashboard" withDivider>
           Dashboard
         </Dropdown.Item>
-        <Dropdown.Item key="notification">
-          Notifications{" "}
+        <Dropdown.Item key="notification" aria-label="Notification">
+          Notifications
           <span
             style={{
               backgroundColor: "lightgrey",
@@ -114,10 +114,10 @@ export default function UserAvatar({ currUser, accessToken, setSelectedPage }) {
             {badgeCount}
           </span>
         </Dropdown.Item>
-        <Dropdown.Item key="settings" withDivider>
+        <Dropdown.Item key="settings" aria-label="Settings" withDivider>
           Settings
         </Dropdown.Item>
-        <Dropdown.Item key="logout" color="error">
+        <Dropdown.Item key="logout" aria-label="Logout" color="error">
           Log Out
         </Dropdown.Item>
       </Dropdown.Menu>

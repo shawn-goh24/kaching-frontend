@@ -66,7 +66,6 @@ export default function EditCategory({ currUser, accessToken }) {
           <CategoriesCard
             key={category.id}
             category={category}
-            setCategories={setCategories}
             handleOpenCategoryModal={handleOpenCategoryModal}
             handleDeleteModal={handleDeleteModal}
           />

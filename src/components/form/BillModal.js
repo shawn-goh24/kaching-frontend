@@ -13,10 +13,12 @@ export default function BillModal({
   const nameRef = useRef();
   const dateRef = useRef();
 
+  // close bill modal
   const closeHandler = () => {
     setBillModal(false);
   };
 
+  // add new reminder or edit reminder
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -43,6 +45,7 @@ export default function BillModal({
         </Modal.Header>
         <Modal.Body>
           <Input
+            aria-label="Bill Name"
             required
             ref={nameRef}
             label="Name"
@@ -50,6 +53,7 @@ export default function BillModal({
             initialValue={bill && bill.name}
           />
           <Input
+            aria-label="Bill Date"
             required
             ref={dateRef}
             label="Date"

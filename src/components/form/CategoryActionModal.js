@@ -17,6 +17,7 @@ export default function CategoryActionModal({
   const [color, setColor] = useState();
   const nameRef = useRef();
 
+  // close category modal
   const closeHandler = () => {
     setCategoryModal(false);
   };
@@ -53,17 +54,12 @@ export default function CategoryActionModal({
     }
   };
 
-  // handle color input
-  const handleColor = (selectedColor) => {
-    setColor(selectedColor.hex);
-    console.log(selectedColor.hex);
-  };
-
   // handle react-select input
   const handleIncomeExpenseChange = (selectedOption) => {
     setSelectedIncomeExpense(selectedOption);
   };
 
+  // edit category
   const handleSubmit = (e) => {
     e.preventDefault();
     handleEditCategory(
@@ -91,6 +87,7 @@ export default function CategoryActionModal({
         <Modal.Body css={{ height: "90%" }}>
           <Text h4>Name</Text>
           <Input
+            aria-label="Name"
             required
             ref={nameRef}
             type="text"

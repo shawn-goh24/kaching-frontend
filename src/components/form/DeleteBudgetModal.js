@@ -7,9 +7,9 @@ export default function DeleteBudgetModal({
   handleDelete,
   budgetToDelete,
 }) {
+  // close modal
   const closeHandler = () => {
     openDeleteModal(false);
-    console.log("closed");
   };
 
   return (

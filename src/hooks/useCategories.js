@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function useCategories(currUser, accessToken) {
   const [category, setCategory] = useState([]);

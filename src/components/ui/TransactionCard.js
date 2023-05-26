@@ -1,5 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
+  Box,
   Chip,
   IconButton,
   Menu,
@@ -23,14 +24,13 @@ export default function TransactionCard({
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
+  // close moreicon menu
   const handleClose = () => {
     setAnchorEl(null);
   };
 
-  // useEffect(() => {
-  //   console.log(currUser.mainCurrency);
-  // }, [currUser]);
-
+  // category tags
   const tag = () => {
     if (transaction.Category) {
       return (
@@ -101,7 +101,7 @@ export default function TransactionCard({
             alignItems: "center",
           }}
         >
-          <Typography>
+          <Box>
             {transaction.Category.incomeExpenseId === 1 ? (
               <Typography color="error">
                 -{" "}
@@ -116,8 +116,7 @@ export default function TransactionCard({
                 )}
               </Typography>
             )}
-            {/* {currencyFormatter('sgd').format(transaction.amount)} */}
-          </Typography>
+          </Box>
           <IconButton
             id="demo-positioned-button"
             aria-controls={open ? "demo-positioned-menu" : undefined}

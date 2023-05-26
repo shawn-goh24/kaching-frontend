@@ -19,10 +19,7 @@ export default function EditBudget({
   handleEdit, // handle edits to db
   userCategories, // all categories from user
 }) {
-  const [selected, setSelected] = useState("");
   const [selectedCategories, setSelectedCategories] = useState([]);
-  const nameRef = useRef();
-  const dateRef = useRef();
   const amountRef = useRef();
   const [groupedOptions, setGroupedOptions] = useState([]);
   const [categoryLists, setCategoryLists] = useState([]);
@@ -35,27 +32,22 @@ export default function EditBudget({
   }, [userCategories]);
 
   useEffect(() => {
-    if (budgetToEdit && budgetToEdit.Category)
-      setSelected(new Set([`${budgetToEdit.Category.name}`]));
+    if (categoryLists && categoryLists.length > 0 && budgetToEdit) {
+      setSelectedCategories(categoryLists[budgetToEdit.Category.id - 1]);
+    }
   }, [budgetToEdit]);
 
+  // close edit budget modal
   const closeHandler = () => {
     setOpenModal(false);
-    console.log("closed");
   };
 
-  // let categoryLists;
-  // if (userCategories.Categories) {
-  //   categoryLists = userCategories.Categories.map((cat) => ({
-  //     value: cat.id,
-  //     label: cat.name,
-  //   }));
-  // }
-
+  // handle category selection on react-select
   const handleSelectChange = (selectedOption) => {
     setSelectedCategories(selectedOption);
   };
 
+  // edit budget
   const handleSubmit = (e) => {
     e.preventDefault();
     closeHandler();
@@ -85,15 +77,14 @@ export default function EditBudget({
             required
             styles={selectFieldStyles}
             defaultValue={
-              budgetToEdit && budgetToEdit.Category
-                ? categoryLists[budgetToEdit.Category.id - 1]
-                : ""
+              budgetToEdit && budgetToEdit.Category ? selectedCategories : ""
             }
             options={groupedOptions}
             onChange={handleSelectChange}
           />
           <Text h4>Amount</Text>
           <Input
+            aria-label="Budget Amount"
             required
             ref={amountRef}
             type="number"

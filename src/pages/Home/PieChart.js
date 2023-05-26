@@ -9,7 +9,7 @@ import {
 } from "../../utils/utils";
 
 export default function PieChart({ transactions, isExpense }) {
-  const [chart, setChart] = useChart([]);
+  const [chart, setChart] = useChart();
 
   useEffect(() => {
     if (transactions) {

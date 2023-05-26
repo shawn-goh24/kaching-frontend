@@ -32,6 +32,14 @@ export default function Top10Expenses({ topExpensesByCat }) {
       "#7F94B0",
       "#EF6537",
       "#C0ADDB",
+      "#FF0000",
+      "#00FF00",
+      "#0000FF",
+      "#FFFF00",
+      "#FF00FF",
+      "#00FFFF",
+      "#800080",
+      "#FFA500",
     ],
     plotOptions: {
       treemap: {

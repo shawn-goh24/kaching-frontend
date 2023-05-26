@@ -116,6 +116,7 @@ export default function ProfileSetting({ currUser, accessToken, setCurrUser }) {
     <Box>
       <Text h3>First Name:</Text>
       <Input
+        aria-label="First Name"
         disabled={user && isGoogleAuth && true}
         placeholder="First Name"
         fullWidth
@@ -128,6 +129,7 @@ export default function ProfileSetting({ currUser, accessToken, setCurrUser }) {
       />
       <Text h3>Last Name:</Text>
       <Input
+        aria-label="Last Name"
         disabled={user && isGoogleAuth && true}
         placeholder="Last Name"
         fullWidth
@@ -140,6 +142,7 @@ export default function ProfileSetting({ currUser, accessToken, setCurrUser }) {
       />
       <Text h3>Email:</Text>
       <Input
+        aria-label="Email"
         disabled={user && isGoogleAuth && true}
         placeholder="Email"
         fullWidth
@@ -152,6 +155,7 @@ export default function ProfileSetting({ currUser, accessToken, setCurrUser }) {
       />
       <Text h3>Currency:</Text>
       <Select
+        aria-label="Currency"
         styles={selectFieldStyles}
         value={selectedCurrency}
         options={countryList}

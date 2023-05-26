@@ -3,7 +3,7 @@ import { Modal, Input, Button, Text } from "@nextui-org/react";
 import { getGroupedCategories, yyyyMmDdConverter } from "../../utils/utils";
 import Select from "react-select";
 
-// Select field styles
+// Select field styles for react-select
 const selectFieldStyles = {
   option: (provided) => ({
     ...provided,
@@ -28,59 +28,23 @@ export default function BudgetModal({
   useEffect(() => {
     const [groupedOptions, categoryLists] =
       getGroupedCategories(userCategories);
+    // grouped categories
     setGroupedOptions(groupedOptions);
+    // list of categories
     setCategoryLists(categoryLists);
   }, [userCategories]);
 
+  // close budget modal
   const closeHandler = () => {
     setBudgetModal(false);
   };
 
-  // let categoryLists;
-  // if (userCategories.Categories) {
-  //   categoryLists = userCategories.Categories.map((cat) => ({
-  //     value: cat.id,
-  //     label: cat.name,
-  //   }));
-  // }
-  // let expenseCategories;
-  // if (userCategories.Categories) {
-  //   expenseCategories = userCategories.Categories.map(
-  //     (cat) =>
-  //       cat.incomeExpenseId === 1 && {
-  //         value: cat.id,
-  //         label: cat.name,
-  //       }
-  //   ).filter((cat) => cat !== false);
-  // }
-  // let incomeCategories;
-  // if (userCategories.Categories) {
-  //   incomeCategories = userCategories.Categories.map(
-  //     (cat) =>
-  //       cat.incomeExpenseId === 2 && {
-  //         value: cat.id,
-  //         label: cat.name,
-  //       }
-  //   ).filter((cat) => cat !== false);
-  // }
-  // let groupedOptions;
-  // if (userCategories.Categories) {
-  //   groupedOptions = [
-  //     {
-  //       label: "Expense",
-  //       options: expenseCategories,
-  //     },
-  //     {
-  //       label: "Income",
-  //       options: incomeCategories,
-  //     },
-  //   ];
-  // }
-
+  // handle category select change on react-select
   const handleSelectChange = (selectedOption) => {
     setSelectedCategories(selectedOption);
   };
 
+  // add budget
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -122,13 +86,19 @@ export default function BudgetModal({
           />
           <Text h4>Date</Text>
           <Input
+            aria-label="Budget Date"
             required
             ref={dateRef}
             type="date"
             initialValue={date && yyyyMmDdConverter(date)}
           />
           <Text h4>Amount</Text>
-          <Input required ref={amountRef} type="number" />
+          <Input
+            aria-label="Budget amount"
+            required
+            ref={amountRef}
+            type="number"
+          />
         </Modal.Body>
         <Modal.Footer>
           <Button auto light onPress={closeHandler}>

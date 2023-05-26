@@ -84,7 +84,6 @@ function App() {
           path="/user"
           element={
             <SideBar
-              accessToken={accessToken}
               currUser={currUser}
               notifications={notifications}
               selectedPage={selectedPage}

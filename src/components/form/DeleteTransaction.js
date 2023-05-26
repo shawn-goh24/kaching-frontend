@@ -7,9 +7,9 @@ export default function DeleteTransaction({
   handleDelete,
   transaction,
 }) {
+  // close modal
   const closeHandler = () => {
     setDeleteModal(false);
-    console.log("closed");
   };
 
   return (

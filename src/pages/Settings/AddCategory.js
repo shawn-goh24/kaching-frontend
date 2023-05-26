@@ -15,7 +15,6 @@ export default function AddCategory({ currUser, accessToken }) {
   const [incomeExpenseList, setIncomeExpenseList] = useState([]);
   const [snackOpen, setSnackOpen] = useState(false);
 
-  console.log(accessToken);
   useEffect(() => {
     if (accessToken) {
       getIncomeExpenseApi();
@@ -127,6 +126,7 @@ export default function AddCategory({ currUser, accessToken }) {
         <Box>
           <Text h3>Category Name:</Text>
           <Input
+            aria-label="Category Name"
             required
             value={newCatName}
             fullWidth
@@ -136,6 +136,7 @@ export default function AddCategory({ currUser, accessToken }) {
           />
           <Text h3>Color:</Text>
           <MuiColorInput
+            aria-label="Color"
             required
             format="hex"
             value={color}
@@ -145,6 +146,7 @@ export default function AddCategory({ currUser, accessToken }) {
             Income or Expense:
           </Text>
           <Select
+            aria-label="Income Expense"
             required
             value={selectedIncomeExpense}
             options={incomeExpenseList}
