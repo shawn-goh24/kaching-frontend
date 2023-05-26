@@ -108,6 +108,7 @@ export default function UserAvatar({ currUser, accessToken, setSelectedPage }) {
               backgroundColor: "lightgrey",
               padding: "3px",
               borderRadius: "5px",
+              marginLeft: "5px",
               display: `${badgeCount === 0 && "none"}`,
             }}
           >

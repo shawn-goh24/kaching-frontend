@@ -10,6 +10,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import SideBar from "./pages/Dashboard/SideBar";
 import Notifications from "./pages/Notifications/Notifications";
+import NewSideBar from "./pages/Dashboard/NewSideBar";
 
 function App() {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
@@ -83,7 +84,7 @@ function App() {
         <Route
           path="/user"
           element={
-            <SideBar
+            <NewSideBar
               currUser={currUser}
               notifications={notifications}
               selectedPage={selectedPage}

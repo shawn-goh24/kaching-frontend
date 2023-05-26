@@ -18,6 +18,7 @@ code {
     monospace;
 }
 
+/* Loader */
 .container {
   position: absolute;
   top: 50%;
@@ -69,4 +70,29 @@ code {
     opacity: 0;
     transform: scale(3);
   }
+}
+
+/* General Styles */
+.flex {
+  display: flex;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.horizontal-center {
+  display: flex;
+  align-items: center;
+}
+
+.vertical-center {
+  display: flex;
+  justify-content: center;
+}
+
+.flex-direction-column {
+  flex-direction: column;
 }

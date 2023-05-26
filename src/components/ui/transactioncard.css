@@ -1,0 +1,6 @@
+.transaction-card {
+  display: flex;
+  justify-content: space-between;
+  max-width: 100%;
+  margin-bottom: 15px;
+}

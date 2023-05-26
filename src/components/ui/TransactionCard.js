@@ -12,6 +12,7 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { currencyFormatter } from "../../utils/utils";
+import "./transactioncard.css";
 
 export default function TransactionCard({
   transaction,
@@ -50,20 +51,12 @@ export default function TransactionCard({
 
   return (
     <>
-      <Paper
-        sx={{
-          maxWidth: "100%",
-          mb: "15px",
-          display: "flex",
-          justifyContent: "space-between",
-        }}
-      >
-        <div style={{ display: "flex" }}>
+      <Paper className="transaction-card">
+        <div className="flex">
           <div
             style={{
               height: "60px",
               width: "3px",
-
               backgroundColor: `${
                 transaction.Category
                   ? transaction.Category.color
@@ -72,19 +65,12 @@ export default function TransactionCard({
             }}
           />
           <div
+            className="vertical-center flex-direction-column"
             style={{
               marginLeft: "12px",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "center",
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
+            <div className="horizontal-center">
               <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                 {transaction.name}
               </Typography>
@@ -95,12 +81,7 @@ export default function TransactionCard({
             </Typography>
           </div>
         </div>
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
+        <div className="horizontal-center">
           <Box>
             {transaction.Category.incomeExpenseId === 1 ? (
               <Typography color="error">
