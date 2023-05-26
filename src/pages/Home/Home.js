@@ -139,7 +139,12 @@ export default function Home({ currUser, accessToken }) {
       >
         <MonthSelection date={date} setDate={setDate} />
       </Grid>
-      <Grid item xs={12} md={4} sx={{ height: "95%" }}>
+      <Grid
+        item
+        xs={12}
+        md={4}
+        sx={{ height: "95%", paddingX: { xs: "50px", md: "0px" } }}
+      >
         <BudgetExpenseCol
           transactions={transactions}
           budgets={budgets}
@@ -153,7 +158,10 @@ export default function Home({ currUser, accessToken }) {
         item
         xs={12}
         md={6}
-        sx={{ maxHeight: `${isSmallHeight ? "95%" : "100%"}` }}
+        sx={{
+          maxHeight: `${isSmallHeight ? "95%" : "100%"}`,
+          paddingX: { xs: "50px", md: "0px" },
+        }}
       >
         <h2 style={{ marginBottom: "10px" }}>Transactions</h2>
         <Box

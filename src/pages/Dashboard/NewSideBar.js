@@ -14,7 +14,7 @@ export default function NewSideBar({
   selectedPage,
   setSelectedPage,
 }) {
-  const [sideBarOpen, setSideBarOpen] = useState(true);
+  const [sideBarOpen, setSideBarOpen] = useState(false);
   const [isInvisible, setIsInvisible] = useState(false);
   const [badgeCount, setBadgeCount] = useState(0);
 
@@ -98,8 +98,11 @@ export default function NewSideBar({
           backgroundColor: "#202A44",
           position: "relative",
           transitionDuration: "200ms",
-          padding: "20px",
-          paddingTop: "30px",
+          // padding:'20px',
+          // paddingTop: "30px",
+          paddingRight: "20px",
+          paddingLeft: "20px",
+          // paddingTop: "30px",
         }}
       >
         <ChevronLeftIcon
@@ -122,6 +125,7 @@ export default function NewSideBar({
             columnGap: "16px",
             alignItems: "center",
             marginBottom: "58px",
+            paddingTop: "30px",
           }}
         >
           <Avatar

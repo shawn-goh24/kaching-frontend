@@ -104,7 +104,7 @@ export default function BudgetList({
     <Box
       sx={{
         maxHeight: `${isSmallHeight ? "35%" : "60%"}`,
-        overflowY: "scroll",
+        overflowY: { xs: "none", md: "scroll" },
       }}
     >
       {mappedBudget()}
