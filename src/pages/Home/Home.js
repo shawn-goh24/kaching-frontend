@@ -1,97 +1,125 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useAuth0 } from "@auth0/auth0-react";
-import { months } from "../../data/constants.js";
-import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import { Grid, Tab, Typography, Box, IconButton } from "@mui/material";
-import PieChart from "./PieChart.js";
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
-import TabPanel from "@mui/lab/TabPanel";
-import useMediaQuery from "../../hooks/useMediaQuery";
-import BudgetBar from "./BudgetBar.js";
+import { Grid, Box, Typography } from "@mui/material";
 import TransactionCol from "./TransactionCol.js";
+import BudgetModal from "../../components/form/BudgetModal.js";
+import MonthSelection from "./MonthSelection.js";
+import BudgetExpenseCol from "./BudgetExpenseCol.js";
+import AddCategoryFab from "./AddCategoryFab.js";
+import Loader from "../../components/ui/Loader.js";
+import useMediaQuery from "../../hooks/useMediaQuery.js";
 
-import Backdrop from "@mui/material/Backdrop";
-import SpeedDial from "@mui/material/SpeedDial";
-import SpeedDialIcon from "@mui/material/SpeedDialIcon";
-import SpeedDialAction from "@mui/material/SpeedDialAction";
-import ReceiptIcon from "@mui/icons-material/Receipt";
-
-export default function Home(props) {
-  const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
+export default function Home({ currUser, accessToken }) {
   const [date, setDate] = useState(new Date());
-  const [value, setValute] = useState("1");
-  const [currUser, setCurrUser] = useState("");
-  const [accessToken, setAccessToken] = useState("");
-  const [tmpMonth, setTmpMonth] = useState(0);
-
-  // speed dial
-  const [openSpeedDial, setOpenSpeedDial] = useState(false);
-  const handleSpeedDialOpen = () => setOpenSpeedDial(true);
-  const handleSpeedDialClose = () => setOpenSpeedDial(false);
+  const [budgetModal, setBudgetModal] = useState(false);
+  const [userCategories, setUserCategories] = useState("");
+  const [transactions, setTransactions] = useState("");
+  const [budgets, setBudgets] = useState("");
   const [openAddTransactionModal, setOpenAddTransactionModal] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const isSmallHeight = useMediaQuery("(max-height: 960px)");
 
-  // check if screen is md or lower
-  const isSmallScreen = useMediaQuery("(max-width: 960px)");
-
-  const getUserApi = async () => {
-    let token = await getAccessTokenSilently();
-    console.log(token);
-    // check user
-    let request = await axios.post(
-      "http://localhost:8080/user/home",
-      {
-        user,
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-    console.log(request.data);
-    setAccessToken(token);
-    setCurrUser(request.data);
-    // get user
-  };
-
+  // upon loaded, get transaction/budget/categories from db
   useEffect(() => {
-    if (isAuthenticated && user) {
-      getUserApi();
-    }
-  }, [isAuthenticated]);
+    getUserTransactionsApi();
+    getBudgetApi();
+    getCategoriesApi();
+  }, [accessToken, date]);
 
-  const handleChange = (e, newValue) => {
-    setValute(newValue);
+  // get all transactions from the user on current month and year
+  const getUserTransactionsApi = async () => {
+    if (accessToken) {
+      const selectedDate = new Date(date);
+      const month = selectedDate.getMonth() + 1;
+      const year = selectedDate.getFullYear();
+      let user = await axios.get(
+        `http://localhost:8080/transaction/${currUser.id}/${month}/${year}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      setTransactions(user.data);
+    }
   };
 
-  const prevMonth = (date) => {
-    const tmp = new Date(date);
-    let month = tmp.getMonth() - 1;
-    let year = tmp.getFullYear();
-    if (month < 0) {
-      month = 11;
-      year = tmp.getFullYear() - 1;
+  // get all budgets from the user on current month and year
+  const getBudgetApi = async () => {
+    if (accessToken) {
+      const selectedDate = new Date(date);
+      const month = selectedDate.getMonth() + 1;
+      const year = selectedDate.getFullYear();
+      let user = await axios.get(
+        `http://localhost:8080/budget/${currUser.id}/${month}/${year}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      setBudgets(user.data);
     }
-    setDate(new Date(year, month));
   };
-  const nextMonth = (date) => {
-    const tmp = new Date(date);
-    let month = tmp.getMonth() + 1;
-    let year = tmp.getFullYear();
-    if (month < 0) {
-      month = 11;
-      year = tmp.getFullYear() + 1;
+
+  // get all categories owned by user from user route
+  const getCategoriesApi = async () => {
+    if (accessToken) {
+      let categories = await axios.get(
+        `http://localhost:8080/user/category/${currUser.id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      setUserCategories(categories.data);
     }
-    setDate(new Date(year, month));
   };
+
+  // add new budget created by user
+  const handleAddBudget = async (userId, category, date, amount) => {
+    if (accessToken) {
+      let newBudget = await axios.post(
+        `http://localhost:8080/budget/add`,
+        {
+          userId: userId,
+          categoryId: category.value,
+          amount: amount,
+          date: date,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      setBudgets([...budgets, newBudget.data]);
+    }
+  };
+
+  //  useeffects to check if loading, and set timeout to display loader
+  useEffect(() => {
+    if (loading) {
+      setTimeout(() => {
+        setLoading(false);
+      }, 1000);
+    }
+  }, [loading]);
+  useEffect(() => {
+    setLoading(!loading);
+    setTimeout(() => {
+      setLoading(!loading);
+    }, 1000);
+  }, []);
+
+  if (loading) return <Loader />;
 
   return (
     <Grid
       container
-      rowGap={5}
+      rowGap={1}
       columnGap={6}
       sx={{
         display: "flex",
@@ -107,82 +135,65 @@ export default function Home(props) {
           justifyContent: "center",
           alignItems: "center",
           height: "100px",
-          border: "1px solid red",
         }}
       >
-        <IconButton sx={{ marginRight: 10 }} onClick={() => prevMonth(date)}>
-          <NavigateBeforeIcon />
-        </IconButton>
-        <Typography variant={isSmallScreen ? "h4" : "h2"}>
-          {months[date.getMonth()]} {date.getFullYear()}
-        </Typography>
-        <IconButton sx={{ marginLeft: 10 }} onClick={() => nextMonth(date)}>
-          <NavigateNextIcon />
-        </IconButton>
+        <MonthSelection date={date} setDate={setDate} />
       </Grid>
       <Grid
         item
         xs={12}
         md={4}
-        sx={{ border: "1px solid red", height: "100%" }}
+        sx={{ height: "95%", paddingX: { xs: "50px", md: "0px" } }}
       >
-        <TabContext
-          value={value}
-          sx={{ display: "flex", justifyContent: "center" }}
-        >
-          <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-            <TabList onChange={handleChange} aria-label="lab API tabs example">
-              <Tab label="Expense" value="1" />
-              <Tab label="Income" value="2" />
-            </TabList>
-          </Box>
-          <TabPanel value="1">
-            <PieChart />
-            <BudgetBar name="Food" amount={200} max={1000} />
-          </TabPanel>
-          <TabPanel value="2">
-            <PieChart />
-          </TabPanel>
-        </TabContext>
+        <BudgetExpenseCol
+          transactions={transactions}
+          budgets={budgets}
+          userCategories={userCategories}
+          accessToken={accessToken}
+          setBudgetModal={setBudgetModal}
+          getBudgetApi={getBudgetApi}
+        />
       </Grid>
-      <Grid item xs={12} md={6} sx={{ height: "100%" }}>
-        <h2>Transactions</h2>
-        <Box sx={{ height: "95%", overflowX: "scroll" }}>
-          <TransactionCol
-            currUser={currUser}
-            accessToken={accessToken}
-            openAddTransactionModal={openAddTransactionModal}
-            setOpenAddTransactionModal={setOpenAddTransactionModal}
-            date={date}
-          />
+      <Grid
+        item
+        xs={12}
+        md={6}
+        sx={{
+          maxHeight: `${isSmallHeight ? "95%" : "100%"}`,
+          paddingX: { xs: "50px", md: "0px" },
+        }}
+      >
+        <h2 style={{ marginBottom: "10px" }}>Transactions</h2>
+        <Box
+          sx={{
+            maxHeight: `${isSmallHeight ? "95%" : "100%"}`,
+            overflowY: "scroll",
+          }}
+        >
+          {transactions.length > 0 ? (
+            <TransactionCol
+              currUser={currUser}
+              accessToken={accessToken}
+              openAddTransactionModal={openAddTransactionModal}
+              setOpenAddTransactionModal={setOpenAddTransactionModal}
+              date={date}
+              transactions={transactions}
+              setTransactions={setTransactions}
+            />
+          ) : (
+            <Typography>No transactions this month</Typography>
+          )}
         </Box>
       </Grid>
-      <Backdrop open={openSpeedDial} sx={{ zIndex: "999" }} />
-      <SpeedDial
-        ariaLabel="SpeedDial tooltip example"
-        sx={{ position: "absolute", bottom: 16, right: 16 }}
-        icon={<SpeedDialIcon />}
-        onClose={handleSpeedDialClose}
-        onOpen={handleSpeedDialOpen}
-        open={openSpeedDial}
-      >
-        <SpeedDialAction
-          key="addTransaction"
-          icon={<ReceiptIcon />}
-          tooltipTitle="Add Transaction"
-          onClick={() => {
-            console.log("Open");
-            setOpenAddTransactionModal(true);
-            handleSpeedDialClose();
-          }}
-        />
-        {/* <SpeedDialAction
-          key="addCategory"
-          icon={<FileCopyIcon />}
-          tooltipTitle="Add Category"
-          onClick={handleSpeedDialClose}
-        /> */}
-      </SpeedDial>
+      <AddCategoryFab setOpenAddTransactionModal={setOpenAddTransactionModal} />
+      <BudgetModal
+        title="Add"
+        budgetModal={budgetModal}
+        setBudgetModal={setBudgetModal}
+        userCategories={userCategories}
+        date={date}
+        handleBudget={handleAddBudget}
+      />
     </Grid>
   );
 }

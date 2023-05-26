@@ -1,15 +1,15 @@
 import { Button, Modal, Text } from "@nextui-org/react";
 import React from "react";
 
-export default function DeleteTransaction({
+export default function DeleteBudgetModal({
+  deleteModal,
   openDeleteModal,
-  setDeleteModal,
   handleDelete,
-  transaction,
+  budgetToDelete,
 }) {
   // close modal
   const closeHandler = () => {
-    setDeleteModal(false);
+    openDeleteModal(false);
   };
 
   return (
@@ -17,7 +17,7 @@ export default function DeleteTransaction({
       closeButton
       blur
       aria-labelledby="modal-title"
-      open={openDeleteModal}
+      open={deleteModal}
       onClose={closeHandler}
     >
       <Modal.Header>
@@ -35,7 +35,7 @@ export default function DeleteTransaction({
           color="warning"
           onPress={() => {
             closeHandler();
-            handleDelete(transaction.id);
+            handleDelete(budgetToDelete.id);
           }}
         >
           Confirm

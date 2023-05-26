@@ -1,10 +1,11 @@
 import { Button, Grid, Text } from "@nextui-org/react";
 import React from "react";
-import appImg from "../../assets/appImg.png";
+import dashboardImg from "../../assets/dashboardImg.png";
 import useMediaQuery from "../../hooks/useMediaQuery";
 
 import FeatureCard from "./FeatureCard";
 import { useAuth0 } from "@auth0/auth0-react";
+import { Box } from "@mui/material";
 
 export default function LandingPage() {
   // check if screen is md or lower
@@ -13,9 +14,8 @@ export default function LandingPage() {
   const { loginWithRedirect } = useAuth0();
 
   return (
-    <>
+    <Box>
       <Grid.Container justify="center">
-        {/* <div style={{ height: "60vh" }}> */}
         <Grid xs={12} justify="center" css={{ marginTop: 100 }}>
           <Text
             h1
@@ -38,6 +38,7 @@ export default function LandingPage() {
           <Button
             auto
             size="lg"
+            color="secondary"
             onClick={() =>
               loginWithRedirect({
                 authorizationParams: {
@@ -50,7 +51,16 @@ export default function LandingPage() {
           </Button>
         </Grid>
         <Grid xs={12} sm={8} justify="center">
-          <img src={appImg} alt="appImg" width="100%" />
+          <img
+            src={dashboardImg}
+            alt="dashboardImg"
+            width="100%"
+            style={{
+              border: "1px solid #D3D3D3",
+              borderRadius: "10px",
+              filter: "drop-shadow(10px 10px 4px #D3D3D3",
+            }}
+          />
         </Grid>
       </Grid.Container>
       <Grid.Container justify="center" style={{ margin: "150px 0" }}>
@@ -76,6 +86,6 @@ export default function LandingPage() {
       <footer style={{ textAlign: "center", color: "grey" }}>
         For project purpose only
       </footer>
-    </>
+    </Box>
   );
 }
