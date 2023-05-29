@@ -32,7 +32,7 @@ export default function FeatureCard(props) {
 
   return (
     <Card
-      css={{ $$cardColor: "#EADCF8" }}
+      css={{ $$cardColor: "#E6E6FA", backdropFilter: "blur(11.4px)" }}
       style={{
         display: "flex",
         justifyContent: "center",
