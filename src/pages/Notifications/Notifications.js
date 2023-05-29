@@ -8,7 +8,7 @@ export default function Notifications({
   setNotifications,
 }) {
   return (
-    <Container>
+    <Container sx={{ minHeight: "100vh" }}>
       <Box>
         <Typography variant="h3" sx={{ pt: 3 }}>
           Notifications

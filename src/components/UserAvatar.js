@@ -73,8 +73,10 @@ export default function UserAvatar({ currUser, accessToken, setSelectedPage }) {
             bordered
             as="button"
             size="md"
-            color="primary"
             src={currUser && currUser.imageUrl && currUser.imageUrl}
+            text={
+              currUser && currUser.firstName ? currUser.firstName : user.name
+            }
             name={
               currUser && currUser.firstName ? currUser.firstName : user.name
             }

@@ -16,7 +16,7 @@ export default function Settings({ currUser, accessToken, setCurrUser }) {
   };
 
   return (
-    <Container>
+    <Container sx={{ minHeight: "100vh" }}>
       <Container maxWidth={isMdScreen ? "md" : "lg"}>
         <Typography variant="h3" sx={{ py: 3 }}>
           Edit Profile

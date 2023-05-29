@@ -47,7 +47,6 @@ export default function AddCategory({ currUser, accessToken }) {
 
   // add new category into database
   const handleAddCategory = async () => {
-    console.log(newCatName, color, selectedIncomeExpense.value, accessToken);
     const newCat = await axios.post(
       "http://localhost:8080/category/new",
       {

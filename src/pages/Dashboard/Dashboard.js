@@ -118,7 +118,7 @@ export default function Dashboard({ accessToken, currUser }) {
   };
 
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth="xl" sx={{ minHeight: "100vh" }}>
       <Box sx={{ pt: 3 }}>
         <Typography variant="h4">
           <strong>Dashboard</strong>

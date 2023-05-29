@@ -93,7 +93,7 @@ export default function NewSideBar({
     <div style={{ display: "flex" }}>
       <div
         style={{
-          height: "100vh",
+          // height: "100vh",
           width: `${sideBarOpen ? "300px" : "50px"}`,
           backgroundColor: "#202A44",
           position: "relative",
@@ -198,7 +198,7 @@ export default function NewSideBar({
                   className="menu-text"
                   h3
                   css={{
-                    color: "white",
+                    // color: "white",
                     transitionDuration: "300ms",
                     transform: `${!sideBarOpen && "scale(0)"}`,
                     color: `${
