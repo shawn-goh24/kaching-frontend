@@ -1,4 +1,4 @@
-import { IconButton, Typography } from "@mui/material";
+import { Button, IconButton, Typography } from "@mui/material";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import React from "react";
@@ -26,6 +26,13 @@ export default function MonthSelection({ date, setDate }) {
     setDate(new Date(year, month));
   };
 
+  const currentMonth = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth();
+    setDate(new Date(year, month));
+  };
+
   return (
     <>
       <IconButton
@@ -43,6 +50,12 @@ export default function MonthSelection({ date, setDate }) {
       >
         <NavigateNextIcon />
       </IconButton>
+      <Button
+        sx={{ position: "absolute", right: "10%" }}
+        onClick={currentMonth}
+      >
+        Today
+      </Button>
     </>
   );
 }
