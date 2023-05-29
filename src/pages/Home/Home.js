@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Grid, Box, Typography } from "@mui/material";
 import TransactionCol from "./TransactionCol.js";
@@ -8,8 +8,9 @@ import BudgetExpenseCol from "./BudgetExpenseCol.js";
 import AddCategoryFab from "./AddCategoryFab.js";
 import Loader from "../../components/ui/Loader.js";
 import useMediaQuery from "../../hooks/useMediaQuery.js";
+import { AccessTokenContext, CurrUserContext } from "../../App.js";
 
-export default function Home({ currUser, accessToken }) {
+export default function Home() {
   const [date, setDate] = useState(new Date());
   const [budgetModal, setBudgetModal] = useState(false);
   const [userCategories, setUserCategories] = useState("");
@@ -18,6 +19,9 @@ export default function Home({ currUser, accessToken }) {
   const [openAddTransactionModal, setOpenAddTransactionModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const isSmallHeight = useMediaQuery("(max-height: 960px)");
+
+  const currUser = useContext(CurrUserContext);
+  const accessToken = useContext(AccessTokenContext);
 
   // upon loaded, get transaction/budget/categories from db
   useEffect(() => {
@@ -149,7 +153,7 @@ export default function Home({ currUser, accessToken }) {
           transactions={transactions}
           budgets={budgets}
           userCategories={userCategories}
-          accessToken={accessToken}
+          // accessToken={accessToken}
           setBudgetModal={setBudgetModal}
           getBudgetApi={getBudgetApi}
         />
@@ -172,8 +176,8 @@ export default function Home({ currUser, accessToken }) {
         >
           {transactions.length > 0 ? (
             <TransactionCol
-              currUser={currUser}
-              accessToken={accessToken}
+              // currUser={currUser}
+              // accessToken={accessToken}
               openAddTransactionModal={openAddTransactionModal}
               setOpenAddTransactionModal={setOpenAddTransactionModal}
               date={date}

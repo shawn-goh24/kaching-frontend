@@ -7,10 +7,13 @@ import Settings from "./pages/Settings/Settings";
 import NavigationBar from "./components/NavigationBar";
 import { useAuth0 } from "@auth0/auth0-react";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import SideBar from "./pages/Dashboard/SideBar";
 import Notifications from "./pages/Notifications/Notifications";
 import NewSideBar from "./pages/Dashboard/NewSideBar";
+
+export const AccessTokenContext = createContext();
+export const CurrUserContext = createContext();
 
 function App() {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
@@ -64,63 +67,40 @@ function App() {
 
   return (
     <>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <NavigationBar
-              accessToken={accessToken}
-              currUser={currUser}
-              setSelectedPage={setSelectedPage}
-            />
-          }
-        >
-          <Route index element={<LandingPage />} />
-          <Route
-            path="home"
-            element={<Home accessToken={accessToken} currUser={currUser} />}
-          />
-        </Route>
-        <Route
-          path="/user"
-          element={
-            <NewSideBar
-              currUser={currUser}
-              notifications={notifications}
-              selectedPage={selectedPage}
-              setSelectedPage={setSelectedPage}
-            />
-          }
-        >
-          <Route
-            path="dashboard"
-            element={
-              <Dashboard accessToken={accessToken} currUser={currUser} />
-            }
-          />
-          <Route
-            path="settings"
-            element={
-              <Settings
-                currUser={currUser}
-                accessToken={accessToken}
-                setCurrUser={setCurrUser}
+      <AccessTokenContext.Provider value={accessToken}>
+        <CurrUserContext.Provider value={currUser}>
+          <Routes>
+            <Route
+              path="/"
+              element={<NavigationBar setSelectedPage={setSelectedPage} />}
+            >
+              <Route index element={<LandingPage />} />
+              <Route path="home" element={<Home />} />
+            </Route>
+            <Route
+              path="/user"
+              element={
+                <NewSideBar
+                  notifications={notifications}
+                  selectedPage={selectedPage}
+                  setSelectedPage={setSelectedPage}
+                />
+              }
+            >
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route
+                path="settings"
+                element={<Settings setCurrUser={setCurrUser} />}
               />
-            }
-          />
-          <Route
-            path="notifications"
-            element={
-              <Notifications
-                currUser={currUser}
-                accessToken={accessToken}
-                setNotifications={setNotifications}
+              <Route
+                path="notifications"
+                element={<Notifications setNotifications={setNotifications} />}
               />
-            }
-          />
-        </Route>
-        <Route path="*" element={<Error />} />
-      </Routes>
+            </Route>
+            <Route path="*" element={<Error />} />
+          </Routes>
+        </CurrUserContext.Provider>
+      </AccessTokenContext.Provider>
     </>
   );
 }

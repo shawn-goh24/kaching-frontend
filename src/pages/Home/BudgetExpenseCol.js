@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Tab, Box } from "@mui/material";
 import PieChart from "./PieChart.js";
 import TabContext from "@mui/lab/TabContext";
@@ -7,16 +7,17 @@ import TabPanel from "@mui/lab/TabPanel";
 import BudgetList from "./BudgetList.js";
 import { Button } from "@nextui-org/react";
 import { checkIfContainIncomeOrExpense } from "../../utils/utils.js";
+import { AccessTokenContext } from "../../App.js";
 
 export default function BudgetExpenseCol({
   transactions,
   budgets,
   userCategories,
-  accessToken,
   setBudgetModal,
   getBudgetApi,
 }) {
   const [tabValue, setTabValue] = useState("1");
+  const accessToken = useContext(AccessTokenContext);
 
   // handle tab value to change between expense/income piechart tab
   const handleTabChange = (e, newValue) => {
@@ -72,7 +73,7 @@ export default function BudgetExpenseCol({
         budgets={budgets}
         transactions={transactions}
         userCategories={userCategories}
-        accessToken={accessToken}
+        // accessToken={accessToken}
         getBudgetApi={getBudgetApi}
       />
       <Box sx={{ display: "flex", justifyContent: "center", mt: "20px" }}>

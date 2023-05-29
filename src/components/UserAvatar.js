@@ -1,14 +1,18 @@
 import { Badge, Dropdown, Text, User } from "@nextui-org/react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { AccessTokenContext, CurrUserContext } from "../App";
 
-export default function UserAvatar({ currUser, accessToken, setSelectedPage }) {
+export default function UserAvatar({ setSelectedPage }) {
   const { logout, user } = useAuth0();
   const navigate = useNavigate();
   const [isInvisible, setIsInvisible] = useState(false);
   const [badgeCount, setBadgeCount] = useState(0);
+
+  const currUser = useContext(CurrUserContext);
+  const accessToken = useContext(AccessTokenContext);
 
   useEffect(() => {
     getNotificationsApi();

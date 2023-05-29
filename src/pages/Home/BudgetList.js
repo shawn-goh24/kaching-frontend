@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import BudgetBar from "./BudgetBar";
 import { Box } from "@mui/material";
 import { combineExpenseCategoryAmounts } from "../../utils/utils";
@@ -6,11 +6,11 @@ import EditBudget from "../../components/form/EditBudget";
 import DeleteBudgetModal from "../../components/form/DeleteBudgetModal";
 import axios from "axios";
 import useMediaQuery from "../../hooks/useMediaQuery";
+import { AccessTokenContext } from "../../App";
 
 export default function BudgetList({
   budgets,
   transactions,
-  accessToken,
   userCategories,
   getBudgetApi,
 }) {
@@ -18,6 +18,8 @@ export default function BudgetList({
   const [deleteModal, openDeleteModal] = useState(false);
   const [budgetToEdit, setBudgetToEdit] = useState();
   const isSmallHeight = useMediaQuery("(max-height: 960px)");
+
+  const accessToken = useContext(AccessTokenContext);
 
   // open edit modal
   const handleEditModal = (budget) => {

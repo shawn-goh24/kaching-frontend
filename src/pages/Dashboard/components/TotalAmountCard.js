@@ -1,9 +1,11 @@
 import { Card } from "@nextui-org/react";
-import React from "react";
+import React, { useContext } from "react";
 import { currencyFormatter } from "../../../utils/utils";
 import { Typography } from "@mui/material";
+import { CurrUserContext } from "../../../App";
 
-export default function TotalAmountCard({ currUser, text, amount, icon }) {
+export default function TotalAmountCard({ text, amount, icon }) {
+  const currUser = useContext(CurrUserContext);
   return (
     <Card>
       <Card.Body>

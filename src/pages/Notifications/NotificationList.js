@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import NotificationCard from "./NotificationCard";
 import { Box } from "@mui/material";
 import axios from "axios";
 import { Button, Modal, Text } from "@nextui-org/react";
+import { AccessTokenContext, CurrUserContext } from "../../App";
 
-export default function NotificationList({
-  currUser,
-  accessToken,
-  setNotifications,
-}) {
+export default function NotificationList({ setNotifications }) {
   const [notis, setNotis] = useState();
   const [deleteModal, setDeleteModal] = useState(false);
   const [notificationToDelete, setNotificationToDelete] = useState();
+
+  const currUser = useContext(CurrUserContext);
+  const accessToken = useContext(AccessTokenContext);
 
   useEffect(() => {
     getNotificationsApi();

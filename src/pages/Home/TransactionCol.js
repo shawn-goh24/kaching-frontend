@@ -1,13 +1,12 @@
 import { Box } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import TransactionCard from "../../components/ui/TransactionCard";
 import axios from "axios";
 import DeleteTransaction from "../../components/form/DeleteTransaction";
 import TransactionModal from "../../components/form/TransactionModal";
+import { AccessTokenContext, CurrUserContext } from "../../App";
 
 export default function TransactionCol({
-  currUser,
-  accessToken,
   setOpenAddTransactionModal,
   openAddTransactionModal,
   date,
@@ -20,6 +19,9 @@ export default function TransactionCol({
   const [deleteModal, setDeleteModal] = useState(false);
   const [editTransaction, setEditTransaction] = useState("");
   const [deleteTransaction, setDeleteTransaction] = useState("");
+
+  const currUser = useContext(CurrUserContext);
+  const accessToken = useContext(AccessTokenContext);
 
   // useeffect to get all data from database
   useEffect(() => {

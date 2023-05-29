@@ -7,7 +7,7 @@ import AddCategory from "./AddCategory";
 import EditCategory from "./EditCategory";
 import ProfileSetting from "./ProfileSetting";
 
-export default function Settings({ currUser, accessToken, setCurrUser }) {
+export default function Settings({ setCurrUser }) {
   const isMdScreen = useMediaQuery("(max-width: 1440px)");
   const [tabValue, setTabValue] = useState("1");
 
@@ -21,11 +21,7 @@ export default function Settings({ currUser, accessToken, setCurrUser }) {
         <Typography variant="h3" sx={{ py: 3 }}>
           Edit Profile
         </Typography>
-        <ProfileSetting
-          currUser={currUser}
-          accessToken={accessToken}
-          setCurrUser={setCurrUser}
-        />
+        <ProfileSetting setCurrUser={setCurrUser} />
         <Typography variant="h3" sx={{ py: 3 }}>
           Category Settings
         </Typography>
@@ -40,10 +36,10 @@ export default function Settings({ currUser, accessToken, setCurrUser }) {
             </TabList>
           </Box>
           <TabPanel value="1">
-            <AddCategory currUser={currUser} accessToken={accessToken} />
+            <AddCategory />
           </TabPanel>
           <TabPanel value="2">
-            <EditCategory currUser={currUser} accessToken={accessToken} />
+            <EditCategory />
           </TabPanel>
         </TabContext>
       </Container>

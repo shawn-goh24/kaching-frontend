@@ -5,10 +5,11 @@ import { useAuth0 } from "@auth0/auth0-react";
 import CloseIcon from "@mui/icons-material/Close";
 import CameraAltIcon from "@mui/icons-material/CameraAlt";
 
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { uploadBytes, getDownloadURL, ref as sRef } from "firebase/storage";
 import { storage } from "../../firebase";
+import { AccessTokenContext, CurrUserContext } from "../../App";
 
 let cc = require("currency-codes");
 
@@ -19,7 +20,7 @@ const selectFieldStyles = {
   }),
 };
 
-export default function ProfileSetting({ currUser, accessToken, setCurrUser }) {
+export default function ProfileSetting({ setCurrUser }) {
   const { user } = useAuth0();
   const [selectedCurrency, setSelectedCurrency] = useState([]);
   const [firstName, setFirstName] = useState("");
@@ -32,6 +33,9 @@ export default function ProfileSetting({ currUser, accessToken, setCurrUser }) {
   const [isGoogleAuth, setIsGoogleAuth] = useState();
   const [selectedProfilePic, setSelectedProfilePic] = useState("");
   const [snackOpen, setSnackOpen] = useState(false);
+
+  const currUser = useContext(CurrUserContext);
+  const accessToken = useContext(AccessTokenContext);
 
   // set default states
   useEffect(() => {

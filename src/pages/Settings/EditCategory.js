@@ -1,12 +1,16 @@
 import { Box } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import useCategories from "../../hooks/useCategories";
 import CategoriesCard from "./CategoriesCard";
 import CategoryActionModal from "../../components/form/CategoryActionModal";
 import axios from "axios";
 import { Button, Modal, Text } from "@nextui-org/react";
+import { AccessTokenContext, CurrUserContext } from "../../App";
 
-export default function EditCategory({ currUser, accessToken }) {
+export default function EditCategory() {
+  const currUser = useContext(CurrUserContext);
+  const accessToken = useContext(AccessTokenContext);
+
   const [categories, setCategories] = useCategories(currUser, accessToken);
   const [categoryModal, setCategoryModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState();

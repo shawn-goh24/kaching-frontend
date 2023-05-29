@@ -1,5 +1,5 @@
 import { Box, IconButton, Tooltip } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import { Avatar, Badge, Text } from "@nextui-org/react";
@@ -7,9 +7,9 @@ import HomeIcon from "@mui/icons-material/Home";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import SettingsIcon from "@mui/icons-material/Settings";
 import EmailIcon from "@mui/icons-material/Email";
+import { CurrUserContext } from "../../App";
 
 export default function NewSideBar({
-  currUser,
   notifications,
   selectedPage,
   setSelectedPage,
@@ -17,6 +17,8 @@ export default function NewSideBar({
   const [sideBarOpen, setSideBarOpen] = useState(false);
   const [isInvisible, setIsInvisible] = useState(false);
   const [badgeCount, setBadgeCount] = useState(0);
+
+  const currUser = useContext(CurrUserContext);
 
   const navigate = useNavigate();
 

@@ -1,13 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Grid from "@mui/material/Unstable_Grid2";
 import { Button, Card, Modal, Text } from "@nextui-org/react";
 import AddIcon from "@mui/icons-material/Add";
 import { currencyFormatter } from "../../utils/utils";
 import BillCard from "./BillCard";
 import { IconButton, Typography } from "@mui/material";
+import { CurrUserContext } from "../../App";
 
 export default function TransactionBillRow({
-  currUser,
   ytdTransactions,
   setAddBillModal,
   billReminders,
@@ -16,6 +16,8 @@ export default function TransactionBillRow({
 }) {
   const [deleteModal, setDeleteModal] = useState(false);
   const [billToDelete, setBillToDelete] = useState();
+
+  const currUser = useContext(CurrUserContext);
 
   const closeHandler = () => {
     setDeleteModal(false);

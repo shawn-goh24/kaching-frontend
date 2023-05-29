@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Box, IconButton, Snackbar } from "@mui/material";
 import { Button, Input, Text } from "@nextui-org/react";
 import { MuiColorInput } from "mui-color-input";
 import Select from "react-select";
 import axios from "axios";
 import CloseIcon from "@mui/icons-material/Close";
+import { AccessTokenContext, CurrUserContext } from "../../App";
 
-export default function AddCategory({ currUser, accessToken }) {
+export default function AddCategory() {
   const [newCatName, setNewCatName] = useState("");
   const [color, setColor] = useState(
     `#${Math.floor(Math.random() * 16777215).toString(16)}`
@@ -14,6 +15,9 @@ export default function AddCategory({ currUser, accessToken }) {
   const [selectedIncomeExpense, setSelectedIncomeExpense] = useState([]);
   const [incomeExpenseList, setIncomeExpenseList] = useState([]);
   const [snackOpen, setSnackOpen] = useState(false);
+
+  const currUser = useContext(CurrUserContext);
+  const accessToken = useContext(AccessTokenContext);
 
   useEffect(() => {
     if (accessToken) {
@@ -81,7 +85,6 @@ export default function AddCategory({ currUser, accessToken }) {
 
   // handle color input
   const handleColor = (color) => {
-    console.log(color);
     setColor(color);
   };
 

@@ -1,16 +1,20 @@
 import { Box, Container, Typography } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import BillModal from "../../components/form/BillModal";
 import AmountBillRow from "./AmountBillRow";
 import ChartRow from "./ChartRow";
 import TransactionBillRow from "./TransactionBillRow";
+import { AccessTokenContext, CurrUserContext } from "../../App";
 
-export default function Dashboard({ accessToken, currUser }) {
+export default function Dashboard() {
   const [ytdTransactions, setYtdTransactions] = useState();
   const [billReminders, setBillReminders] = useState();
   const [addBillModal, setAddBillModal] = useState(false);
   const [editBillModal, setEditBillModal] = useState(false);
+
+  const accessToken = useContext(AccessTokenContext);
+  const currUser = useContext(CurrUserContext);
 
   const [tmp, setTmp] = useState();
 
@@ -128,13 +132,11 @@ export default function Dashboard({ accessToken, currUser }) {
         </Typography>
       </Box>
       <AmountBillRow
-        currUser={currUser}
         ytdTransactions={ytdTransactions}
         billReminders={billReminders}
       />
       <ChartRow ytdTransactions={ytdTransactions} />
       <TransactionBillRow
-        currUser={currUser}
         ytdTransactions={ytdTransactions}
         setAddBillModal={setAddBillModal}
         billReminders={billReminders}
