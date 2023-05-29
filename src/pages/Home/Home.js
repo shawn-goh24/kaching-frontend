@@ -1,6 +1,16 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import { Grid, Box, Typography } from "@mui/material";
+import {
+  Grid,
+  Box,
+  Typography,
+  Input,
+  InputAdornment,
+  Select,
+  MenuItem,
+  IconButton,
+  Tooltip,
+} from "@mui/material";
 import TransactionCol from "./TransactionCol.js";
 import BudgetModal from "../../components/form/BudgetModal.js";
 import MonthSelection from "./MonthSelection.js";
@@ -9,6 +19,9 @@ import AddCategoryFab from "./AddCategoryFab.js";
 import Loader from "../../components/ui/Loader.js";
 import useMediaQuery from "../../hooks/useMediaQuery.js";
 import { AccessTokenContext, CurrUserContext } from "../../App.js";
+import SearchIcon from "@mui/icons-material/Search";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import useDebounce from "../../hooks/useDebounce.js";
 
 export default function Home() {
   const [date, setDate] = useState(new Date());
@@ -18,6 +31,10 @@ export default function Home() {
   const [budgets, setBudgets] = useState("");
   const [openAddTransactionModal, setOpenAddTransactionModal] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [age, setAge] = useState("");
+  const [searchValue, setSearchValue] = useState("");
+  const [transactionColList, setTransactionColList] = useState([]);
+
   const isSmallHeight = useMediaQuery("(max-height: 960px)");
 
   const currUser = useContext(CurrUserContext);
@@ -118,6 +135,21 @@ export default function Home() {
     }, 1000);
   }, []);
 
+  const handleFilter = (searchValue) => {
+    const filteredTransactions = transactions.filter((item) => {
+      return item.Category.name
+        ?.toLowerCase()
+        .includes(searchValue?.toLowerCase());
+    });
+    setTransactionColList(filteredTransactions);
+
+    if (searchValue === "") {
+      setTransactionColList(transactions);
+    }
+  };
+
+  useDebounce(() => handleFilter(searchValue), 500, [searchValue]);
+
   if (loading) return <Loader />;
 
   return (
@@ -167,7 +199,28 @@ export default function Home() {
           paddingX: { xs: "50px", md: "0px" },
         }}
       >
-        <h2 style={{ marginBottom: "10px" }}>Transactions</h2>
+        <Box display="flex" alignItems="center" justifyContent="space-between">
+          <h2 style={{ marginBottom: "10px" }}>Transactions</h2>
+          <Box display="flex">
+            <Input
+              id="input-with-icon-adornment"
+              variant="outlined"
+              size="small"
+              placeholder="Filter Categories"
+              startAdornment={
+                <InputAdornment position="start">
+                  <SearchIcon />
+                </InputAdornment>
+              }
+              onChange={(e) => setSearchValue(e.target.value)}
+            />
+            {/* <Tooltip title="Price sorting">
+              <IconButton>
+                <ArrowUpwardIcon />
+              </IconButton>
+            </Tooltip> */}
+          </Box>
+        </Box>
         <Box
           sx={{
             maxHeight: `${isSmallHeight ? "95%" : "100%"}`,
@@ -181,7 +234,9 @@ export default function Home() {
               openAddTransactionModal={openAddTransactionModal}
               setOpenAddTransactionModal={setOpenAddTransactionModal}
               date={date}
-              transactions={transactions}
+              transactions={
+                searchValue === "" ? transactions : transactionColList
+              }
               setTransactions={setTransactions}
             />
           ) : (
