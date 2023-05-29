@@ -43,7 +43,7 @@ export default function CategoriesCard({
             />
           </Box>
         </CardContent>
-        <CardActions>
+        <CardActions sx={{ scale: `${category.defaultCategory ? 0 : 1}` }}>
           <IconButton
             size="small"
             onClick={() => handleOpenCategoryModal(category)}
