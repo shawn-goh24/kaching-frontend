@@ -1,4 +1,4 @@
-# goWhere
+# kaching frontend
 
 <p align="center">
     <img src="./src/assets/logo.svg#gh-dark-mode-only" width='40%' style="filter: invert(100%)">
