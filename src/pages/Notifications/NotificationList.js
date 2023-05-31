@@ -21,7 +21,7 @@ export default function NotificationList({ setNotifications }) {
   const getNotificationsApi = async () => {
     if (accessToken) {
       const allNotification = await axios.get(
-        `${process.env.REACT_APP_BACKEND}notification/${currUser.id}`,
+        `${process.env.REACT_APP_BACKEND}/notification/${currUser.id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
