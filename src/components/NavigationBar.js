@@ -28,7 +28,7 @@ export default function NavigationBar({ setSelectedPage }) {
                 onClick={() =>
                   loginWithRedirect({
                     authorizationParams: {
-                      redirect_uri: "http://localhost:3000/home",
+                      redirect_uri: `${process.env.REACT_APP_FRONTEND}/home`,
                     },
                   })
                 }
@@ -43,7 +43,7 @@ export default function NavigationBar({ setSelectedPage }) {
                 onClick={() =>
                   loginWithRedirect({
                     authorizationParams: {
-                      redirect_uri: "http://localhost:3000/home",
+                      redirect_uri: `${process.env.REACT_APP_FRONTEND}/home`,
                     },
                   })
                 }
