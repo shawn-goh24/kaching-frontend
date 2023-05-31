@@ -96,7 +96,6 @@ export default function ProfileSetting({ setCurrUser }) {
       let updatedUser;
 
       const imageUrl = await handleChangeProfilePic();
-      // console.log(imageUrl);
       if (imageUrl) {
         setProfileUrl(imageUrl);
       }
@@ -141,7 +140,6 @@ export default function ProfileSetting({ setCurrUser }) {
     setSelectedProfilePic(event.target.files[0]);
     setProfileUrl(previewImage);
     setHasChanged(true);
-    // console.log(previewImage);
   };
 
   const handleChangeProfilePic = () => {
@@ -154,7 +152,6 @@ export default function ProfileSetting({ setCurrUser }) {
           resolve(getDownloadURL(snapshot.ref));
         });
       } else {
-        // console.log(false);
         resolve(false);
       }
     });
@@ -181,8 +178,6 @@ export default function ProfileSetting({ setCurrUser }) {
       </IconButton>
     </React.Fragment>
   );
-
-  // console.log("currUser", currUser.imageUrl);
 
   return (
     <Box>

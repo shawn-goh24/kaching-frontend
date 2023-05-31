@@ -16,7 +16,7 @@ export default function Dashboard() {
   const accessToken = useContext(AccessTokenContext);
   const currUser = useContext(CurrUserContext);
 
-  const [tmp, setTmp] = useState();
+  const [tmpBill, setTmpBill] = useState();
 
   useEffect(() => {
     getYtdTransactionsApi();
@@ -57,7 +57,7 @@ export default function Dashboard() {
 
   // open edit bill modal
   const handleOpenEditBillModal = (bill) => {
-    setTmp(bill);
+    setTmpBill(bill);
     setEditBillModal(true);
   };
 
@@ -153,7 +153,7 @@ export default function Dashboard() {
         title="Edit"
         billModal={editBillModal}
         setBillModal={setEditBillModal}
-        bill={tmp}
+        bill={tmpBill}
         handleEdit={handleEditBill}
       />
     </Container>

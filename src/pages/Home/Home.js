@@ -1,16 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import {
-  Grid,
-  Box,
-  Typography,
-  Input,
-  InputAdornment,
-  Select,
-  MenuItem,
-  IconButton,
-  Tooltip,
-} from "@mui/material";
+import { Grid, Box, Typography, Input, InputAdornment } from "@mui/material";
 import TransactionCol from "./TransactionCol.js";
 import BudgetModal from "../../components/form/BudgetModal.js";
 import MonthSelection from "./MonthSelection.js";
@@ -20,7 +10,6 @@ import Loader from "../../components/ui/Loader.js";
 import useMediaQuery from "../../hooks/useMediaQuery.js";
 import { AccessTokenContext, CurrUserContext } from "../../App.js";
 import SearchIcon from "@mui/icons-material/Search";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import useDebounce from "../../hooks/useDebounce.js";
 
 export default function Home() {
@@ -185,7 +174,6 @@ export default function Home() {
           transactions={transactions}
           budgets={budgets}
           userCategories={userCategories}
-          // accessToken={accessToken}
           setBudgetModal={setBudgetModal}
           getBudgetApi={getBudgetApi}
         />
@@ -214,11 +202,6 @@ export default function Home() {
               }
               onChange={(e) => setSearchValue(e.target.value)}
             />
-            {/* <Tooltip title="Price sorting">
-              <IconButton>
-                <ArrowUpwardIcon />
-              </IconButton>
-            </Tooltip> */}
           </Box>
         </Box>
         <Box
@@ -227,10 +210,13 @@ export default function Home() {
             overflowY: "scroll",
           }}
         >
-          {transactions.length > 0 ? (
+          <Box>
+            {transactions.length > 0 ? (
+              ""
+            ) : (
+              <Typography>No transactions this month</Typography>
+            )}
             <TransactionCol
-              // currUser={currUser}
-              // accessToken={accessToken}
               openAddTransactionModal={openAddTransactionModal}
               setOpenAddTransactionModal={setOpenAddTransactionModal}
               date={date}
@@ -239,9 +225,7 @@ export default function Home() {
               }
               setTransactions={setTransactions}
             />
-          ) : (
-            <Typography>No transactions this month</Typography>
-          )}
+          </Box>
         </Box>
       </Grid>
       <AddCategoryFab setOpenAddTransactionModal={setOpenAddTransactionModal} />

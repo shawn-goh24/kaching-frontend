@@ -13,7 +13,6 @@ export default function TransactionCol({
   transactions,
   setTransactions,
 }) {
-  // const [transactions, setTransactions] = useState("");
   const [categories, setCategories] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const [deleteModal, setDeleteModal] = useState(false);
