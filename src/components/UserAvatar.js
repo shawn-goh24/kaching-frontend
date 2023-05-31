@@ -22,7 +22,7 @@ export default function UserAvatar({ setSelectedPage }) {
   const getNotificationsApi = async () => {
     if (accessToken) {
       const allNotification = await axios.get(
-        `http://localhost:8080/notification/${currUser.id}`,
+        `${process.env.REACT_APP_BACKEND}/notification/${currUser.id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,

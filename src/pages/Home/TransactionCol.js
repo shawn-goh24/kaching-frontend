@@ -31,7 +31,7 @@ export default function TransactionCol({
   const getCategoriesApi = async () => {
     if (accessToken) {
       let categories = await axios.get(
-        `http://localhost:8080/user/category/${currUser.id}`,
+        `${process.env.REACT_APP_BACKEND}/user/category/${currUser.id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -60,7 +60,7 @@ export default function TransactionCol({
       const month = selectedDate.getMonth() + 1;
       const year = selectedDate.getFullYear();
       let editTransaction = await axios.put(
-        `http://localhost:8080/transaction/edit/${currUser.id}/${transactionId}/${month}/${year}`,
+        `${process.env.REACT_APP_BACKEND}/transaction/edit/${currUser.id}/${transactionId}/${month}/${year}`,
         {
           name: name,
           date: new Date(date),
@@ -86,7 +86,7 @@ export default function TransactionCol({
   ) => {
     if (accessToken) {
       let addTransaction = await axios.post(
-        `http://localhost:8080/transaction/add`,
+        `${process.env.REACT_APP_BACKEND}/transaction/add`,
         {
           userId: currUser.id,
           name: name,
@@ -127,7 +127,7 @@ export default function TransactionCol({
       const month = selectedDate.getMonth() + 1;
       const year = selectedDate.getFullYear();
       let deleteTransaction = await axios.delete(
-        `http://localhost:8080/transaction/delete/${currUser.id}/${transactionId}/${month}/${year}`,
+        `${process.env.REACT_APP_BACKEND}/transaction/delete/${currUser.id}/${transactionId}/${month}/${year}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,

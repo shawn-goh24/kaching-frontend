@@ -102,7 +102,7 @@ export default function ProfileSetting({ setCurrUser }) {
 
       if (isGoogleAuth) {
         updatedUser = await axios.put(
-          `http://localhost:8080/user/edit/${currUser.id}`,
+          `${process.env.REACT_APP_BACKEND}/user/edit/${currUser.id}`,
           {
             mainCurrency: currency,
             imageUrl: `${imageUrl ? imageUrl : currUser.imageUrl}`,
@@ -115,7 +115,7 @@ export default function ProfileSetting({ setCurrUser }) {
         );
       } else {
         updatedUser = await axios.put(
-          `http://localhost:8080/user/edit/${currUser.id}`,
+          `${process.env.REACT_APP_BACKEND}/user/edit/${currUser.id}`,
           {
             firstName: firstName,
             lastName: lastName,

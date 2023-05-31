@@ -40,11 +40,14 @@ export default function CategoryActionModal({
   // get income expense table from database
   const getIncomeExpenseApi = async () => {
     if (accessToken) {
-      const response = await axios.get("http://localhost:8080/incomeexpense", {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      const response = await axios.get(
+        `${process.env.REACT_APP_BACKEND}/incomeexpense`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
       const list = response.data.map((data) => ({
         value: data.id,
         label: data.name,

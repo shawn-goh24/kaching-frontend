@@ -40,7 +40,7 @@ export default function EditCategory() {
   ) => {
     if (accessToken) {
       await axios.put(
-        `http://localhost:8080/category/edit/${categoryId}`,
+        `${process.env.REACT_APP_BACKEND}/category/edit/${categoryId}`,
         {
           name: name,
           color: `${color}`,

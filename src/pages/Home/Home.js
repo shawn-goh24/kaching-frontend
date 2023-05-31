@@ -43,7 +43,7 @@ export default function Home() {
       const month = selectedDate.getMonth() + 1;
       const year = selectedDate.getFullYear();
       let user = await axios.get(
-        `http://localhost:8080/transaction/${currUser.id}/${month}/${year}`,
+        `${process.env.REACT_APP_BACKEND}/transaction/${currUser.id}/${month}/${year}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -61,7 +61,7 @@ export default function Home() {
       const month = selectedDate.getMonth() + 1;
       const year = selectedDate.getFullYear();
       let user = await axios.get(
-        `http://localhost:8080/budget/${currUser.id}/${month}/${year}`,
+        `${process.env.REACT_APP_BACKEND}/budget/${currUser.id}/${month}/${year}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -76,7 +76,7 @@ export default function Home() {
   const getCategoriesApi = async () => {
     if (accessToken) {
       let categories = await axios.get(
-        `http://localhost:8080/user/category/${currUser.id}`,
+        `${process.env.REACT_APP_BACKEND}/user/category/${currUser.id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -91,7 +91,7 @@ export default function Home() {
   const handleAddBudget = async (userId, category, date, amount) => {
     if (accessToken) {
       let newBudget = await axios.post(
-        `http://localhost:8080/budget/add`,
+        `${process.env.REACT_APP_BACKEND}/budget/add`,
         {
           userId: userId,
           categoryId: category.value,

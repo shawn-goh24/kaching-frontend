@@ -21,7 +21,7 @@ export default function NotificationList({ setNotifications }) {
   const getNotificationsApi = async () => {
     if (accessToken) {
       const allNotification = await axios.get(
-        `http://localhost:8080/notification/${currUser.id}`,
+        `${process.env.REACT_APP_BACKEND}notification/${currUser.id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -45,7 +45,7 @@ export default function NotificationList({ setNotifications }) {
   // update notification to read/unread
   const handleReadNotifications = async (isRead, notificationId) => {
     const allNotification = await axios.put(
-      `http://localhost:8080/notification/${currUser.id}/${notificationId}`,
+      `${process.env.REACT_APP_BACKEND}/notification/${currUser.id}/${notificationId}`,
       {
         isRead: isRead,
       },
@@ -62,7 +62,7 @@ export default function NotificationList({ setNotifications }) {
   // delete notification
   const handleDeleteNotification = async (notificationId) => {
     const allNotification = await axios.delete(
-      `http://localhost:8080/notification/${currUser.id}/${notificationId}`,
+      `${process.env.REACT_APP_BACKEND}/notification/${currUser.id}/${notificationId}`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,

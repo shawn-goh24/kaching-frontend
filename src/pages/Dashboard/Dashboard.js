@@ -28,7 +28,7 @@ export default function Dashboard() {
     const currentYear = new Date().getFullYear();
     if (accessToken) {
       let user = await axios.get(
-        `http://localhost:8080/transaction/${currUser.id}/${currentYear}`,
+        `${process.env.REACT_APP_BACKEND}/transaction/${currUser.id}/${currentYear}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -43,7 +43,7 @@ export default function Dashboard() {
   const getBillReminderApi = async () => {
     if (accessToken) {
       const response = await axios.get(
-        `http://localhost:8080/bill/${currUser.id}`,
+        `${process.env.REACT_APP_BACKEND}/bill/${currUser.id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -65,7 +65,7 @@ export default function Dashboard() {
   const handleDeleteBill = async (billId) => {
     if (accessToken) {
       const response = await axios.delete(
-        `http://localhost:8080/bill/${currUser.id}/${billId}`,
+        `${process.env.REACT_APP_BACKEND}/bill/${currUser.id}/${billId}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -81,7 +81,7 @@ export default function Dashboard() {
   const handleEditBill = async (billId, name, date) => {
     if (accessToken) {
       const response = await axios.put(
-        `http://localhost:8080/bill/${currUser.id}/${billId}`,
+        `${process.env.REACT_APP_BACKEND}/bill/${currUser.id}/${billId}`,
         {
           name: name,
           amount: 0,
@@ -102,7 +102,7 @@ export default function Dashboard() {
   const handleAddBill = async (name, date) => {
     if (accessToken) {
       const response = await axios.post(
-        `http://localhost:8080/bill/new`,
+        `${process.env.REACT_APP_BACKEND}/bill/new`,
         {
           userId: currUser.id,
           name: name,

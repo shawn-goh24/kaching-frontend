@@ -28,11 +28,14 @@ export default function AddCategory() {
   // get income expense table from database
   const getIncomeExpenseApi = async () => {
     if (accessToken) {
-      const response = await axios.get("http://localhost:8080/incomeexpense", {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      const response = await axios.get(
+        `${process.env.REACT_APP_BACKEND}/incomeexpense`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
       const list = response.data.map((data) => ({
         value: data.id,
         label: data.name,
@@ -52,7 +55,7 @@ export default function AddCategory() {
   // add new category into database
   const handleAddCategory = async () => {
     const newCat = await axios.post(
-      "http://localhost:8080/category/new",
+      `${process.env.REACT_APP_BACKEND}/category/new`,
       {
         name: newCatName,
         color: `${color}`,
@@ -67,7 +70,7 @@ export default function AddCategory() {
 
     // add to userCategory table
     await axios.post(
-      "http://localhost:8080/category/add",
+      `${process.env.REACT_APP_BACKEND}/category/add`,
       {
         userId: currUser.id,
         categoryId: newCat.data.id,

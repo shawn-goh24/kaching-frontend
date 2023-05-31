@@ -30,7 +30,7 @@ export default function BudgetList({
   // handle edit on budget
   const handleEdit = async (budgetId, categoryId, amount) => {
     await axios.put(
-      `http://localhost:8080/budget/edit/${budgetId}`,
+      `${process.env.REACT_APP_BACKEND}/budget/edit/${budgetId}`,
       {
         categoryId: categoryId,
         amount: +amount,
@@ -53,11 +53,14 @@ export default function BudgetList({
 
   // handle delete budget
   const handleDelete = async (budgetId) => {
-    await axios.delete(`http://localhost:8080/budget/delete/${budgetId}`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    await axios.delete(
+      `${process.env.REACT_APP_BACKEND}/budget/delete/${budgetId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
 
     getBudgetApi();
   };

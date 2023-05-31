@@ -7,7 +7,7 @@ export default function useCategories(currUser, accessToken) {
   const getCategoryApi = async () => {
     if (accessToken) {
       let user = await axios.get(
-        `http://localhost:8080/user/category/${currUser.id}`,
+        `${process.env.REACT_APP_BACKEND}user/category/${currUser.id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -22,7 +22,7 @@ export default function useCategories(currUser, accessToken) {
     if (accessToken) {
       if (obj.selection === "delete") {
         await axios.delete(
-          `http://localhost:8080/category/delete/${obj.categoryId}`,
+          `${process.env.REACT_APP_BACKEND}/category/delete/${obj.categoryId}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
