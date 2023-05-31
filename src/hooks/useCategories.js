@@ -7,7 +7,7 @@ export default function useCategories(currUser, accessToken) {
   const getCategoryApi = async () => {
     if (accessToken) {
       let user = await axios.get(
-        `${process.env.REACT_APP_BACKEND}user/category/${currUser.id}`,
+        `${process.env.REACT_APP_BACKEND}/user/category/${currUser.id}`,
         {
           headers: {
             Authorization: `Bearer ${accessToken}`,
